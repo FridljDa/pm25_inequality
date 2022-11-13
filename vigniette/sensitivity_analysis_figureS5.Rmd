@@ -1,0 +1,196 @@
+---
+title: "24_numbers_for_sensitivity"
+author: "Daniel Fridljand"
+date: "1/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include=FALSE}
+# clear memory
+rm(list = ls(all = TRUE))
+
+# load packages, install if missing
+library(data.table)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(ggpubr)
+library(tidyr)
+theme_set(theme_classic(base_family = "Helvetica"))
+```
+
+```{r}
+file_list <- list.files("../data/15_summary")
+file_list <- file.path("../data/15_summary", file_list[grepl("attr_bur", file_list)])
+#file_list <- list.files("data/15_summary")
+#file_list <- file.path("data/15_summary", file_list[grepl("attr_bur", file_list)])
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+rm(file_list)
+```
+
+# Sensitivity of our findings to the use of a race-ethnicity-specific CRF:
+```{r}
+attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           attr == "attributable" &
+           source == "National Vital Statistics System" & scenario == "real") %>% 
+  filter(agr_by == "nation" & Education == 666 & Ethnicity == "White, Not Hispanic or Latino" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
+                                   & method %in% c("di_gee","di_gee_white") & Year %in% 2000:2015) %>%
+  group_by(method) %>%
+  summarise(min_proportion_of_disparity = min(mean),
+            max_proportion_of_disparity = max(mean))
+
+```
+
+```{r}
+#variability by Race-ethnicity for each method
+attr_burd_methods <- attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           Ethnicity != "All, All origins" & Education == 666 & rural_urban_class == "All" &
+           attr == "attributable" &
+           source == "National Vital Statistics System" & scenario == "real" &
+           agr_by == "nation" & 
+           measure3 == "value" &
+           method != "EPA")
+
+attr_burd_methods <- attr_burd_methods %>% mutate(method = forcats::fct_recode(method,
+"GEMM"="burnett",
+"Di" = "di_gee",
+"Di (uniform White reponse)" = "di_gee_white"))
+
+attr_burd_methods <- attr_burd_methods %>% 
+  group_by(Year, method) %>%
+  summarise(CoV = sqrt(var(mean))/mean(mean))
+
+plot_attr_burd_methods <- ggplot(attr_burd_methods, aes(x = Year, y = CoV, color = method)) +
+     labs(color='Concentration-response function (CRF)') +
+  geom_line(size = 1.5)
+plot_attr_burd_methods
+```
+
+```{r}
+##same exposure
+total_burden <- fread("../data/15_summary/all_burd.csv")
+total_burden <- total_burden %>% filter(Region == "United States" & 
+                                          Education == 666 & rural_urban_class == "All" & measure1 == "Deaths" &
+                                          measure2 == "age-adjusted rate per 100,000" & Year == 2016)
+
+hr_race_specific <- data.frame(
+  method = rep("di_gee", 1),
+  Ethnicity = c("White","NH White", "Black American", "Asian or Pacific Islander", "Hispanic or Latino White", "American Indian or Alaska Native", "All"), # TODO
+  label_cause =  rep("all-cause", 1),
+  hr_mean = c(1.063, 1.063, 1.208, 1.096, 1.116, 1.1, 1.073),
+  hr_lower = c(1.06, 1.06, 1.199, 1.075, 1.1, 1.06, 1.071),
+  hr_upper = c(1.065,1.065, 1.217, 1.117, 1.133,1.14, 1.075),
+  min_age = rep(25, 1)
+)
+
+paf_di <- inner_join(total_burden, hr_race_specific, by = c("Ethnicity"))
+
+pm <- seq(0, 30, by = 0.5)
+#median = 7.383503
+
+attr_burd_di <- tidyr::crossing(paf_di, pm)
+
+attr_burd_di <- attr_burd_di %>%
+  mutate(
+    attributable_burden = case_when(
+      pm < 5 ~ 0,
+      pm >= 5 ~ overall_value * (pm - 5) * (hr_mean - 1) / 10
+    )
+  ) 
+  
+plot_attr_burd_di <- ggplot(data = attr_burd_di, mapping = aes(color = Ethnicity, x = pm, y = attributable_burden)) +
+  ylab("Mortality rate")+
+   xlab("Annual average PM2.5 in μg/m^3") +
+  geom_line(size = 1.5)
+plot_attr_burd_di
+```
+
+```{r}
+##---get median pm ---
+pm_summary <- readr::read_csv("../data/15_summary/pm_summary.csv") 
+pm_summary <- pm_summary %>% filter(scenario == "real" & rural_urban_class == "All" & Region == "United States" &
+                                      Ethnicity == "All, All Origins" & Education == 666 & Year == 2016 &
+                                      pm_metric == "mean")
+
+attr_burd_di_median <- paf_di %>% mutate(pm = pm_summary$value)
+attr_burd_di_median <- attr_burd_di_median %>%
+  mutate(
+    attributable_burden = case_when(
+      pm < 5 ~ 0,
+      pm >= 5 ~ overall_value * (pm - 5) * (hr_mean - 1) / 10
+    ),
+    attributable_burden = round(attributable_burden, 2)
+  )
+#+ geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) 
+attr_burd_di_median %>% select(Ethnicity, attributable_burden)
+```
+
+```{r}
+#variability by Race-ethnicity for each scenario
+attr_burd_scenario <- attr_burd %>% 
+  filter(scenario != "future threshold")
+attr_burd_scenario <- attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           Ethnicity != "All, All origins" & Education == 666 & rural_urban_class == "All" &
+           attr == "attributable" &
+           source == "National Vital Statistics System" & method == "di_gee" &
+           agr_by == "nation" & 
+           measure3 == "value" &
+           scenario != "future threshold")
+
+attr_burd_scenario <- attr_burd_scenario %>% mutate(scenario = forcats::fct_recode(scenario,
+"Observed"="real"))
+
+attr_burd_scenario <- attr_burd_scenario %>%
+  group_by(Year, scenario) %>%
+  summarise(CoV = sqrt(var(mean))/mean(mean)) %>%
+  ungroup()
+
+plot_attr_burd_scenario <- ggplot(attr_burd_scenario, aes(x = Year, y = CoV, color = scenario)) +
+  geom_line(size = 1.5)+
+  labs(color='Scenario')
+plot_attr_burd_scenario
+```
+
+```{r}
+plot_attr_burd_methods <- plot_attr_burd_methods+ 
+  theme(legend.position = c(0.5, 0.5),
+        legend.title = element_text(size = 8),
+  legend.text = element_text(size = 7),
+  legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent', color = 'transparent') )
+
+plot_attr_burd_di <- plot_attr_burd_di+ 
+  theme(legend.position = c(0.35, 0.73),
+        legend.title = element_text(size = 8),
+  legend.text = element_text(size = 7),
+  legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent', color = 'transparent'))
+plot_attr_burd_scenario <- plot_attr_burd_scenario+ 
+  guides(color=guide_legend(title="Scenario")) +
+  theme(legend.position = c(0.8, 0.8),
+        legend.title = element_text(size = 8),
+  legend.text = element_text(size = 7),
+  legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent', color = 'transparent'))
+```
+
+```{r}
+plots_arranged <- ggarrange(plot_attr_burd_methods, plot_attr_burd_di, plot_attr_burd_scenario , 
+          labels = c("A", "B", "C"),
+          ncol = 2, nrow = 2) +
+   bgcolor("White")
+plots_arranged
+```
+
+```{r}
+ggsave(plots_arranged, filename="../data/16_figures/figureS5.png")
+#, width=6/1.2,height=4/1.2
+```
+

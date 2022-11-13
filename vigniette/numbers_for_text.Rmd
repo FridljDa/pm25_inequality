@@ -1,0 +1,308 @@
+---
+title: "numbers_for_text"
+author: "Daniel Fridljand"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(data.table)
+library(dplyr)
+library(magrittr)
+library(scales)
+#library(tidyr)
+
+options(scipen = 10000)
+```
+
+# Loading data
+```{r load_calculated_data}
+tracDir <- "../data/02_tracts"
+exp_tracDir <- "../data/03_exp_tracts"
+censDir <- "../data/05_demog"
+cens_agrDir <- "../data/06_dem.agr/nation"
+summaryDir <- "../data/15_summary"
+
+file_list <- list.files(summaryDir)
+file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
+attr_burden <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+rm(file_list)
+
+all_burden <- fread(file.path(summaryDir, "all_burd.csv"))
+pm_summ <- fread(file.path(summaryDir, "pm_summary.csv"))
+pm_summ <- pm_summ %>% filter(scenario == "real")
+pop_summary <- fread(file.path(summaryDir, "pop_summary.csv"))
+```
+# Mortality counts
+
+```{r}
+#total_burden_nvss_2016 <- read_csv("data/09_total_burden_parsed/nation/nvss/total_burden_nvss_2016.csv")
+
+total_burden_nvss <- lapply(list.files("../data/09_total_burden_parsed/nation/nvss/"),
+                            function(path){
+                              total_burden_nvss_i <- fread(file.path("../data/09_total_burden_parsed/nation/nvss",path))
+                              total_burden_nvss_i <- total_burden_nvss_i %>%
+  filter(Race == "All"& Hispanic.Origin == "All Origins" & rural_urban_class == 666 & label_cause == "all-cause" &
+           Education == "666") %>%
+  group_by(Year) %>%
+  summarise(Deaths = sum(Deaths))
+                            })
+
+total_burden_nvss <- total_burden_nvss %>% rbindlist(use.names = T)
+total_burden_nvss %>% filter(Year %in% c(1990,2016))
+```
+
+```{r}
+sum(total_burden_nvss$Deaths)
+```
+
+# Exposure to PM2.5 at the national level:
+census tracts exposed to an annual mean PM2.5 concentration above 12µg/m3 in 2016
+```{r}
+exp_trac_files_2016 <- list.files(file.path(exp_tracDir, "2016"))
+exp_tracts_2016 <- lapply(exp_trac_files_2016, function(file) {
+  file.path(exp_tracDir, "2016", file) %>%
+    fread() %>%
+    mutate(GEO_ID = as.numeric(GEO_ID))
+})
+
+exp_tracts_2016 <- rbindlist(exp_tracts_2016)
+
+scales::label_percent(0.1)(sum(exp_tracts_2016$pm > 12) / nrow(exp_tracts_2016))
+```
+
+census tracts exposed to an annual mean PM2.5 concentration above 12µg/m3 in 1990
+```{r}
+exp_trac_files_1990 <- list.files(file.path(exp_tracDir, "1990"))
+exp_tracts_1990 <- lapply(exp_trac_files_1990, function(file) {
+  file.path(exp_tracDir, "1990", file) %>%
+    fread() %>%
+    mutate(GEO_ID = toString(GEO_ID))
+})
+
+exp_tracts_1990 <- rbindlist(exp_tracts_1990)
+scales::label_percent(0.1)(sum(exp_tracts_1990$pm > 12) / nrow(exp_tracts_1990))
+```
+
+overall population exposed to an annual mean PM2.5 concentration above 12µg/m3
+
+```{r}
+## what part of population affected
+cens_meta_1990 <- fread(file.path(censDir, "meta", paste0("cens_meta_", "1990", ".csv")))
+
+cens_agr_1990 <- fread(file.path(cens_agrDir, "1990", paste0("cens_agr_", "1990", "_us.csv"))) %>% filter(scenario == "real") 
+
+cens_agr_1990 <- left_join(cens_agr_1990, cens_meta_1990, by = "variable")
+
+cens_meta_2016 <- fread(file.path(censDir, "meta", paste0("cens_meta_", "2016", ".csv")))
+
+cens_agr_2016 <- fread(file.path(cens_agrDir, "2016", paste0("cens_agr_", "2016", "_us.csv"))) %>% filter(scenario == "real")
+
+cens_agr_2016 <- left_join(cens_agr_2016, cens_meta_2016, by = "variable")
+
+pop_exposed_over_12 <- rbind(cens_agr_1990, cens_agr_2016) %>%
+  as.data.frame() %>%
+  group_by(Year, Race, Hispanic.Origin, pm) %>%
+  dplyr::summarize(pop_size = sum(pop_size)) %>%
+  filter(Year %in% c(1990,2016) & Race == "All" & Hispanic.Origin == "All Origins") %>%
+  group_by(Year, Race, Hispanic.Origin) %>%
+  mutate(prop = pop_size / sum(pop_size)) %>%
+  ungroup() %>%
+  mutate(above = pm > 12) 
+
+pop_exposed_over_12 <- pop_exposed_over_12 %>%
+  group_by(Year, Race, Hispanic.Origin, above) %>%
+  dplyr::summarize(
+    prop = scales::label_percent(0.1)(sum(prop))
+  )
+pop_exposed_over_12
+```
+population-weighted mean PM2.5 exposure in the overall study population 
+```{r}
+pm_summ %>%
+  filter(Ethnicity == "All, All Origins" & Region == "United States" & Year %in% c(1990, 2016) &
+    Education == 666 & rural_urban_class == "All" & pm_metric == "mean") %>%
+  mutate(value = round(value, 2)) %>%
+  select(value, everything())
+```
+# PM2.5-attributable mortality at the national level in 2016:
+age-adjusted deaths per 100,000 were attributable to PM2.5 in 2016
+```{r}
+attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Region == "United States" &
+    Year %in% c(2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
+    Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All") %>%
+  mutate(
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) %>% 
+  select(Year, mean, lower, upper, Education, Ethnicity, rural_urban_class)
+```
+
+```{r}
+attr_burden_2016 <- attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Region == "United States" &
+    Year %in% c(2016) & method == "di_gee" & measure3 == "value" & scenario == "real" ) %>%
+  select(Ethnicity, Education, rural_urban_class, mean, Year) %>%
+  mutate(mean = round(mean, 1)) 
+
+attr_burden_2016_overall <- attr_burden_2016[attr_burden_2016$Education == 666 & attr_burden_2016$Ethnicity == "All, All Origins" & attr_burden_2016$rural_urban_class == "All", "mean"]
+attr_burden_2016_overall <- unlist(attr_burden_2016_overall)
+attr_burden_2016_overall
+
+attr_burden_2016 %>% 
+  split(attr_burden_2016$mean <= attr_burden_2016_overall) 
+```
+
+# Time trends in PM2.5-attributable mortality at the national level:
+## overall population
+```{r}
+attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Region == "United States" &
+    Year %in% c(1990, 2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
+    Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All") %>%
+  mutate(
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) %>% 
+  select(Year, mean, lower, upper, Education, Ethnicity, rural_urban_class)
+```
+We observed this steep downward trend for all studied subpopulations, with absolute differences between these groups narrowing considerably over the study period
+
+```{r}
+attr_burden_absolute_difference_within_group <- attr_burden %>%
+  filter(method == "di_gee" & Region == "United States" & scenario == "real" &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & measure3 == "value") %>%
+  filter((Ethnicity == "All, All Origins" & rural_urban_class == "All") |
+    (Ethnicity == "All, All Origins" & Education == 666 & Year >= 2000) |
+    (rural_urban_class == "All" & Education == 666)) %>%
+  mutate(group = case_when(
+    Ethnicity == "All, All Origins" & Education == 666 & rural_urban_class == 666 ~ "All",
+    Ethnicity == "All, All Origins" & Education == 666 ~ "Urbanicity",
+    Ethnicity == "All, All Origins" & Education != 666 ~ "Education",
+    Ethnicity != "All, All Origins" & Education == 666 ~ "Ethnicity",
+    TRUE ~ "none"
+  )) %>%
+  group_by(Year, group) %>%
+  summarise(min = min(mean), max = max(mean)) %>%
+  mutate(dif = max - min) %>%
+  as.data.frame() 
+ggplot(attr_burden_absolute_difference_within_group, aes(x = Year, y = dif, color = group))+
+  geom_line()
+```
+Black or African Americans have seen an estimated 85.7% reduction in the PM2.5-attributable age-adjusted mortality rate from 1990 to 2016
+
+```{r}
+attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Region == "United States" &
+    Year %in% c(1990, 2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
+    Education == 666 & Ethnicity == "Black American" & rural_urban_class == "All") %>%
+  select(Year, Ethnicity, mean) %>%
+  tidyr::pivot_wider(names_from = Year, values_from = mean) %>%
+  mutate(reduction = 1-`2016`/`1990`,
+         reduction = scales::label_percent(0.1)(reduction))
+```
+ 
+
+# Proportion of all-cause mortality that is attributable to PM2.5 exposure
+```{r}
+attr_burden %>%
+  filter(method == "di_gee" & Region == "United States" & scenario == "real" &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Year == 2016 & measure3 == "prop. of overall burden") %>%
+  filter((Ethnicity == "All, All Origins" & rural_urban_class == "All") |
+    (Ethnicity == "All, All Origins" & Education == 666) |
+    (rural_urban_class == "All" & Education == 666)) %>%
+  arrange(mean) %>%
+  mutate(
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) %>%
+  select(mean, lower, upper, everything()) %>%
+  arrange(desc(mean))
+```
+TODO Those with low education, the Hispanic White population, and Black or African Americans had a higher PM2.5-attributable mortality than the respective average for every rurality level in 2016 (for example, in large metro areas, 15.1 age-adjusted deaths per 100,000 for the overall population, 21.1 for those with low education, 29.0 for Hispanic Whites, and 58.4 for Black or African Americans). 
+
+TODO Absolute disparities in PM2.5-attributable mortality were more pronounced in more urbanized areas. 
+
+TODO We found that this also tends to be the case within states in the US.
+
+# Variation in PM2.5-attributable mortality across states and counties:
+In all states studied, Black or African Americans had higher or equal PM2.5-attributable mortality in 2016 than the NH White population.
+```{r}
+## count states, where whites less affected
+attr_burden %>% filter(Ethnicity %in% c("White, Not Hispanic or Latino", "Black American") &
+  Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & Region != "United States" &
+  Year == 2016 & method == "di_gee" & measure3 == "value") %>%
+  group_by(Year, Region, scenario) %>%
+  slice(which.max(mean)) %>%
+  group_by(scenario, Ethnicity) %>%
+  summarise(n = n())
+```
+
+TODO Similarly, those with a high school diploma or lower education had a higher or equal PM2.5-attributable mortality in all states compared to groups with a higher level of education. 
+
+TODO For rurality, in 44 states, large metro areas had a higher or equal PM2.5-attributable mortality compared to non-metro areas
+
+TODO In 82.7% of the counties for which data were available, Black or African Americans had higher PM2.5-attributable mortality than the NH White population (Fig. S6) in 2016. 
+
+## Comparison to CRFs that do not provide race-ethnicity-specific estimates
+mplementing this stylized scenario leads to substantially lower variation by race-ethnicity (Fig. S5a), with only x.x% of the difference in mortality to Black or African Americans being attributable to PM2.5 in each year from 2000 to 2015
+```{r}
+attr_burd  %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           attr == "attributable" &
+           source == "National Vital Statistics System" & scenario == "real") %>% 
+  filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
+                                   & method %in% c("di_gee_white")) %>%
+  filter(Year >= 2000 & Ethnicity == "NH White") %>%
+  select(Year, mean)
+```
+
+# Materials and Methods, Data sources:
+
+
+##  Ascertaining race-ethnicity:
+```{r study_population}
+pop_summary %>%
+  filter(Region == "United States" & Gender.Code == "All genders" & Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" &
+    Year %in% c(1990, 2016) &
+    source2 == "Official Bridged-Race Population Estimates") %>%
+  group_by(Year) %>%
+  mutate(
+    prop = scales::label_percent(0.1)(Population / sum(Population)) 
+  ) %>%
+  select(Year, Ethnicity, prop)
+```
+## Ascertaining educational attainment:
+```{r}
+pop_summary %>%
+  filter(Region == "United States" & Gender.Code == "All genders" & Education != 666 & rural_urban_class == "All" & Year %in% c(2009, 2016) & Ethnicity == "All, All Origins") %>%
+  group_by(Year) %>%
+  mutate(
+    prop = scales::label_percent(0.1)(Population / sum(Population)) 
+  ) %>% 
+  select(Year, prop, Education) 
+```
+## Ascertaining rurality:
+```{r}
+pop_summary %>%
+  filter(Region == "United States" & Gender.Code == "All genders" & Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year %in% c(2000, 2016)) %>%
+  group_by(Year) %>%
+  mutate(
+    prop = scales::label_percent(0.1)(Population / sum(Population)) 
+  ) %>% 
+  select(Year, rural_urban_class, prop)
+```
+
+
+
+
+
+

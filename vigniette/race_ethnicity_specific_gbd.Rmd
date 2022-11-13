@@ -1,0 +1,135 @@
+---
+title: "race-ethnicity-specific-GBD"
+author: "Daniel"
+date: '2022-10-17'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE, include=FALSE}
+library(dplyr)
+library(magrittr)
+library(data.table)
+library(tidyverse)
+
+options(bitmapType ="cairo")
+theme_set(theme_classic(base_family = "Helvetica"))
+```
+
+```{r}
+scenarioI <- "real"
+methodI <- "di_gee"
+
+summaryDir <- here::here("data/15_summary") 
+figuresDir <- here::here("data/16_figures") 
+```
+
+## Calculate within county PM2.5 variation by population
+```{r}
+hr_race_specific <- data.frame(
+  method = rep("di_gee", 1),
+  Ethnicity = c("White","NH White", "Black American", "Asian or Pacific Islander", "Hispanic or Latino White", "American Indian or Alaska Native", "All"), # TODO
+  hr_mean = c(1.063, 1.063, 1.208, 1.096, 1.116, 1.1, 1.073)#,
+  #hr_lower = c(1.06, 1.06, 1.199, 1.075, 1.1, 1.06, 1.071),
+  #hr_upper = c(1.065,1.065, 1.217, 1.117, 1.133,1.14, 1.075),
+  #min_age = rep(25, 1)
+)
+
+hr_race_specific <- hr_race_specific %>% mutate(hr_mean_log = log(hr_mean))
+hr_log_all <- hr_race_specific$hr_mean_log[hr_race_specific$Ethnicity == "All"]
+
+hr_race_specific <- hr_race_specific %>% mutate(hr_mean_log_ratio = hr_mean_log/hr_log_all)
+hr_race_specific <- hr_race_specific %>% select(Ethnicity, hr_mean_log_ratio)
+```
+
+## load data
+```{r}
+file_list <- list.files("../data/15_summary")
+file_list <- file.path("../data/15_summary", file_list[grepl("attr_bur", file_list)])
+#file_list <- list.files("data/15_summary")
+#file_list <- file.path("data/15_summary", file_list[grepl("attr_bur", file_list)])
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+rm(file_list)
+```
+
+```{r}
+unique(attr_burd$measure3)
+attr_burd_filter <- attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           attr == "attributable" &
+           source == "National Vital Statistics System" & scenario == "real") %>% 
+  filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All") 
+
+attr_burd_filter <- attr_burd_filter %>%
+  mutate(hr_mean = 1+mean/100,
+         hr_mean_log = log(hr_mean))
+```
+
+```{r}
+attr_burd_filter <- attr_burd_filter %>%
+  left_join(hr_race_specific, 
+            by = c("Ethnicity")) %>% 
+  mutate(hr_mean_race_specific = exp(hr_mean_log*hr_mean_log_ratio))
+```
+
+```{r}
+ggplot(attr_burd_filter, aes(x = hr_mean, y = hr_mean_race_specific, color = Ethnicity)) +
+  geom_point() +
+  facet_wrap(vars(method))+
+  geom_abline(slope =1)
+```
+
+## redo relevant analysis
+```{r}
+attr_burd_filter <- attr_burd_filter %>%
+  filter(method %in% c("burnett", "GBD"))
+```
+
+```{r}
+attr_burd_filter <- attr_burd_filter %>%
+  mutate(hr_mean_race_specific_scaled  = hr_mean_race_specific-1)
+```
+
+```{r}
+group.colors <- c(
+  RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
+  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2]
+)
+group.colors[c(12, 2)] <- group.colors[c(2, 12)]
+names(group.colors) <- c(
+  "NH White",
+  "Hispanic or Latino White",
+  "Black American",
+  "White",
+  "Asian or Pacific Islander",
+  "American Indian or Alaska Native",
+  "High school graduate or lower",
+  "Some college education but no 4-year college degree",
+  "4-year college graduate or higher",
+  "Non metro",
+  "Large metro",
+  "Small-medium metro"
+)
+```
+
+```{r}
+g <- ggplot(attr_burd_filter, aes(x = Year, y = hr_mean_race_specific_scaled, color = Ethnicity)) +
+  geom_line(size=1.5) +
+  facet_wrap(vars(method),
+              labeller = as_labeller(c(burnett = "Race-ethnicity specific GEMM",
+                                       GBD = "Race-ethnicity specific GBD")))+ 
+    #                                    `prop. of overall burden` = "Percent of all-cause mortality attributable to PM2.5 for each race-ethnicity",
+    #                                    `proportion of disparity to Black or African American attributable` = "Relative size (in percent) of the difference in all-cause mortality between each race-ethnicity and Black Americans that can be attributed to PM2.5 exposure") ) )+)+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L)) +
+  scale_colour_manual( values = group.colors, limits = force) +
+  theme(legend.position = "bottom") +
+  ylab("Percentage of mortality \n attributable to PM2.5")
+g
+```
+```{r}
+ggsave(plot = g, file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS50_race_ethnicity_specific_GBD.png"), dpi = 300, height = 6, width = 8)
+```
+
