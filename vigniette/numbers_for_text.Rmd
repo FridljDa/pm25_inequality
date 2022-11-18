@@ -250,7 +250,62 @@ TODO Similarly, those with a high school diploma or lower education had a higher
 
 TODO For rurality, in 44 states, large metro areas had a higher or equal PM2.5-attributable mortality compared to non-metro areas
 
-TODO In 82.7% of the counties for which data were available, Black or African Americans had higher PM2.5-attributable mortality than the NH White population (Fig. S6) in 2016. 
+
+At the county level, iIn 82.7% of the counties for which data were available, Black or African Americans had higher PM2.5-attributable mortality than the NH White population (Fig. S4, Panel B) for the mean value across the period 2000 toin 2016.
+```{r}
+attr_burdenDir <-  here::here("data/14_attr_burd")  
+agr_bys <- "county"
+attr_burd_county <- lapply(agr_bys, function(agr_by) {
+  sources <- list.files(file.path(attr_burdenDir, agr_by))
+  attr_burden <- lapply(sources, function(source) {
+    files <- list.files(file.path(attr_burdenDir, agr_by, source))
+    attr_burden <- lapply(files, function(file) fread(file.path(attr_burdenDir, agr_by, source, file))) %>% rbindlist(use.names = TRUE)
+  }) %>% rbindlist(use.names = TRUE)
+  
+  return(attr_burden)
+}) %>%
+  rbindlist(use.names = TRUE) %>%
+  as.data.frame()
+
+attr_burd_county_sub <- attr_burd_county %>%
+  filter(
+    method == "di_gee" & Year %in% 2000:2016 & measure2 == "age-adjusted rate"&
+      Education == 666 & scenario == "real" 
+  )
+
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  unite("Ethnicity", Race, Hispanic.Origin, sep = ", ") 
+
+attr_burd_county_sub <- attr_burd_county_sub %>% 
+  mutate(Ethnicity = as.factor(Ethnicity),
+       Ethnicity = forcats::fct_recode(Ethnicity,
+"Black American" = "Black or African American, All Origins",
+  "NH White" = "White, Not Hispanic or Latino"))
+
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  filter(Ethnicity %in% c("Black American", "NH White"))
+
+#attr_burd_county_sub <- attr_burd_county_sub %>%
+#  group_by(Year, county, Ethnicity) %>%
+#  filter(n()>1)
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  group_by(Year, county) %>%
+  filter("NH White" %in% c(Ethnicity) & "Black American" %in% c(Ethnicity))
+
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  group_by(county, Ethnicity) %>%
+  summarise(mean = mean(mean)) %>%
+  ungroup()
+
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  group_by(county) %>%
+  filter("NH White" %in% c(Ethnicity) & "Black American" %in% c(Ethnicity)) %>%
+  mutate(difference = mean[Ethnicity == "Black American"] - mean[Ethnicity == "NH White"]) %>%
+  ungroup()
+
+scales::label_percent(0.1)(mean(attr_burd_county_sub$difference >0))
+```
+
 
 ## Comparison to CRFs that do not provide race-ethnicity-specific estimates
 mplementing this stylized scenario leads to substantially lower variation by race-ethnicity (Fig. S5a), with only x.x% of the difference in mortality to Black or African Americans being attributable to PM2.5 in each year from 2000 to 2015

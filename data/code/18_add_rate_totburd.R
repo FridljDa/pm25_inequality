@@ -32,7 +32,7 @@ pop.summary.dir <- args[16]
 totalBurdenParsed2Dir <- args[17]
 
 if (rlang::is_empty(args)) {
-  year <- 2016
+  year <- 2005
   
   dataDir <-"data"
   tmpDir <- "data/tmp"
@@ -218,9 +218,10 @@ if (!file.exists(totalBurdenParsed2Dir)) {
     group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
     summarise(value = sum(value)) %>%
     ungroup()
+  
 
   total_burden_age_adj <- total_burden_age_adj %>%
-    filter(Population > 0 & full_stand_popsize > 0) %>%
+    filter(Population >=1 & full_stand_popsize >=1) %>%
     dplyr::mutate(
       value = (value * standard_popsize / Population) * (100000 / full_stand_popsize), 
       value = ifelse(is.nan(value), 0, value),

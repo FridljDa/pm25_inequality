@@ -46,6 +46,9 @@ unique(attr_burd$Ethnicity)
 attr_burd_sub1 <- attr_burd %>%
   filter(Ethnicity %in% c("Black American", "NH White", "Hispanic or Latino White", "American Indian or Alaska Native", "Asian or Pacific Islander") &
     Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" ) 
+
+attr_burd_sub1 <- attr_burd_sub1 %>% filter(measure3 == "value")
+
 ```
 
 ```{r}
@@ -59,7 +62,7 @@ ggplot(attr_burd_sub1, aes(x=mean)) +
 ```{r}
 name = "Percentage of all-cause mortality
 attributable to PM2.5"
-map1 <-  plot_usmap(data = attr_burd_sub1 %>% rename(state = Region), values = "mean", color = "white") +
+map1 <-  plot_usmap(data = attr_burd_sub1 %>% rename(fips = Region), values = "mean", color = "white") +
  #scale_fill_viridis_b(name = name#, 
                       #breaks = c(5, 10, 15, 20, 40, 60), 
                       #label = c(5, 10, 15, 20, 40, 60)
@@ -73,6 +76,6 @@ map1
 ```
 
 ```{r}
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure4.png"), dpi = 300, map1, height = 12, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure4.png"), dpi = 300, map1, height = 12, width = 8)
 ```
 

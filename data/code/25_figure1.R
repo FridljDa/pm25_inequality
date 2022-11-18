@@ -55,6 +55,7 @@ file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
 attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
 rm(file_list)
 
+#attr_burd <- read_csv("data/16_summary_higher/attributable_burden_age_adj.csv")
 # source(paste0("https://raw.githubusercontent.com/mkiang/",
 #              "opioid_hotspots/master/code/mk_nytimes.R"))
 

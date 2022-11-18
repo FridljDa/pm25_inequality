@@ -35,7 +35,7 @@ attr_burdenDir <- args[18]
 # TODO delete
 if (rlang::is_empty(args)) {
   year <- 2016
-  agr_by <- "county"
+  agr_by <- "nation"
   source <- "nvss"
 
   tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
@@ -181,6 +181,7 @@ if (!file.exists(attr_burdenDir)) {
     filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
     mutate(
       min_age = min_age.y, max_age = max_age.y,
+      #min_age = min_age.x, max_age = min_age.x, for age specific
       min_age.y = NULL, min_age.x = NULL, max_age.x = NULL, max_age.y = NULL
     )
 

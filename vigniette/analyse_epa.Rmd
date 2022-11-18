@@ -1,0 +1,42 @@
+---
+title: "analyse_epa"
+author: "Daniel"
+date: '2022-11-15'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+
+```{r cars}
+monitors <- list.files("data/01_exposure/epa")
+annual_conc <- lapply(monitors, function(monitor) read_csv(file.path("data/01_exposure/epa", monitor)))
+annual_conc <- 
+annual_conc_by_monitor_2016 <- read_csv("data/01_exposure/epa/annual_conc_by_monitor_2016.csv")
+
+annual_conc_by_monitor_sub <- annual_conc_by_monitor_sub %>%
+      filter(
+        `State Code` %in% c("02","15"),
+        `Parameter Name` == "PM2.5 - Local Conditions",
+        `Pollutant Standard` == "PM25 Annual 2012",
+        `Units of Measure` == "Micrograms/cubic meter (LC)"
+      )
+#,` Event Type` %in% c("No Events", "Events Excluded")
+```
+
+```{r}
+test <- annual_conc_by_monitor_sub %>% 
+  select(`State Code`, `County Code`) %>%
+  distinct
+paste0(test$`State Code`,test$`County Code`)
+```
+
+```{r}
+
+```
+

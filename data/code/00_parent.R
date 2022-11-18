@@ -74,7 +74,7 @@ dir.create(dem.dir, recursive = T, showWarnings = F)
 dem.agr.dir <- file.path(data.dir, "06_dem.agr")
 dir.create(dem.agr.dir, recursive = T, showWarnings = F)
 agr_bys <- c("nation", "STATEFP", "county") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
-agr_bys <- c("nation", "STATEFP")
+agr_bys <- c("county")
 
 paf.dir <- file.path(data.dir, "07_gbd_paf")
 dir.create(paf.dir, recursive = T, showWarnings = F)
@@ -150,7 +150,7 @@ args <- paste(tmp.dir, exp.rr.dir)
 
 years <- c(1990, 2000, 2010, 2016:2011, 2009:2001, 1999:1991)
 
-# years <- c(2010)
+years <- c(2016)
 # years <- c(2000,1990,1991) #,1990,1991
 for (agr_by in agr_bys) {
   for (source in sources) {

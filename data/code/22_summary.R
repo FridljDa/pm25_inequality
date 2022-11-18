@@ -50,9 +50,9 @@ states <- file.path(tmpDir, "states.csv") %>%
 
 tic("summarized all burden and attributable burden data")
 #agr_bys <- list.files(attr_burdenDir)
-#agr_bys <- "county" #TODO
+agr_bys <- c("STATEFP", "nation") #TODO
 #agr_bys <- c("nation","county") #TODO
-agr_bys <- setdiff(list.files(attr_burdenDir),"county")
+#agr_bys <- setdiff(list.files(attr_burdenDir),"county")
 ## --- read attr burden----
 attr_burden <- lapply(agr_bys, function(agr_by) {
   sources <- list.files(file.path(attr_burdenDir, agr_by))

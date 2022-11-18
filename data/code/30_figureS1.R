@@ -61,12 +61,23 @@ pm_summ <- pm_summ %>%
 
 ## -- figure 3, attributable burden---
 pm_summ1 <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All")
+
 g1 <- ggplot(pm_summ1, aes(x = Year, y = value, color = Ethnicity))
 
 pm_summ2 <- pm_summ %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
+pm_summ2$Education <- factor(pm_summ2$Education,                 # Relevel group factor
+                             levels = c("High school graduate or lower", 
+                                        "Some college education but no 4-year college degree",
+                                        "4-year college graduate or higher"))
+
 g2 <- ggplot(pm_summ2, aes(x = Year, y = value, color = Education))
 
 pm_summ3 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year >= 2000)
+pm_summ3$rural_urban_class <- factor(pm_summ3$rural_urban_class,                 # Relevel group factor
+                                       levels = c("Large metro", 
+                                                  "Small-medium metro",
+                                                  "Non metro"))
+
 g3 <- ggplot(pm_summ3, aes(x = Year, y = value, color = rural_urban_class))
 
 ## --set range---

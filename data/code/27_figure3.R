@@ -72,6 +72,11 @@ attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Ori
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 
 attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "Large metro")
+attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel group factor
+                             levels = c("High school graduate or lower", 
+                                        "Some college education but no 4-year college degree",
+                                        "4-year college graduate or higher"))
+
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Education))
 
 attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "Small-medium metro")
