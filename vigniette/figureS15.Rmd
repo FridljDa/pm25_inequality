@@ -1,0 +1,106 @@
+---
+title: "24_numbers_for_sensitivity"
+author: "Daniel Fridljand"
+date: "1/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include=FALSE}
+library(data.table)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(ggpubr)
+library(tidyr)
+theme_set(theme_classic(base_family = "Helvetica"))
+```
+
+```{r}
+file_list <- list.files("../data/17_summary")
+file_list <- file.path("../data/17_summary", file_list[grepl("attr_bur", file_list)])
+# file_list <- list.files("data/17_summary")
+# file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- attr_burd %>% filter(min_age == 25)
+rm(file_list)
+```
+
+# Sensitivity of our findings to the use of a race-ethnicity-specific CRF:
+```{r}
+unique(attr_burd$measure3)
+attr_burd <- attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    attr == "attributable" & Ethnicity != "All, All Origins" &
+    source == "National Vital Statistics System" & scenario == "real") %>%
+  filter(agr_by == "nation" & Education == 666 & rural_urban_class == "All" &
+    method %in% c("di_gee", "di_gee_white")  &
+      measure3 == "prop. of overall burden" ) 
+
+```
+
+```{r}
+attr_burd_contrast <- attr_burd %>%
+  group_by(Year, method) %>%
+  mutate(difference = mean[Ethnicity == "Black American"] - mean,
+         ratio = mean[Ethnicity == "Black American"]/ mean) %>%
+  ungroup()
+
+attr_burd_contrast <- pivot_longer(attr_burd_contrast,
+                                   cols= c("difference", "ratio"),
+                                   names_to = "contrast_measure",
+                                   values_to = "contrast_value") 
+
+attr_burd_contrast <- attr_burd_contrast %>% filter(Ethnicity != "Black American") 
+
+attr_burd_contrast <- attr_burd_contrast %>%
+  mutate(method = forcats::fct_recode(method,
+"Race-ethnicity specific CRF"="di_gee",
+"Uniform CRF" = "di_gee_white"))
+
+attr_burd_contrast <- attr_burd_contrast %>%
+  mutate(contrast_measure = forcats::fct_recode(contrast_measure,
+"Absolute difference\n (% points)"="difference",
+"Relative difference\n (ratio)" = "ratio"))
+
+```
+
+```{r}
+group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
+                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
+group.colors[c(12,2)] <- group.colors[c(2,12)] 
+
+names(group.colors) <- c("NH White",
+                         "Hispanic or Latino White",
+                         "Black American",
+                         "White",
+                         "Asian or Pacific Islander",
+                         "American Indian or Alaska Native"
+)
+group.colors <- group.colors[c(1,2,4,5,6)]
+```
+
+```{r}
+ g <- ggplot(attr_burd_contrast, aes(x = Year, y = contrast_value, color = Ethnicity))+
+    geom_line(size = 1.5) +
+    xlab("Year") +
+    scale_colour_manual(values=group.colors) +
+    theme(legend.title = element_blank()) +
+    guides(color=guide_legend(ncol=3,byrow=TRUE)) +
+    facet_grid(vars(contrast_measure),vars(method), scales = "free", switch="y") + 
+    theme(legend.position="bottom") +
+  ylab("")
+g
+```
+
+```{r}
+scenarioI <- "real"
+methodI <- "di_gee"
+figuresDir <- here::here("data/18_figures") 
+
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS15.png"), dpi = 300, g, height = 6, width = 8)
+```
+

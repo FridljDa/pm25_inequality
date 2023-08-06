@@ -1,0 +1,227 @@
+---
+title: "within_county_pm_variation"
+author: "Daniel"
+date: '2022-10-17'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE, include=FALSE}
+library(dplyr)
+library(magrittr)
+library(data.table)
+library(testthat)
+library(tidyverse)
+library(tictoc)
+library(Hmisc)
+library(ggpubr)
+
+options(bitmapType ="cairo")
+theme_set(theme_classic(base_family = "Helvetica"))
+```
+
+```{r}
+scenarioI <- "real"
+methodI <- "di_gee"
+
+censDir <- here::here("data/05_demog")
+summaryDir <- here::here("data/17_summary") 
+tmpDir <- here::here("data/tmp") 
+cens_agrDir <- here::here("data/06_dem.agr")
+figuresDir <- here::here("data/18_figures") 
+```
+
+## Calculate within county PM2.5 variation by population
+
+Census tracts are small. It is reasonable to assume that variation within census tracts is not much higher than on the 1km x 1km grid level. They have the advantage of reflecting population density and we have access to population counts for census tracts. Furthermore, the data already calculated easily allowed to implement the following approach. Working with 1km x 1km grid level, mapping them to county geography would be a whole new thing with the ultimate goal address a minor comment by one reviewer, but we can do that if necessary.
+
+```{r, eval = F}
+# load states, so we can loop over them
+states <- file.path(tmpDir, "states.csv") %>%
+  fread() %>%
+  as.data.frame()
+
+pm_weighted_county <- lapply(2000:2016, function(year){
+  census_metan_new <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", toString(year), ".csv")))
+  census_metan_new <- census_metan_new %>%
+    filter(Race == "All" & Hispanic.Origin == "All Origins"& Education == 666)
+  
+  census_metan_new <- census_metan_new %>% filter(min_age >= 25)
+  
+  pm_weighted_county <- apply(states, 1, function(state) {
+    STUSPS <- state[["STUSPS"]]
+    name <- state[["NAME"]]
+    
+    cens_agrDirCX <- file.path(cens_agrDir, "county",year,paste0("cens_agr_", toString(year), "_", STUSPS, ".csv"))
+    
+    cens_agr <- fread(cens_agrDirCX)
+    
+    cens_agr <- cens_agr %>% 
+      filter(scenario == "real" & variable %in% census_metan_new$variable)
+    
+    cens_agr <- cens_agr %>%
+      group_by(state, county) %>%
+      dplyr::summarize(
+                number_census_tracts = n(),
+                pm_weighted_mean = Hmisc::wtd.mean(pm, pop_size),
+                pm_weighted_variance = Hmisc::wtd.var(pm, pop_size)
+                ) %>%
+      mutate(pm_weighted_stddev = sqrt(pm_weighted_variance)) %>%
+      mutate_at(c("pm_weighted_mean", "pm_weighted_variance", "pm_weighted_stddev"),
+                function(x) round(x,digits = 5)) %>%
+      ungroup()
+  })
+  
+  pm_weighted_county <- pm_weighted_county %>% rbindlist(use.names = TRUE)
+  
+  pm_weighted_county <- pm_weighted_county %>% add_column(Year = year)
+})
+
+pm_weighted_county <- pm_weighted_county %>% rbindlist(use.names = TRUE)
+
+saveRDS(pm_weighted_county, file = file.path(tmpDir, "pm_weighted_county.Rds"))
+```
+
+```{r}
+pm_weighted_county <- readRDS(file.path(tmpDir, "pm_weighted_county.Rds"))
+head(pm_weighted_county)
+```
+Filter out Alaska
+```{r}
+#pm_weighted_county <- pm_weighted_county %>% filter(state != 2)
+```
+
+## load attributable burden and join 
+
+
+
+```{r}
+file_list <- list.files(file.path(summaryDir, "county"))
+file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+attr_burd <- attr_burd %>% filter(min_age == 25)
+
+attr_burd <- attr_burd %>%
+  filter(
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & method == "di_gee" &
+      attr == "attributable" &
+      source == "National Vital Statistics System" & rural_urban_class == "All" & agr_by == "county" &
+       scenario == "real" & Year %in% 2000:2016 &
+      Education == 666
+  )
+
+attr_burd1 <- attr_burd %>% filter(measure3 == "prop. of overall burden"  & Ethnicity == "All, All Origins")
+#unique(attr_burd$Ethnicity)
+attr_burd2 <- attr_burd %>% filter(measure3 == "proportion of disparity to Black or African American attributable"  & Ethnicity == "NH White")
+```
+
+```{r}
+attr_burd_pm_weighted_county <- inner_join(pm_weighted_county, attr_burd1,
+                                           by = c("Year", "county" = "Region"))
+
+attr_burd_pm_weighted_county2 <- inner_join(pm_weighted_county, attr_burd2,
+                                           by = c("Year", "county" = "Region"))
+```
+
+## look for patterns
+```{r}
+bins = 50 #plotting parameter
+```
+
+Make some scatter plots
+
+```{r}
+g1 <- ggplot(attr_burd_pm_weighted_county, 
+       aes(x = pm_weighted_mean, y = mean/100)) +
+  #geom_hex(bins = bins) +
+  geom_point(alpha = .3)+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))+
+  #geom_bin2d()+
+   xlab("Population-weighted mean of PM2.5")  +
+  ylab("Percent of all-cause mortality\n attributable to PM2.5")
+g1
+```
+As expected, the latter figure has a clear trend/pattern.
+
+```{r}
+g2 <- ggplot(attr_burd_pm_weighted_county, aes(x = pm_weighted_stddev, y = mean/100)) +
+  #geom_hex(bins = bins) +
+  geom_point(alpha = .3)+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))+
+  ylab("Percent of all-cause mortality\n attributable to PM2.5")+
+  #geom_bin2d()+
+  xlab("Population-weighted std of PM2.5")  
+  #geom_smooth(method=lm, se=FALSE, alpha = 0.1)
+  #labs(title="each point corresponds to one year-county combination",
+  #      x = "population-weighted standard deviation PM2.5", 
+  #      y = "Percentage of mortality \n attributable to PM2.5")
+g2
+```
+There are some outliers in the last plot. They turn out to be in California. Let's filter them out:
+
+The last plot does not show any clear patterns. How can we use this?
+```{r}
+attr_burd_pm_weighted_county <- attr_burd_pm_weighted_county %>%
+  mutate(pm_weighted_stddev_quantile = ntile(pm_weighted_stddev, 5),
+         pm_weighted_stddev_quantile = as.factor(pm_weighted_stddev_quantile))
+
+g3<-ggplot(attr_burd_pm_weighted_county,
+           aes(x=pm_weighted_stddev_quantile, y=mean/100)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))+
+  geom_boxplot() +
+  xlab("Quintiles of population-weighted std of PM2.5") +
+  ylab("Percent of all-cause mortality\n attributable to PM2.5")
+  #labs(title="each point corresponds to one year-county combination, without California, Alaska",
+  #      x = "quantile of population-weighted std of PM2.5", 
+  #      y = "Percentage of mortality \n attributable to PM2.5"
+  #     )
+
+g3
+```
+## Panel d
+```{r}
+unique(attr_burd$Ethnicity)
+attr_burd_pm_weighted_county3 <- attr_burd %>% 
+  filter(measure3 == "prop. of overall burden"  & Ethnicity %in% c("NH White", "Black American") ) 
+
+attr_burd_pm_weighted_county3 <- attr_burd_pm_weighted_county3 %>%
+  group_by(Year, Region) %>%
+  filter("NH White" %in% c(Ethnicity) & "Black American" %in% c(Ethnicity)) %>%
+  mutate(difference = mean[Ethnicity == "Black American"] - mean[Ethnicity == "NH White"]) %>%
+  ungroup()
+
+attr_burd_pm_weighted_county3 <-
+  inner_join(pm_weighted_county, attr_burd_pm_weighted_county3,  by = c("Year", "county" = "Region")) 
+```
+
+```{r}
+attr_burd_pm_weighted_county3 <- attr_burd_pm_weighted_county3 %>%
+  mutate(pm_weighted_stddev_quantile = ntile(pm_weighted_stddev, 5),
+         pm_weighted_stddev_quantile = as.factor(pm_weighted_stddev_quantile))
+
+g4<-ggplot(attr_burd_pm_weighted_county3,
+           aes(x=pm_weighted_stddev_quantile, y=mean/100)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))+
+  geom_boxplot() +
+  xlab("Quintiles of population-weighted std of PM2.5") +
+  ylab("Diff. in the % of PM2.5-attributable\n mortality for Black minus NH White")
+
+g4
+```
+
+```{r}
+g_combined <- ggarrange(g1,g2,g3, g4, labels = c("A","B","C", "D"),
+                        vjust	= 0.4) +
+  theme(plot.margin = unit(c(0.3, 0, 0, 0), "cm"),
+        panel.background = element_rect(fill = 'white', colour = 'white'))
+
+
+g_combined
+```
+
+```{r}
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS32.png"), dpi = 300, g_combined, height = 6, width = 8)
+```

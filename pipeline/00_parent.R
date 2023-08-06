@@ -5,45 +5,14 @@
 # Purpose: parent file for project
 #
 #***************************************************************************
-
-#------------------SET-UP--------------------------------------------------
-
-
-
-# memory.limit(size=1800)
-
-# runtime configuration
-# run cripts from command line depending on OS
-if (Sys.info()["sysname"] == "Darwin") {
-  runscript <- function(script, args = "") {
-    system(paste("Rscript", script, args))
-  }
-} else if (Sys.info()["sysname"] == "Windows") {
-  memory.limit(size = 500000)
-
-  exec <- paste0("C:/Program Files/R/R-", R.Version()$major, ".", R.Version()$minor, "/bin/Rscript.exe")
-  exec <- shQuote(exec)
-  runscript <- function(script, args = "") {
-    system(paste(exec, "--vanilla", script, args))
-  }
-} else {
-  runscript <- function(script, args = "") {
-    system(paste("Rscript", script, args))
-  }
-  # print(paste("no handler for", Sys.info()["sysname"], "implemented yet."))
-}
-
-## ----------------directories--------------------------------------------------------------------------------
+devtools::load_all()
 # create data directory, setwd
-code_dir <- "code"
 
-h_root <-""
-
+## ----------------directories of data--------------------------------------------------------------------------------
 
 # create directory, where all downloaded and calculated data is stored
-data.dir <- file.path(h_root, "data")
+data.dir <- "data"
 dir.create(data.dir, recursive = T, showWarnings = F)
-
 
 # directory contains variables used in calculations, which several scripts might need
 tmp.dir <- file.path(data.dir, "tmp")
@@ -104,71 +73,43 @@ figures.dir <- file.path(data.dir, "18_figures")
 dir.create(figures.dir, recursive = T, showWarnings = F)
 
 
-# paths of scripts
-mrbrtRR.script <- file.path(code_dir, "01_mrbrt_rr.R")
-download.meta.script <- file.path(code_dir, "02_download_meta.R")
-meta.cross.script <- file.path(code_dir, "03_meta_cross.R")
-download.cens.script <- file.path(code_dir, "04_download_cens.R")
-read1990.script <- file.path(code_dir, "05_read1990.R")
-cross.walk.script <- file.path(code_dir, "06_cross_walk.R")
-interp_script <- file.path(code_dir, "07_interp.R")
-download.other.script <- file.path(code_dir, "08_download_other.R")
-assignTract.script <- file.path(code_dir, "09_ass_trac.R")
-assignTractAKHI.script <- file.path(code_dir, "10_ass_trac_AKHI.R")
-cens_agr_script <- file.path(code_dir, "11_aggregate.R")
-rural.urban.script <- file.path(code_dir, "12_rural_urban_class.R")
-#paf.script <- file.path(code_dir, "13_paf_gbd.R")
-read.nvs.findrepl.script <- file.path(code_dir, "13_nvss_findrepl.R")
-read.total.burden.nvs.script <- file.path(code_dir, "14_read_tot_nvss.R")
-pop.summary.script <- file.path(code_dir, "15_popsum.R")
-pop.summary.educ.script <- file.path(code_dir, "16_popsum_educ.R")
-add.rate.tot.burd <- file.path(code_dir, "18_add_rate_totburd.R")
-calc.attr.burd1.script <- file.path(code_dir, "19_calc_attr_burd_gbd.R")
-calc.attr.burd2.script <- file.path(code_dir, "20_calc_attr_burd_gemm.R")
-calc.attr.burd3.script <- file.path(code_dir, "21_calc_attr_burd_di.R")
-summary.script <- file.path(code_dir, "22_summary.R")
-summary.other.script <- file.path(code_dir, "23_summary_other.R")
-figure1.script <- file.path(code_dir, "25_figure1.R")
-figure2.script <- file.path(code_dir, "26_figure2.R")
-figure3.script <- file.path(code_dir, "27_figure3.R")
-figure4.script <- file.path(code_dir, "28_figure4.R")
-figure5.script <- file.path(code_dir, "29_figure5.R")
+#------ paths of scripts--------
+script_vector <- list.files("pipeline")
+script_vector <- file.path("pipeline", script_vector)
+script_vector <- setdiff(script_vector, "pipeline/00_parent.R")
+# Use grep to find strings that end with ".R"
+script_vector <- grep("\\.R$", script_vector, value = TRUE)
+# Use grep to find strings that contain "figure"
+figure_scripts_list <- grep("figure", script_vector, value = TRUE)
 
-figureS1.script <- file.path(code_dir, "30_figureS1.R")
-figureS2.script <- file.path(code_dir, "31_figureS2.R")
-figureS3.script <- file.path(code_dir, "32_figureS3.R")
-figureS4.script <- file.path(code_dir, "33_figureS4.R")
-figureS6.script <- file.path(code_dir, "34_figureS6.R")
-figureS7.script <- file.path(code_dir, "35_figureS7.R")
-figureS4.script <- file.path(code_dir, "36_figureS4.R")
+# Use grepl to find strings that do not contain "figure"
+no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
-#--------parameters of code-------------------
-args <- paste(tmp.dir, exp.rr.dir)
-# runscript(script=mrbrtRR.script, args = args)
-
-
-years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
-#years <- 1996
+#------ running scripts of data pipeline--------
+#no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
+no_figure_scripts_list <- no_figure_scripts_list_full[15:18]
+#years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+years <- 1995
 #years <- 1991:1999
 # years <- 1998 #,1990,1991
+source <- "nvss"
 for (agr_by in agr_bys) {
-  for (source in sources) {
     for (year in years) {
       args <- paste(
         year, # 1
         data.dir = "data", # 2
         tmp.dir = "data/tmp", # 3
-        exp.dir = "data//01_exposure", # 4
+        exp.dir = "data/01_exposure", # 4
         trac.dir = "data/02_tracts", # 5
         exp.rr.dir = "data/04_exp_rr", # 6
         trac.exp.dir = "data/03_exp_tracts", # 7
         dem.dir = "data/05_demog", # 8
         dem.agr.dir ="data/06_dem.agr", # 9
-        agr_by, # 10
+        agr_by = agr_by, # 10
         paf.dir = "data/07_gbd_paf", # 11
         total.burden.dir = "data/08_total_burden", # 12
         total.burden.parsed.dir = "data/09_total_burden_parsed", # 13
-        source, # 14
+        source = source, # 14
         cdc.pop.dir = "data/10_cdc_population", # 15
         pop.summary.dir = "data/12_population_summary", # 16
         total.burden.parsed2.dir ="data/13_total_burden_rate", # 17
@@ -176,44 +117,14 @@ for (agr_by in agr_bys) {
         summaryHigherDir <- "data/15_sum_higher_geog_level", #19
         propOfAttrBurdDir = "data/16_prop_of_attr_burd" #20
       )
-      # runscript(script = download.meta.script, args = args)
-      # runscript(script = meta.cross.script, args = args)
-      if (year %in% c(2000, 2009:2016)) {
-        # runscript(script = download.cens.script, args = args)
-      } else if (year == 1990) {
-        #  runscript(script = read1990.script, args = args)
-      } else {
-       #   runscript(script = interp_script, args = args)
+      for(no_figure_script in no_figure_scripts_list){
+        run_script(script = no_figure_script, args = args)
       }
-      if (year %in% c(1990, 2000)) {
-       #    runscript(script = cross.walk.script, args = args)
-      }
-
-      #  runscript(script = download.other.script, args = args)
-
-      #  runscript(script=assignTract.script, args  = args)
-
-       #   runscript(script = assignTractAKHI.script, args = args)
-      #     runscript(script = rural.urban.script, args = args)
-      #   runscript(script = cens_agr_script, args = args)
-
-            #runscript(script = paf.script, args = args)
-      #     runscript(script = read.nvs.findrepl.script, args = args)
-      #   runscript(script = read.total.burden.nvs.script, args = args)
-      #    runscript(script=pop.summary.script, args = args)
-      #   runscript(script=pop.summary.educ.script, args = args)
-
-     #   runscript(script = add.rate.tot.burd, args = args)
-     #  runscript(script = "code/19_calc_attr_burd_gbd.R", args = args)
-     #   runscript(script = calc.attr.burd2.script, args = args)
-     #   runscript(script = calc.attr.burd3.script, args = args)
-     #  runscript(script = "code/22_sum_higher_geog_level_age_adjust.R", args = args)
-    #    runscript(script = "code/23_proportions_attr_burd.R", args = args)
-     #  print(paste(year, agr_by))
+      print(paste(year, agr_by))
     }
-  }
 }
 
+#------ running scripts of figures--------
 scenario <- "real"
 method <- "di_gee"
 args <- paste(
@@ -232,14 +143,12 @@ args <- paste(
   min_age = 25 #13
 )
 
-runscript(script = "code/24_summary_attr_total_burd.R", args = args)
-#runscript(script = summary.script, args = args)
-#runscript(script = summary.other.script, args = args)
+#run_script(script = "code/24_summary_attr_total_burd.R", args = args)
+#run_script(script = summary.script, args = args)
+#run_script(script = summary.other.script, args = args)
 
-#run all figures
-figure_scripts_list <- list.files(code_dir)
-figure_scripts_list <- file.path(code_dir, figure_scripts_list[grepl("figure", figure_scripts_list)])
-for(figure_script in figure_scripts_list) runscript(script = figure_script, args = args)
+
+#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
 
 args <- paste(
   tmp.dir, # 1
@@ -256,4 +165,4 @@ args <- paste(
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
   min_age = 65 #13
 )
-for(figure_script in figure_scripts_list) runscript(script = figure_script, args = args)
+#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)

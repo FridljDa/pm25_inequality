@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/FridljDa/pm25_inequality/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FridljDa/pm25_inequality/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+  
 # PM2.5-attributable-mortality-analysis
 
 Repo supporting ["TODO publication"](https://www-pnas-org.stanford.idm.oclc.org/content/118/2/e2011048118).

@@ -1,0 +1,99 @@
+---
+title: "reading_csv"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Analyse SVI data
+
+https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html?
+
+```{r}
+library(dplyr)
+library(readr)
+```
+
+```{r}
+# List of years for which you have CSV files
+years <- c(2000, 2010, 2020)
+
+# Initialize an empty list to store the data frames for each year
+svi_county <- list()
+
+# Loop through each year and read the corresponding CSV file into the list
+for (year in years) {
+  file_name <- paste0("data/xx_svi/SVI_", year, "_US_county.csv")
+  svi_county[[as.character(year)]] <- read_csv(file_name, show_col_types = FALSE)
+}
+```
+
+```{r}
+rural_urban_class <- read_csv("data/rural_urban_class.csv", show_col_types = FALSE)
+  #filter(fromYear == 2010)
+rural_urban_class <- rural_urban_class  %>% split(rural_urban_class$fromYear)
+```
+
+The four summary theme ranking variables, detailed in the Data Dictionary below, are: • Socioeconomic Status - RPL_THEME1 • Household Characteristics - RPL_THEME2 • Racial & Ethnic Minority Status - RPL_THEME3 • Housing Type & Transportation - RPL_THEME4 Overall tract rankings: We summed the sums for each theme, ordered the tracts, and then calculated overall percentile rankings. Please note taking the sum of the sums for each theme is the same as summing individual variable rankings. The overall summary ranking variable is RPL_THEMES.
+
+```{r}
+SVI_2020_US_county %>% select(starts_with("RPL_"))
+```
+
+```{r}
+range(SVI_2020_US_county$RPL_THEMES)
+```
+
+## compare county fips
+
+```{r}
+# Function to calculate set proportions and return/print elements in the intersection, vector1 only, and vector2 only
+calculate_set_proportions <- function(vector1, vector2, print_proportions = FALSE) {
+  # Convert vectors to sets (unique elements)
+  set1 <- unique(vector1)
+  set2 <- unique(vector2)
+
+  # Calculate the elements in the intersection
+  intersection_elements <- intersect(set1, set2)
+
+  # Calculate the elements in vector1 only
+  vector1_only_elements <- setdiff(set1, set2)
+
+  # Calculate the elements in vector2 only
+  vector2_only_elements <- setdiff(set2, set1)
+
+  # Calculate the total number of unique elements in both vectors
+  total_unique_count <- length(union(set1, set2))
+
+  # Calculate proportions
+  proportion_intersection <- length(intersection_elements) / total_unique_count
+  proportion_vector1_only <- length(vector1_only_elements) / total_unique_count
+  proportion_vector2_only <- length(vector2_only_elements) / total_unique_count
+
+  # Print the proportions if requested
+  if (print_proportions) {
+    cat("Proportion in Intersection:", proportion_intersection, "\n")
+    cat("Proportion in Vector1 only:", proportion_vector1_only, "\n")
+    cat("Proportion in Vector2 only:", proportion_vector2_only, "\n")
+  }
+
+  # Return proportions and elements
+  return(list(
+    intersection = proportion_intersection,
+    vector1_only = proportion_vector1_only,
+    vector2_only = proportion_vector2_only,
+    intersection_elements = intersection_elements,
+    vector1_only_elements = vector1_only_elements,
+    vector2_only_elements = vector2_only_elements
+  ))
+}
+```
+
+```{r}
+set_comp <- calculate_set_proportions(rural_urban_class$FIPS.code, SVI_2020_US_county$FIPS, print_proportions = TRUE)
+```
+
+```{r}
+set_comp$vector1_only_elements
+```
