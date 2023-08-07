@@ -249,7 +249,9 @@ group_summarize_add_column <- function(df, column, new_col_value) {
 #' @importFrom readr col_factor
 read_data <- function(path) {
   # Read the first row of the CSV file
-  first_row <- readr::read_csv(path, n_max = 1)
+  first_row <- readr::read_csv(path,
+                               n_max = 1,
+                               show_col_types = FALSE)
 
   # Get the column names
   column_names <- colnames(first_row)
@@ -487,12 +489,10 @@ inner_join_age_left_outer <- function(df1, df2, by, group_column = NULL){
 #' group_column <- "value"
 #' summarize_column_by_group(df3, group_column)
 summarize_column_by_group <- function(df, group_column) {
-  require(dplyr)
-
   if (!group_column %in% colnames(df)) {
     stop("The specified group_column is not in the dataframe.")
   }
-
+  stop("Need to fix this function")
   # If the group column is not part of the columns to be grouped by, then include it in summarise.
   if (group_column %in% setdiff(colnames(df), group_column)) {
     df <- df %>%

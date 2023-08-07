@@ -17,7 +17,7 @@ if (rlang::is_empty(args)) {
   attr_burdenDir <- "data/14_attr_burd"
   summaryHigherDir <- "data/15_sum_higher_geog_level"
   agr_by <- "nation"
-  year <- 2010
+  year <- 1995
 }else{
   year <- args[1]
   dataDir <- args[2]
@@ -100,12 +100,12 @@ if (agr_by == "county") {
 attr_burden_with_rural_urban_class <- attr_burden %>%
   mutate() %>%
   left_join(rural_urban_class_df,
-            by = c("county" ="FIPS.code"),
-            na.replace = "Unknown"
+            by = c("county" ="FIPS.code")#,
+            #na.replace = "Unknown"
   ) %>%
-  mutate(rural_urban_class= rural_urban_class.y,
+  mutate(rural_urban_class = rural_urban_class.y,
          rural_urban_class.x = NULL, rural_urban_class.y = NULL) %>%
-  filter(rural_urban_class != "Unknown")
+  filter(rural_urban_class != "Unknown" & !is.na(rural_urban_class))
 
 attr_burden <- rbind(attr_burden, attr_burden_with_rural_urban_class)
 rm(attr_burden_with_rural_urban_class)

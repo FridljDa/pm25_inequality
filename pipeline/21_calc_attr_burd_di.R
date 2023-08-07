@@ -11,7 +11,7 @@
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc"
+  "dplyr", "magrittr", "data.table", "tidyverse", "tictoc"
 )
 
 for (p in packages) {
@@ -84,11 +84,7 @@ pm_summ <- pm_summ %>%
   dplyr::summarize(pop_size = sum(pop_size))
 
 # rm(meta, files)
-# test_that("basic check pm summ", {
-#  pm_summ_dupl <- pm_summ %>% select(setdiff(colnames(pm_summ), c("pop_weight_pm_exp")))
-#  pm_summ_dupl <- pm_summ_dupl[duplicated(pm_summ_dupl), ]
-#  expect_equal(nrow(pm_summ_dupl), 0)
-# })
+
 ## ---paf calculations----
 
 # DI 2017, SI, Table S3
@@ -164,10 +160,15 @@ if (agr_by == "county") {
 
 attr_burden_di <- inner_join_age_right_outer(total_burden,
   paf_di,
-  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "label_cause"),
-  group_column = "value"
+  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "label_cause")#,
+  #group_column = "value"
 )
+attr_burden_di <- attr_burden_di %>%
+  dplyr::group_by_at(vars(one_of(setdiff(colnames(attr_burden_di), "value")))) %>%
+  summarise(value := sum(value)) %>%
+  ungroup()
 
+#browser()
 attr_burden_di <- attr_burden_di %>%
   mutate(
     mean = value * paf_mean,
