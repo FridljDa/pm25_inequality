@@ -1,0 +1,102 @@
+---
+title: "analyse_total_burden_na_values"
+format: html
+editor: visual
+---
+
+## Quarto
+
+```{r}
+require(narcan)
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+total_burden <- narcan:::.import_restricted_data("data/08_total_burden/nvss/MULT1995.AllCnty.zip", year = 1995) # , fix_states = FALSE
+
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+if (year %in% 1990:1995) {
+  selectcolumns <- c( # TODO year
+    "Year" = "datayear",
+    "label_cause" = "ucod", # record_1/enum_1
+    # "Education" = "educ", # 52-53
+    "Gender.Code" = "sex", # 59
+    "Race" = "race", # 60
+    "min_age" = "age", # 64, Single Year
+    "max_age" = "age", # 64
+    "Hispanic.Origin" = "hispanic", # 80 - 81
+    "interested_state" = "staters"
+  )
+} else if (year %in% 1996:2002) {
+  selectcolumns <- c(
+    "Year" = "year",
+    "label_cause" = "ucod", # record_1/enum_1
+    # "Education" = "educ", # 52-53
+    "Gender.Code" = "sex", # 59
+    "Race" = "race", # 60
+    "min_age" = "age", # 64, Single Year
+    "max_age" = "age", # 64
+    "Hispanic.Origin" = "hispanic", # 80 - 81
+    "interested_state" = "staters"
+  )
+} else if (year %in% 2003:2005) {
+  selectcolumns <- c(
+    "Year" = "year",
+    "label_cause" = "ucod", # record_1/enum_1
+    # "Education" = "educ", # 52-53
+    "Gender.Code" = "sex", # 59
+    "Race" = "race", # 60
+    "min_age" = "age", # 64, Single Year
+    "max_age" = "age",
+    "Hispanic.Origin" = "hspanicr", # 80 - 81
+    "interested_state" = "staters"
+  )
+} else if (year %in% 2006:2008) {
+  selectcolumns <- c(
+    "Year" = "year",
+    "label_cause" = "ucod", # record_1/enum_1
+    "Gender.Code" = "sex", # 59
+    "Race" = "race", # 60
+    "min_age" = "age", # 64, Single Year
+    "max_age" = "age",
+    "Hispanic.Origin" = "hspanicr", # 80 - 81
+    "interested_state" = "staters"
+  )
+} else if (year %in% 2009:2016) {
+  # For the years 2009:2016 we have population estimates by Education
+  selectcolumns <- c(
+    "Year" = "year",
+    "label_cause" = "ucod", # record_1/enum_1
+    "Education1989" = "educ89",
+    "Education2003" = "educ", # 52-53
+    "Gender.Code" = "sex", # 59
+    "Race" = "race", # 60
+    "min_age" = "age", # 64, Single Year
+    "max_age" = "age",
+    "Hispanic.Origin" = "hspanicr", # 80 - 81
+    "interested_state" = "staters"
+  )
+}
+
+```
+
+```{r}
+total_burden_select <- total_burden %>% select(all_of(selectcolumns))
+
+```
+
+```{r}
+na_values <- is.na(total_burden_select)
+colSums(na_values)
+```
+
+```{r}
+unique(rowSums(na_values))
+
+```

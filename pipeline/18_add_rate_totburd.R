@@ -22,16 +22,6 @@ options(dplyr.join.inform = FALSE)
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
-year <- args[1]
-dataDir <- args[2]
-tmpDir <- args[3]
-agr_by <- args[10]
-# pafDir <- args[11]
-totalBurdenParsedDir <- args[13]
-source <- args[14]
-pop.summary.dir <- args[16]
-totalBurdenParsed2Dir <- args[17]
-
 if (rlang::is_empty(args)) {
   year <- 1995
 
@@ -42,6 +32,16 @@ if (rlang::is_empty(args)) {
   source <- "nvss"
   pop.summary.dir <- "data/12_population_summary"
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+}else{
+  year <- args[1]
+  dataDir <- args[2]
+  tmpDir <- args[3]
+  agr_by <- args[10]
+  # pafDir <- args[11]
+  totalBurdenParsedDir <- args[13]
+  source <- args[14]
+  pop.summary.dir <- args[16]
+  totalBurdenParsed2Dir <- args[17]
 }
 
 totalBurdenParsed2Dir <- file.path(totalBurdenParsed2Dir, agr_by, source)

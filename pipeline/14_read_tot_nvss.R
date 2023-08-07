@@ -13,8 +13,8 @@
 library(magrittr)
 library(data.table)
 library(tictoc)
-library(foreach)
-library(doParallel)
+#library(foreach)
+#library(doParallel)
 library(dplyr)
 library(stringr)
 require(narcan)
@@ -22,7 +22,7 @@ library(readr)
 require(tidyr)
 
 devtools::load_all()
-NCORES <- 3
+#NCORES <- 3
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -113,7 +113,8 @@ totalBurdenParsedDirX <- file.path(
 )
 
 if (file.exists(totalBurdenParsedDirX)) {
-  next
+  #next
+  quit()
 }
 
 # if (!file.exists(totalBurdenParsedDirX)) {
@@ -234,6 +235,10 @@ if (agr_by == "nation") {
 
 # https://www.nber.org/research/data/mortality-data-vital-statistics-nchs-multiple-cause-death-data
 total_burden_agr_by <- total_burden_agr_by %>% select(all_of(selectcolumns))
+
+#Don't want rows with too many NA values
+total_burden_agr_by <- total_burden_agr_by %>%
+  filter(rowSums(is.na(.)) < 4)
 # total_burden_agr_by <- total_burden_agr_by[!apply(is.na(total_burden_agr_by), 1, all),]
 ## Test print
 print(total_burden_agr_by, n = 5)
