@@ -124,21 +124,10 @@ if (file.exists(attr_burdenDir)){
   hr <- rbind(hr_race_specific, hr_race_uniform)
   rm(hr_race_specific, hr_race_uniform)
 
-
-  paf_di <- inner_join(pm_summ, hr, by = c("Race", "Hispanic.Origin"))
-  paf_di <- paf_di %>%
-    filter(min_age.x >= min_age.y) %>%
-    mutate(
-      min_age = min_age.y,
-      max_age = 150,
-      min_age.x = NULL, min_age.y = NULL
-    )
-
   hr$max_age <- 150
-  paf_di2 <-inner_join_age_right_outer(pm_summ,
+  paf_di <-inner_join_age_right_outer(pm_summ,
                                       hr,
                                       by = c("Race", "Hispanic.Origin"))
-  browser()
   paf_di <- paf_di %>%
     dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
     summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
