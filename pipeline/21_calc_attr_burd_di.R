@@ -7,7 +7,7 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -26,7 +26,7 @@ args <- commandArgs(trailingOnly = T)
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2016
+  year <- 1995
   agr_by <- "county"
   source <- "nvss"
 
@@ -61,7 +61,7 @@ if (file.exists(attr_burdenDir)){
   tic(paste("calculated attr burden with di et al", year, agr_by, source))
   #----read some data-----
   total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
-    fread()
+    read_data()
 
   meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
   files <- list.files(file.path(dem_agrDir, agr_by, year))
@@ -134,6 +134,11 @@ if (file.exists(attr_burdenDir)){
       min_age.x = NULL, min_age.y = NULL
     )
 
+  hr$max_age <- 150
+  paf_di2 <-inner_join_age_right_outer(pm_summ,
+                                      hr,
+                                      by = c("Race", "Hispanic.Origin"))
+  browser()
   paf_di <- paf_di %>%
     dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
     summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%

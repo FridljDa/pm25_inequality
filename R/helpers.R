@@ -271,7 +271,8 @@ read_data <- function(path) {
   )
 
   df <- readr::read_csv(path,
-                        col_types = col_types_data
+                        col_types = col_types_data,
+                        show_col_types = FALSE
   )
   return(df)
 }
