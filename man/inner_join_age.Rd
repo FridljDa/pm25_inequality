@@ -4,7 +4,7 @@
 \alias{inner_join_age}
 \title{Inner join two data frames and filter by age.}
 \usage{
-inner_join_age(df1, df2, by, right_outer = TRUE)
+inner_join_age(df1, df2, by, right_outer = TRUE, group_column = NULL)
 }
 \arguments{
 \item{df1}{The first data frame to join.}
