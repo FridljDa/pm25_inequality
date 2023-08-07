@@ -23,14 +23,6 @@ options(dplyr.join.inform = FALSE)
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
-year <- args[1]
-tmpDir <- args[3]
-censDir <- args[8]
-dem_agrDir <- args[9]
-agr_by <- args[10]
-source <- args[14]
-totalBurdenParsed2Dir <- args[17]
-attr_burdenDir <- args[18]
 
 # TODO delete
 if (rlang::is_empty(args)) {
@@ -43,6 +35,15 @@ if (rlang::is_empty(args)) {
   dem_agrDir <- "data/06_dem.agr"
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
   attr_burdenDir <- "data/14_attr_burd"
+}else{
+  year <- args[1]
+  tmpDir <- args[3]
+  censDir <- args[8]
+  dem_agrDir <- args[9]
+  agr_by <- args[10]
+  source <- args[14]
+  totalBurdenParsed2Dir <- args[17]
+  attr_burdenDir <- args[18]
 }
 
 if (agr_by != "county") {
@@ -52,8 +53,11 @@ if (agr_by != "county") {
 attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
+if (file.exists(attr_burdenDir)){
+  quit()
+}
 
-if (!file.exists(attr_burdenDir)) {
+
   tic(paste("calculated attr burden with di et al", year, agr_by, source))
   #----read some data-----
   total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
@@ -74,7 +78,7 @@ if (!file.exists(attr_burdenDir)) {
   #restrict everything to age_group 25+
   total_burden <- total_burden %>%
     filter(min_age >= 25)
-  
+
   pm_summ <- pm_summ %>%
     dplyr::group_by_at(vars(one_of("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "scenario", "pm", "min_age", "max_age"))) %>%
     dplyr::summarize(pop_size = sum(pop_size))
@@ -93,12 +97,12 @@ if (!file.exists(attr_burdenDir)) {
 
   # Increases of 10 μg per cubic meter in PM2.5 were associated with increases in all-cause mortality
 
-  hr_race_specific <- tibble::tribble( 
+  hr_race_specific <- tibble::tribble(
     ~method, ~Race, ~Hispanic.Origin, ~label_cause,~hr_mean, ~hr_lower, ~hr_upper, ~min_age,
     "di_gee", "White", "All Origins", "all-cause",1.063,1.06, 1.065, 25,
     "di_gee", "White", "Not Hispanic or Latino", "all-cause",1.063, 1.06, 1.065, 25,
     "di_gee", "White", "Hispanic or Latino", "all-cause",1.116, 1.1, 1.133, 25,
-    
+
     "di_gee", "Black or African American", "All Origins", "all-cause",1.208, 1.199, 1.217, 25,
     "di_gee", "Asian or Pacific Islander", "All Origins", "all-cause",1.096, 1.075,  1.117, 25,
     "di_gee", "American Indian or Alaska Native", "All Origins", "all-cause",1.1, 1.06, 1.14, 25,
@@ -119,6 +123,7 @@ if (!file.exists(attr_burdenDir)) {
 
   hr <- rbind(hr_race_specific, hr_race_uniform)
   rm(hr_race_specific, hr_race_uniform)
+
 
   paf_di <- inner_join(pm_summ, hr, by = c("Race", "Hispanic.Origin"))
   paf_di <- paf_di %>%
@@ -161,7 +166,7 @@ if (!file.exists(attr_burdenDir)) {
       filter(county != "Unknown") %>%
       mutate(county = as.numeric(county))
   }
-  
+
   attr_burden_di <- inner_join(
     total_burden,
     paf_di,
@@ -175,7 +180,7 @@ if (!file.exists(attr_burdenDir)) {
       min_age = min_age.x, max_age = min_age.x, #for age specific
       min_age.y = NULL, min_age.x = NULL, max_age.x = NULL, max_age.y = NULL
     )
-  
+
   attr_burden_di <- attr_burden_di %>%
     dplyr::group_by_at(vars(one_of(setdiff(colnames(attr_burden_di), "value")))) %>%
     summarise(value = sum(value)) %>%
@@ -195,8 +200,8 @@ if (!file.exists(attr_burdenDir)) {
       # min_age.x = NULL, min_age.y = NULL, max_age.x = NULL, max_age.y = NULL
     )
 
-  
+
   attr_burden_di <- attr_burden_di %>% filter(method %in% c("di_gee",  "di_gee_white"))
   fwrite(attr_burden_di, attr_burdenDir)
   toc()
-}
+
