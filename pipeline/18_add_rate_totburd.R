@@ -209,20 +209,24 @@ if (!file.exists(totalBurdenParsed2Dir)) {
   rm(total_burden_age_adj1, total_burden_age_adj2)
 
   # calculate age-adjusted rate
-  total_burden_age_adj <- total_burden %>%
-    left_join(total_burden_age_adj,
-      by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
-      multiple = "all"
-    ) %>%
-    filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
-    mutate(min_age.x = NULL, max_age.x = NULL) %>%
-    rename(min_age = min_age.y, max_age = max_age.y)
+  total_burden_age_adj <- inner_join_age_right_outer(total_burden,
+                             total_burden_age_adj,
+                             by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+                             group_column = "value")
 
-  total_burden_age_adj <- total_burden_age_adj %>%
-    group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
-    summarise(value = sum(value)) %>%
-    ungroup()
+  #total_burden_age_adj <- total_burden %>%
+  #  left_join(total_burden_age_adj,
+  #    by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+  #    multiple = "all"
+  #  ) %>%
+  #  filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
+  #  mutate(min_age.x = NULL, max_age.x = NULL) %>%
+  #  rename(min_age = min_age.y, max_age = max_age.y)
 
+  #total_burden_age_adj <- total_burden_age_adj %>%
+  #  group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
+  #  summarise(value = sum(value)) %>%
+  #  ungroup()
 
   total_burden_age_adj <- total_burden_age_adj %>%
     filter(Population >= 1 & full_stand_popsize >= 1) %>%

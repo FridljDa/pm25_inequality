@@ -398,7 +398,7 @@ search_files <- function(directory, string, ends_with = FALSE) {
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age(df1, df2, by = "id", right_outer = TRUE)
-inner_join_age <- function(df1, df2, by, right_outer = TRUE){
+inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL){
   if (!all(c("min_age", "max_age") %in% names(df1))) stop("df1 does not have both 'min_age' and 'max_age' columns")
   if (!all(c("min_age", "max_age") %in% names(df2))) stop("df2 does not have both 'min_age' and 'max_age' columns")
 
@@ -427,6 +427,11 @@ inner_join_age <- function(df1, df2, by, right_outer = TRUE){
   df3 <- df3 %>%
     select(-c(min_age.y, min_age.x, max_age.x, max_age.y)) # Drop unnecessary age columns
 
+  if(!is.null(group_column)){
+    df3 <- df3 %>%
+      summarize_column_by_group(group_column)
+  }
+
   return(df3)
 }
 
@@ -444,8 +449,8 @@ inner_join_age <- function(df1, df2, by, right_outer = TRUE){
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age_right_outer(df1, df2, by = "id")
-inner_join_age_right_outer <- function(df1, df2, by){
-  inner_join_age(df1, df2, by, right_outer = TRUE)
+inner_join_age_right_outer <- function(df1, df2, by, group_column = NULL){
+  inner_join_age(df1, df2, by, right_outer = TRUE, group_column = group_column)
 }
 
 #' Inner join two data frames using left outer join and filter by age.
@@ -462,7 +467,44 @@ inner_join_age_right_outer <- function(df1, df2, by){
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age_left_outer(df1, df2, by = "id")
-inner_join_age_left_outer <- function(df1, df2, by){
-  inner_join_age(df1, df2, by, right_outer = FALSE)
+inner_join_age_left_outer <- function(df1, df2, by, group_column = NULL){
+  inner_join_age(df1, df2, by, right_outer = FALSE, group_column = group_column)
+}
+
+#' Summarize a specified column by grouping other columns
+#'
+#' This function takes a dataframe and a column name to summarize.
+#' It groups by all other columns and then summarizes the specified column.
+#' If the specified column is not in the dataframe, it throws an error.
+#'
+#' @param df A dataframe to be summarized.
+#' @param group_column The column name to be summarized (character).
+#'
+#' @return A dataframe with the summarized column.
+#' @export
+#' @examples
+#' df3 <- data.frame(A = c('a', 'a', 'b', 'b'), B = c('x', 'x', 'y', 'y'), value = c(1,2,3,4))
+#' group_column <- "value"
+#' summarize_column_by_group(df3, group_column)
+summarize_column_by_group <- function(df, group_column) {
+  require(dplyr)
+
+  if (!group_column %in% colnames(df)) {
+    stop("The specified group_column is not in the dataframe.")
+  }
+
+  # If the group column is not part of the columns to be grouped by, then include it in summarise.
+  if (group_column %in% setdiff(colnames(df), group_column)) {
+    df <- df %>%
+      dplyr::group_by_at(vars(one_of(setdiff(colnames(df), group_column)))) %>%
+      summarise(!!group_column := sum(.data[[group_column]])) %>%
+      ungroup()
+  } else {
+    # If group column is the only column, then just summarize it.
+    df <- df %>%
+      summarise(!!group_column := sum(.data[[group_column]]))
+  }
+
+  return(df)
 }
 
