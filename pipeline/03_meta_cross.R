@@ -25,9 +25,14 @@ for (p in packages) {
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
-year <- args[1]
-tmpDir <- args[3]
-censDir <- args[8]
+if (rlang::is_empty(args)) {
+  year <- 1995
+  censDir <- "data/05_demog"
+}else{
+  year <- args[1]
+  censDir <- args[8]
+}
+
 
 metaDir <- file.path(censDir, "meta")
 dir.create(metaDir, recursive = T, showWarnings = F)
@@ -143,7 +148,7 @@ if (!file.exists(cross_bridgeDir) & year %in% c(1990, 2000, 2009:2016)) {
     mutate(Education = as.character(Education)) %>%
     rename(Race2 = Race, Hispanic.Origin2 = Hispanic.Origin, Education2 = Education, Gender.Code2 = Gender.Code)
   downloaded_meta[downloaded_meta == "High school graduate (includes equivalency)"] <- "High school graduate, GED, or alternative"
-  downloaded_meta <- downloaded_meta %>% filter(min_age >= 25) 
+  downloaded_meta <- downloaded_meta %>% filter(min_age >= 25)
 
   if (year == 1990) {
     replaces1 <- data.frame(
@@ -199,11 +204,11 @@ if (!file.exists(cross_bridgeDir) & year %in% c(1990, 2000, 2009:2016)) {
       Race2 = c("WHITE", "AMERICAN INDIAN AND ALASKA NATIVE", "ASIAN", "NATIVE HAWAIIAN AND OTHER PACIFIC ISLANDER", "BLACK OR AFRICAN AMERICAN")
     )
   }
-  
+
   cross_bridge <- aim_meta %>%
     left_join(replaces2, by = "Hispanic.Origin") %>%
     left_join(replaces4, by = "Gender.Code")
-  
+
   cross_bridge <- cross_bridge %>%
     mutate(Education = as.character(Education))  %>%
     left_join(replaces3, by = c("Education","Race"))
