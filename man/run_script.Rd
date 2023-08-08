@@ -20,7 +20,7 @@ The function will also print which script was run and how long it took.
 }
 \examples{
 \dontrun{
-  run_script("my_script.R")
-  run_script("my_script.R", "--arg value")
+run_script("my_script.R")
+run_script("my_script.R", "--arg value")
 }
 }

@@ -2,27 +2,27 @@
 % Please edit documentation in R/helpers2.R
 \name{check_package_usage}
 \alias{check_package_usage}
-\title{Check if a Package is Used in an R Script}
+\title{Check Package Usage in an R Script}
 \usage{
-check_package_usage(path_to_script, pkg)
+check_package_usage(path_to_script, pkgs)
 }
 \arguments{
-\item{path_to_script}{A string providing the path to the R script.}
+\item{path_to_script}{A string representing the path to the R script.}
 
-\item{pkg}{A string indicating the name of the package to check.}
+\item{pkgs}{A character vector containing the names of the packages to check.}
 }
 \value{
-A character vector with the names of the functions from the package used in the script,
-or NULL if none are used.
+A character vector containing the names of the packages that are used in the script, or NULL if none of the specified packages are used.
 }
 \description{
-This function checks if functions from a specified package are used in the given R script.
-It returns the names of functions from the package that are used in the script, or NULL if none are used.
-Additionally, a message indicating the usage status will be displayed.
+This function checks which functions from a given set of packages are used in an R script.
+It takes the path to the R script and a vector of package names, then returns the packages that are actually used.
 }
 \examples{
 \dontrun{
-result <- check_package_usage("path_to_your_script.R", "dplyr")
-cat(result)
+  path <- "path/to/your/script.R"
+  packages <- c("dplyr", "ggplot2", "tidyr")
+  result <- check_package_usage(path, packages)
+  print(result)
 }
 }
