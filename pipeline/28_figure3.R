@@ -20,6 +20,7 @@ for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }
+devtools::load_all()
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
 
@@ -37,28 +38,28 @@ if (rlang::is_empty(args)) {
   scenarioI <- "real"
   methodI <- "di_gee"
   min_ageI <- 25
-  
+
   summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
   #summaryDir <- "/Users/default/Desktop/data_summary_old"
   figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-  
+
   #summaryDir <- "C:/Users/Daniel/Desktop/paper2021/data/17_summary"
   #figuresDir <- "C:/Users/Daniel/Desktop/paper2021/data/18_figures"
-  
+
   summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
-  
+
   summaryDir <- "/Volumes/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
-  
+
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 }
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
-all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE)
+all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 all_burd <- all_burd %>% filter(min_age == min_ageI)
 #rm(file_list)
@@ -73,7 +74,7 @@ attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == scenarioI &
-           agr_by == "nation" & method == methodI & Year >= 2009 & measure3 == "value" & Ethnicity != "All, All Origins"  
+           agr_by == "nation" & method == methodI & Year >= 2009 & measure3 == "value" & Ethnicity != "All, All Origins"
          & rural_urban_class == "All" & Education != 666
          )
 
@@ -85,15 +86,15 @@ all_burd <- all_burd %>%
 ## -- figure 3, attributable burden---
 attr_burd1 <- attr_burd %>% filter(Education == "4-year college graduate or higher"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
-g1 <- g1 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) 
+g1 <- g1 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
-attr_burd2 <- attr_burd %>% filter(Education == "Some college education but no 4-year college degree"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All") 
+attr_burd2 <- attr_burd %>% filter(Education == "Some college education but no 4-year college degree"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
-g2 <- g2 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) 
+g2 <- g2 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
 attr_burd3 <- attr_burd %>% filter(Education == "High school graduate or lower" & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
-g3 <- g3 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) 
+g3 <- g3 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
 all_burd4 <- all_burd %>% filter(Education == "4-year college graduate or higher"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
 g4 <- ggplot(all_burd4, aes(x = Year, y = overall_value, color = Ethnicity))
@@ -134,7 +135,7 @@ if(TRUE){
   #g1 <- g1 +scale_y_continuous(limits = c(0, NA))
   #g2 <- g2+scale_y_continuous(limits = c(0, NA))
   #g3 <- g3 +scale_y_continuous(limits = c(0, NA))
-  
+
 }
 
 
@@ -148,9 +149,9 @@ rm(
 )
 #----formatting------
 #https://rdrr.io/cran/RColorBrewer/man/ColorBrewer.html
-group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
+group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
                   RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
-group.colors[c(12,2)] <- group.colors[c(2,12)] 
+group.colors[c(12,2)] <- group.colors[c(2,12)]
 
 names(group.colors) <- c("NH White",
                          "Hispanic or Latino White",
@@ -158,7 +159,7 @@ names(group.colors) <- c("NH White",
                          "White",
                          "Asian or Pacific Islander",
                          "American Indian or Alaska Native"
-                         
+
 )
 group.colors <- group.colors[c(1:3,5)]
 
@@ -172,11 +173,11 @@ plots <- lapply(plots, function(g) {
 })
 ## ----get legends ---
 #https://stackoverflow.com/questions/27803710/ggplot2-divide-legend-into-two-columns-each-with-its-own-title
-toy_data <- tibble(x = seq_along(group.colors), 
+toy_data <- tibble(x = seq_along(group.colors),
                    labels = names(group.colors)
 )
 toy_data$labels <- factor(toy_data$labels, levels = names(group.colors))
-toy_plot <- ggplot(toy_data, aes(x, x, color = labels)) + 
+toy_plot <- ggplot(toy_data, aes(x, x, color = labels)) +
   geom_point() +
   scale_color_manual(values = group.colors) +
   theme(legend.title = element_blank()) +
@@ -188,8 +189,8 @@ rm(toy_data, toy_plot)
 ## --- arrange plots----
 
 plots <- lapply(plots, function(g) {
-  g + theme(legend.position = "none", axis.title.y = element_blank()) 
-  
+  g + theme(legend.position = "none", axis.title.y = element_blank())
+
 })
 
 lay <- rbind(

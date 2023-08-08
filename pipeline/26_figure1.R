@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -79,7 +79,7 @@ g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
 attr_burd2 <- attr_burd %>% filter(agr_by == "nation" & Education != 666 & Ethnicity == "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
 attr_burd2$Education <- factor(attr_burd2$Education,                 # Relevel group factor
-                               levels = c("High school graduate or lower", 
+                               levels = c("High school graduate or lower",
                                           "Some college education but no 4-year college degree",
                                           "4-year college graduate or higher"))
 
@@ -89,7 +89,7 @@ g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Education))
 attr_burd3 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
   rural_urban_class != "All" & Year >= 2000)
 attr_burd3$rural_urban_class <- factor(attr_burd3$rural_urban_class,                 # Relevel group factor
-                                       levels = c("Large metro", 
+                                       levels = c("Large metro",
                                                   "Small-medium metro",
                                                   "Non metro"))
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = rural_urban_class))

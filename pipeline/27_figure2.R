@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(ggpubr)
-
+devtools::load_all()
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
@@ -27,7 +27,7 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
-  
+
   min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
@@ -35,15 +35,15 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files("data/17_summary")
 file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = T)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
-all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
+all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
 all_burd <- all_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"); 
+theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 
-if(min_age == 65){
+if(min_ageI == 65){
   quit()
 }
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
@@ -210,7 +210,7 @@ lay <- rbind(
   c(3,3)
 )
 
-gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay, 
+gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay,
                                        widths = c(1.7, 1),
                                        heights = c(1,1/3)) # , rel_heights = c(1/2, 1/2)
 # gg_combined <- cowplot::plot_grid(g1, g3,g2, legend,  nrow = 2)
