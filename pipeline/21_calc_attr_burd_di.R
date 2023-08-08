@@ -19,6 +19,7 @@ for (p in packages) {
 }
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
+devtools::load_all()
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)

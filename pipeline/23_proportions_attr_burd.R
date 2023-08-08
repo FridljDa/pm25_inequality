@@ -7,15 +7,10 @@ suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
+devtools::load_all()
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 # agr_by <- args[10]
-year <- args[1]
-source <- "nvss"
-agr_by <- args[10]
-totalBurdenParsed2Dir <- args[17]
-summaryHigherDir <- args[19]
-propOfAttrBurdDir <- args[20]
 
 if (rlang::is_empty(args)) {
   dataDir <- "data"
@@ -25,6 +20,13 @@ if (rlang::is_empty(args)) {
   agr_by <- "nation"
   source <- "nvss"
   year <- 1996
+}else{
+  year <- args[1]
+  source <- "nvss"
+  agr_by <- args[10]
+  totalBurdenParsed2Dir <- args[17]
+  summaryHigherDir <- args[19]
+  propOfAttrBurdDir <- args[20]
 }
 
 propOfAttrBurdDir <- file.path(propOfAttrBurdDir, agr_by)
@@ -46,7 +48,7 @@ total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_b
 
 #-----filter, summarise total burden-----
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
-  measure1 == "Deaths") #& 
+  measure1 == "Deaths") #&
 
 if(agr_by == "county") total_burden <- total_burden %>% filter(measure2 == "age-adjusted rate")
 

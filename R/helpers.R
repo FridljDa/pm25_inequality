@@ -435,7 +435,7 @@ inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL
 
   if(!is.null(group_column)){
     df3 <- df3 %>%
-      summarize_column_by_group(group_column)
+      group_and_sum(group_column)
   }
 
   return(df3)
