@@ -4,19 +4,22 @@
 \alias{group_and_sum}
 \title{Group and Sum Specified Columns in a Data Frame}
 \usage{
-group_and_sum(df, columns_to_sum)
+group_and_sum(df, columns_to_sum, columns_to_not_group = NULL)
 }
 \arguments{
 \item{df}{A data frame.}
 
 \item{columns_to_sum}{A character vector of column names in \code{df} to be summed.}
+
+\item{columns_to_not_group}{An optional character vector of column names in \code{df} not to be grouped.
+Default is \code{NULL}.}
 }
 \value{
 A grouped and summarized data frame.
 }
 \description{
 This function groups the input data frame by all columns except the ones specified
-in \code{columns_to_sum} and then sums up the values in the specified columns.
+in \code{columns_to_sum} and \code{columns_to_not_group}, then sums up the values in the specified columns.
 }
 \examples{
 df <- data.frame(
@@ -25,7 +28,7 @@ df <- data.frame(
   value1 = c(1, 2, 3, 4),
   value2 = c(5, 6, 7, 8)
 )
-result <- group_and_sum(df, columns_to_sum = c("value1", "value2"))
+result <- group_and_sum(df, columns_to_sum = c("value1", "value2"), columns_to_not_group = c("B"))
 print(result)
 
 }

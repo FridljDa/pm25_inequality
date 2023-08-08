@@ -1,0 +1,162 @@
+#read_data
+#' Read Data from CSV file
+#'
+#' This function reads data from a CSV file at a given path. It specifies column types
+#' for the data to ensure it is read correctly. This function uses the readr package
+#' to read the CSV.
+#'
+#' @param path A string. The path to the CSV file to read.
+#'
+#' @return A data frame with columns: Year, min_age, max_age, county, rural_urban_class,
+#' Deaths, Education, Race. The "Race" column is read as a factor with specific levels.
+#'
+#' @examples
+#' df <- read_data("path/to/your/file.csv")
+#'
+#' @importFrom readr read_csv
+#' @importFrom readr cols
+#' @importFrom readr col_integer
+#' @importFrom readr col_factor
+read_data <- function(path) {
+  # Read the first row of the CSV file
+  first_row <- readr::read_csv(path,
+                               n_max = 1,
+                               show_col_types = FALSE
+  )
+
+  # Get the column names
+  column_names_present <- colnames(first_row)
+
+  col_types_data <- cols(
+    Year = col_integer(),
+    min_age = col_integer(), max_age = col_integer(),
+    county = col_integer(),
+    rural_urban_class = col_factor(levels = c(
+      "Large metro", "1",
+      "Small-medium metro", "2",
+      "Non metro", "3",
+      "All", "666"
+    )),
+    Deaths = col_integer(),
+    Education = col_factor(levels = c(
+      "666", "Unknown",
+      "High school graduate or lower" , "lower",
+      "Some college education but no 4-year college degree", "middle",
+      "4-year college graduate or higher","higher"
+    )),
+    Race = col_factor(levels = c(
+      "All",
+      "American Indian or Alaska Native",
+      "Asian or Pacific Islander",
+      "Black or African American",
+      "White"
+    )),
+    measure1 = col_factor(levels = c(
+      "Deaths"
+    )),
+    method = col_factor(levels = c(
+      "di_gee",
+      "di_gee_white",
+      "burnett",
+      "GBD"
+    )),
+    measure2 = col_factor(levels = c(
+      "crude rate per 100,000", "crude rate",
+      "age-adjusted rate per 100,000", "age-adjusted rate",
+      "absolute number", "absolute number"
+    )),
+    scenario = col_factor(levels = c(
+      "NAAQS",
+      "WHO",
+      "future threshold",
+      "real"
+    )),
+    measure3 = col_factor(levels = c(
+      "value",
+      "prop. of overall burden",
+      "proportion of disparity to Black or African American attributable"
+    )),
+    Gender.Code = col_factor(levels = c(
+      "All genders", "A"
+    )),
+    source = col_factor(levels = c(
+      "nvss", "National Vital Statistics System"
+    )),
+    Hispanic.Origin = col_factor(levels = c(
+      "All Origins", "Hispanic or Latino", "Not Hispanic or Latino"
+    )),
+    Ethnicity = col_factor(levels = c(
+      "Black American", "Black or African American, All Origins",
+      "American Indian or Alaska Native", "American Indian or Alaska Native, All Origins",
+      "Asian or Pacific Islander", "Asian or Pacific Islander, All Origins",
+      "Hispanic or Latino White", "White, Hispanic or Latino",
+      "NH White", "White, Not Hispanic or Latino",
+      "White", "White, All Origins",
+      "All, All Origins", "All, All Origins"
+    ))
+    # TODO Hispanic.Origin
+  )
+
+  column_names_available <- names(col_types_data[["cols"]])
+  column_names_intersection <- intersect(column_names_available, column_names_present)
+
+  col_types_data[["cols"]] <- col_types_data[["cols"]][column_names_intersection]
+
+  df <- readr::read_csv(path,
+                        col_types = col_types_data,
+                        show_col_types = FALSE
+  )
+
+  parsing_problems <- readr::problems(df)
+
+  if (nrow(parsing_problems) > 0) {
+    df2 <- readr::read_csv(path)
+    unique_levels <- lapply(df2, unique)
+    #print(parsing_problems)
+    first_problem <- df2[,parsing_problems$col[1]]
+    browser()
+    stop("Parsing issues detected. Please check the CSV file.")
+  }
+
+  return(df)
+}
+
+#' Search for Files in a Directory
+#'
+#' This function takes a directory path and a string, and returns the path to all files
+#' and directories in that path, where the name contains the string.
+#' Optionally, it can also return only those files and directories whose names end with the string.
+#'
+#' @param directory A string specifying the path to the directory.
+#' @param string The string to search for in the file and directory names.
+#' @param ends_with A logical value. If TRUE, only files and directories whose names
+#' end with the specified string are returned. If FALSE (the default), files and directories
+#' whose names contain the string anywhere are returned.
+#'
+#' @return A character vector containing the full paths to the matching files and directories.
+#' @examples
+#' \dontrun{
+#' search_files("path/to/directory", "test")
+#' search_files("path/to/directory", "test", ends_with = TRUE)
+#' }
+#' @export
+search_files <- function(directory, string, ends_with = FALSE) {
+
+  # Ensure the directory exists before proceeding
+  if (!dir.exists(directory)) {
+    stop(paste("Directory", directory, "does not exist."))
+  }
+
+  # Get all file and directory names in the directory
+  all_files <- list.files(directory, full.names = TRUE, recursive = FALSE)
+
+  # Modify the string if ends_with = TRUE
+  if (ends_with) {
+    string <- paste0(string, "$")
+  }
+
+  # Filter files and directories whose names contain the specified string
+  matching_files <- all_files[grepl(string, basename(all_files))]
+
+  return(matching_files)
+}

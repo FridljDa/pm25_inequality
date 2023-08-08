@@ -52,10 +52,12 @@ check_package_usage <- function(path_to_script, pkg) {
 #' Group and Sum Specified Columns in a Data Frame
 #'
 #' This function groups the input data frame by all columns except the ones specified
-#' in `columns_to_sum` and then sums up the values in the specified columns.
+#' in `columns_to_sum` and `columns_to_not_group`, then sums up the values in the specified columns.
 #'
 #' @param df A data frame.
 #' @param columns_to_sum A character vector of column names in `df` to be summed.
+#' @param columns_to_not_group An optional character vector of column names in `df` not to be grouped.
+#'   Default is `NULL`.
 #'
 #' @return A grouped and summarized data frame.
 #' @examples
@@ -65,15 +67,18 @@ check_package_usage <- function(path_to_script, pkg) {
 #'   value1 = c(1, 2, 3, 4),
 #'   value2 = c(5, 6, 7, 8)
 #' )
-#' result <- group_and_sum(df, columns_to_sum = c("value1", "value2"))
+#' result <- group_and_sum(df, columns_to_sum = c("value1", "value2"), columns_to_not_group = c("B"))
 #' print(result)
 #'
 #' @export
 
-group_and_sum <- function(df, columns_to_sum) {
+group_and_sum <- function(df, columns_to_sum, columns_to_not_group = NULL) {
+
+  # Combine columns_to_sum and columns_to_not_group
+  columns_to_exclude <- unique(c(columns_to_sum, columns_to_not_group))
 
   # Identify missing columns
-  missing_columns <- setdiff(columns_to_sum, colnames(df))
+  missing_columns <- setdiff(columns_to_exclude, colnames(df))
 
   # Check if there are any missing columns
   if (length(missing_columns) > 0) {
@@ -81,9 +86,9 @@ group_and_sum <- function(df, columns_to_sum) {
          paste(missing_columns, collapse = ", "))
   }
 
-  # Group by all columns except those in 'columns_to_sum'
+  # Group by all columns except those in 'columns_to_exclude'
   df <- df %>%
-    group_by_at(vars(one_of(setdiff(colnames(df), columns_to_sum))))
+    group_by_at(vars(one_of(setdiff(colnames(df), columns_to_exclude))))
 
   # Sum up the specified columns
   summarise_list <- lapply(columns_to_sum, function(col) {
@@ -99,5 +104,6 @@ group_and_sum <- function(df, columns_to_sum) {
     as.data.frame()
   return(df)
 }
+
 
 

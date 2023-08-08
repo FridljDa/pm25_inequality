@@ -227,60 +227,13 @@ group_summarize_add_column <- function(df, column, new_col_value) {
     group_by_at(setdiff(colnames(df), c(column, "Deaths"))) %>%
     summarise(Deaths = sum(Deaths)) %>%
     mutate({{ column }} := new_col_value)
-}
 
-#' Read Data from CSV file
-#'
-#' This function reads data from a CSV file at a given path. It specifies column types
-#' for the data to ensure it is read correctly. This function uses the readr package
-#' to read the CSV.
-#'
-#' @param path A string. The path to the CSV file to read.
-#'
-#' @return A data frame with columns: Year, min_age, max_age, county, rural_urban_class,
-#' Deaths, Education, Race. The "Race" column is read as a factor with specific levels.
-#'
-#' @examples
-#' df <- read_data("path/to/your/file.csv")
-#'
-#' @importFrom readr read_csv
-#' @importFrom readr cols
-#' @importFrom readr col_integer
-#' @importFrom readr col_factor
-read_data <- function(path) {
-  # Read the first row of the CSV file
-  first_row <- readr::read_csv(path,
-                               n_max = 1,
-                               show_col_types = FALSE)
+  # Exclude the given 'column' and "Deaths" from grouping, and sum the "Deaths" column
+  # result <- group_and_sum(df, columns_to_sum = c("Deaths"), columns_to_not_group = c(column))
 
-  # Get the column names
-  column_names <- colnames(first_row)
-
-  col_types_data <- cols(
-    Year = col_integer(),
-    min_age = col_integer(), max_age = col_integer(),
-    county = col_integer(),
-    rural_urban_class = col_integer(), #1,2,3,666
-    Deaths = col_integer(),
-    Education = col_factor(levels = c(
-      "666",    "higher", "lower",  "middle", "Unknown"
-    )),
-    Race = col_factor(levels = c(
-      "All",
-      "American Indian or Alaska Native",
-      "Asian or Pacific Islander",
-      "Black or African American",
-      "White",
-      "White, Hispanic or Latino",
-      "White, Not Hispanic or Latino"
-    ))
-  )
-
-  df <- readr::read_csv(path,
-                        col_types = col_types_data,
-                        show_col_types = FALSE
-  )
-  return(df)
+  # Add the new column with the specified value
+  # result %>%
+  #  mutate({{ column }} := new_col_value)
 }
 
 #' Run script based on system type
@@ -294,8 +247,8 @@ read_data <- function(path) {
 #' @return NULL. This function is mainly called for its side effects (running the script and printing the results).
 #' @examples
 #' \dontrun{
-#'   run_script("my_script.R")
-#'   run_script("my_script.R", "--arg value")
+#' run_script("my_script.R")
+#' run_script("my_script.R", "--arg value")
 #' }
 #' @export
 run_script <- function(script, args = "") {
@@ -343,50 +296,12 @@ run_script <- function(script, args = "") {
 #' @export
 create_directory <- function(dir_path) {
   if (!file.exists(dir_path)) {
-    dir.create(dir_path)
+    dir.create(dir_path, recursive = T)
   }
   invisible(NULL)
 }
 
-#' Search for Files in a Directory
-#'
-#' This function takes a directory path and a string, and returns the path to all files
-#' and directories in that path, where the name contains the string.
-#' Optionally, it can also return only those files and directories whose names end with the string.
-#'
-#' @param directory A string specifying the path to the directory.
-#' @param string The string to search for in the file and directory names.
-#' @param ends_with A logical value. If TRUE, only files and directories whose names
-#' end with the specified string are returned. If FALSE (the default), files and directories
-#' whose names contain the string anywhere are returned.
-#'
-#' @return A character vector containing the full paths to the matching files and directories.
-#' @examples
-#' \dontrun{
-#' search_files("path/to/directory", "test")
-#' search_files("path/to/directory", "test", ends_with = TRUE)
-#' }
-#' @export
-search_files <- function(directory, string, ends_with = FALSE) {
 
-  # Ensure the directory exists before proceeding
-  if(!dir.exists(directory)){
-    stop(paste("Directory", directory, "does not exist."))
-  }
-
-  # Get all file and directory names in the directory
-  all_files <- list.files(directory, full.names = TRUE, recursive = FALSE)
-
-  # Modify the string if ends_with = TRUE
-  if(ends_with) {
-    string <- paste0(string, "$")
-  }
-
-  # Filter files and directories whose names contain the specified string
-  matching_files <- all_files[grepl(string, basename(all_files))]
-
-  return(matching_files)
-}
 
 #' Inner join two data frames and filter by age.
 #'
@@ -404,18 +319,19 @@ search_files <- function(directory, string, ends_with = FALSE) {
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age(df1, df2, by = "id", right_outer = TRUE)
-inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL){
+inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL) {
   if (!all(c("min_age", "max_age") %in% names(df1))) stop("df1 does not have both 'min_age' and 'max_age' columns")
   if (!all(c("min_age", "max_age") %in% names(df2))) stop("df2 does not have both 'min_age' and 'max_age' columns")
 
   # Perform an inner join on the two data frames.
   df3 <- inner_join(df1,
-                    df2,
-                    by = by,
-                    multiple = "all")
+    df2,
+    by = by,
+    multiple = "all"
+  )
 
   # Filter and mutate based on the right_outer argument.
-  if(right_outer){
+  if (right_outer) {
     df3 <- df3 %>%
       filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>% # Keep rows where min_age from df2 is less than or equal to min_age from df1, and max_age from df1 is less than or equal to max_age from df2
       mutate(
@@ -433,7 +349,7 @@ inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL
   df3 <- df3 %>%
     select(-c(min_age.y, min_age.x, max_age.x, max_age.y)) # Drop unnecessary age columns
 
-  if(!is.null(group_column)){
+  if (!is.null(group_column)) {
     df3 <- df3 %>%
       group_and_sum(group_column)
   }
@@ -455,7 +371,7 @@ inner_join_age <- function(df1, df2, by, right_outer = TRUE, group_column = NULL
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age_right_outer(df1, df2, by = "id")
-inner_join_age_right_outer <- function(df1, df2, by, group_column = NULL){
+inner_join_age_right_outer <- function(df1, df2, by, group_column = NULL) {
   inner_join_age(df1, df2, by, right_outer = TRUE, group_column = group_column)
 }
 
@@ -473,7 +389,6 @@ inner_join_age_right_outer <- function(df1, df2, by, group_column = NULL){
 #' df1 <- data.frame(id = c(1, 2, 3), min_age = c(20, 25, 30), max_age = c(40, 45, 50))
 #' df2 <- data.frame(id = c(1, 2, 4), min_age = c(30, 35, 40), max_age = c(50, 55, 60))
 #' inner_join_age_left_outer(df1, df2, by = "id")
-inner_join_age_left_outer <- function(df1, df2, by, group_column = NULL){
+inner_join_age_left_outer <- function(df1, df2, by, group_column = NULL) {
   inner_join_age(df1, df2, by, right_outer = FALSE, group_column = group_column)
 }
-
