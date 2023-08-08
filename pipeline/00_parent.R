@@ -148,8 +148,6 @@ args <- paste(
 run_script(script = "pipeline/25_summary_other.R", args = args)
 
 
-#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
-
 args <- paste(
   tmp.dir, # 1
   dem.dir, # 2
@@ -165,4 +163,4 @@ args <- paste(
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
   min_age = 65 #13
 )
-#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
+for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)

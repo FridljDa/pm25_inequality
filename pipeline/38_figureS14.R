@@ -41,10 +41,10 @@ all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-if(min_age == 65){
+if(min_ageI == 65){
   quit()
 }
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"); 
+theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- all burden----
@@ -181,7 +181,7 @@ lay <- rbind(
   c(3,3)
 )
 
-gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay, 
+gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay,
                                        widths = c(1.7, 1),
                                        heights = c(1,1/3)) # , rel_heights = c(1/2, 1/2)
 # gg_combined <- cowplot::plot_grid(g1, g3,g2, legend,  nrow = 2)

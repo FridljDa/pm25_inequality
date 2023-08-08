@@ -32,7 +32,7 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
-  
+
   min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
@@ -44,7 +44,7 @@ attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-if(min_age == 65){
+if(min_ageI == 65){
   quit()
 }
 
@@ -82,24 +82,24 @@ attr_burd$measure3 %>% unique
 #plots <- list(g1)
 #rm(min1, max1)
 #rm(
-#  attr_burd1, attr_burd2, 
+#  attr_burd1, attr_burd2,
 #  g1, g2
 #)
 #----formatting------
-group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
+group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
                   RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
-group.colors[c(12,2)] <- group.colors[c(2,12)] 
+group.colors[c(12,2)] <- group.colors[c(2,12)]
 names(group.colors) <- c("NH White",
                          "Hispanic or Latino White",
                          "Black American",
                          "White",
                          "Asian or Pacific Islander",
                          "American Indian or Alaska Native",
-                         
+
                          "High school graduate or lower",
                          "Some college education but no 4-year college degree",
                          "4-year college graduate or higher",
-                         
+
                          "Non metro",
                          "Large metro",
                          "Small-medium metro"
