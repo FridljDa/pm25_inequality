@@ -9,7 +9,11 @@ replace_values(df, findreplace, NA_string = "Unique_NA_String", silent = TRUE)
 \arguments{
 \item{df}{A dataframe with the columns to replace values in.}
 
-\item{findreplace}{A dataframe defining what values to find and what to replace them with.}
+\item{findreplace}{A dataframe defining what values to find and what to replace them with.
+It must contain three columns:
+- \code{replacecolumns}: the names of the columns in \code{df} to replace values in
+- \code{from}: the values to be replaced in the specified columns
+- \code{to}: the new values that will replace the existing values in the specified columns}
 
 \item{NA_string}{A unique string to replace NA values with during processing (default is "Unique_NA_String"). Should not be present in df.}
 }
