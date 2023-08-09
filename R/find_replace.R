@@ -43,6 +43,43 @@ convert_columns_to_numeric <- function(df) {
   return(df)
 }
 
+#' Simplify Data Frame Columns
+#'
+#' This function iterates through the columns of the provided data frame,
+#' attempting to convert character columns to numeric if possible, and then back to character.
+#' If the column is a factor, it will be converted to a character column.
+#'
+#' @param df A data frame containing the columns to be simplified.
+#'
+#' @return A data frame with character columns that have been simplified based on the described rules.
+#'
+#' @examples
+#' df <- data.frame(a = c("1", "2", "3"), b = as.factor(c("a", "b", "c")))
+#' df <- simplify_columns_df(df)
+#'
+simplify_columns_df <- function(df) {
+  for (column in colnames(df)) {
+    # Try to convert character columns to numeric if possible
+    if (is.character(df[[column]]) && can_be_numeric(df[[column]])) {
+      # Convert from character to numeric and then back to character
+      df[[column]] <- df[[column]] %>%
+        as.numeric() %>%
+        as.character()
+    } else if (is.factor(df[[column]])) { # for factor columns
+      # Convert factor columns to character
+      df[[column]] <- df[[column]] %>%
+        as.character()
+    } else if (is.numeric(df[[column]])) { # for factor columns
+      # Convert factor columns to character
+      df[[column]] <- df[[column]] %>%
+        as.character()
+    }
+  }
+
+  return(df)
+}
+
+
 #' Replace specific values in a dataframe
 #'
 #' This function takes a dataframe and a findreplace dataframe as input. It replaces specific values in the dataframe
@@ -50,6 +87,10 @@ convert_columns_to_numeric <- function(df) {
 #'
 #' @param df A dataframe with the columns to replace values in.
 #' @param findreplace A dataframe defining what values to find and what to replace them with.
+#'                    It must contain three columns:
+#'                    - `replacecolumns`: the names of the columns in `df` to replace values in
+#'                    - `from`: the values to be replaced in the specified columns
+#'                    - `to`: the new values that will replace the existing values in the specified columns
 #' @param NA_string A unique string to replace NA values with during processing (default is "Unique_NA_String"). Should not be present in df.
 #'
 #' @return A dataframe with replaced values as defined by the findreplace dataframe.
@@ -64,26 +105,40 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
   df <- as.data.frame(df)
   findreplace <- as.data.frame(findreplace)
 
+  # Check if the column is not of type numeric, factor, or character
+  for (column in colnames(df)) {
+    if (!any(sapply(df[[column]], function(x) is.numeric(x) || is.factor(x) || is.character(x)))) {
+      stop(paste("Error: Column", column, "is not of type numeric, factor, or character."))
+    }
+  }
+
+  # Check if the required columns are present in findreplace
+  required_columns <- c("replacecolumns", "from", "to")
+  missing_columns <- setdiff(required_columns, names(findreplace))
+  if (length(missing_columns) > 0) {
+    stop(paste("Error: findreplace is missing the required columns:", paste(missing_columns, collapse = ", ")))
+  }
+
+  # Check if findreplace contains duplicate combinations of replacecolumns and from
   findreplace <- findreplace %>%
     select(replacecolumns, from, to) %>%
     distinct()
 
-  # Check if findreplace contains duplicate combinations of replacecolumns and from
   duplicates <- findreplace[duplicated(findreplace[, c("replacecolumns", "from")]), ]
 
   if (nrow(duplicates) > 0) {
-    browser()
     stop(paste(
       "Error: findreplace contains", nrow(duplicates), "rows with the same replacecolumns, from combination.\n",
       "Duplicated rows:\n", capture.output(print(duplicates))
     ))
   }
 
-  if (silent == FALSE) cat("running replace_values", "\n")
+  if (!silent) cat("running replace_values", "\n")
 
   # reduce everything
-  df <- convert_columns_to_numeric(df) %>%
-    dplyr::mutate(across(everything(), as.character))
+  df <- df %>%
+    simplify_columns_df
+
 
   # Replace NA values with the unique string in df and findreplace
   df <- replace(df, is.na(df), NA_string)
@@ -94,12 +149,14 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
 
   for (replacecolumn in unique(findreplace$replacecolumns)) {
     if (silent == FALSE) cat("replacing ", replacecolumn, "\n")
-    findreplace_column <- dplyr::filter(findreplace, replacecolumns == replacecolumn) %>%
+    findreplace_column <- findreplace %>%
+      dplyr::filter(replacecolumns == replacecolumn) %>%
       dplyr::mutate(replacecolumns = NULL)
 
     # reduce everything
-    findreplace_column <- convert_columns_to_numeric(findreplace_column) %>%
-      dplyr::mutate(across(everything(), as.character))
+    findreplace_column <- findreplace_column %>%
+        simplify_columns_df %>%
+      dplyr::filter(from %in% df[, replacecolumn])
 
     replacement <- df %>%
       dplyr::select(all_of(replacecolumn)) %>%
@@ -112,16 +169,20 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
       dplyr::distinct()
 
     if (nrow(missing) > 0) {
-      print(paste("no value assigned in", replacecolumn, "for"))
-      print(missing[, 1] %>% unique())
+      warning(
+        paste("No value assigned in", replacecolumn, "for"),
+        paste(missing[, 1] %>% unique(), collapse = " ")
+      )
     }
 
-    # if(silent == FALSE){
-    #  print("replacement")
-    #  print(head(replacement))
-    #  print("df")
-    #  print(head(df))
-    # }
+    if (!silent) {
+      cat("peplacing \n")
+      print("replacement")
+      print(head(replacement))
+      print("df")
+      print(head(df))
+    }
+
     df[, replacecolumn] <- dplyr::coalesce(replacement$to, df[, replacecolumn])
   }
 
@@ -235,11 +296,3 @@ group_summarize_add_column <- function(df, column, new_col_value) {
   # result %>%
   #  mutate({{ column }} := new_col_value)
 }
-
-
-
-
-
-
-
-
