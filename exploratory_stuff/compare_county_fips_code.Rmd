@@ -23,7 +23,7 @@ library(stringr)
 library(ComplexHeatmap)
 
 options(bitmapType = "cairo")
-year <- 1999
+year <- 2016
 ```
 
 load demog
@@ -172,15 +172,15 @@ NCHSURCodes2013 <- NCHSURCodes2013$`FIPS code`
 # Initialize an empty list to store the data frames for each year
 svi_county <- list()
 
-file_name <- here(paste0("data/xx_svi/SVI_", 2000, "_US_county.csv"))
-tmp <- readr::read_csv(file_name, show_col_types = FALSE)
-svi_county_2000 <- tmp$STCOFIPS
+#file_name <- here(paste0("data/xx_svi/SVI_", 2000, "_US_county.csv"))
+#tmp <- readr::read_csv(file_name, show_col_types = FALSE)
+#svi_county_2000 <- tmp$STCOFIPS
 
-file_name <- here(paste0("data/xx_svi/SVI_", 2010, "_US_county.csv"))
-tmp <- readr::read_csv(file_name, show_col_types = FALSE)
-svi_county_2010 <- tmp$FIPS
+#file_name <- here(paste0("data/xx_svi/SVI_", 2010, "_US_county.csv"))
+#tmp <- readr::read_csv(file_name, show_col_types = FALSE)
+#svi_county_2010 <- tmp$FIPS
 
-file_name <- here(paste0("data/xx_svi/SVI_", 2020, "_US_county.csv"))
+file_name <- here(paste0("data/08_svi/SVI_", 2020, "_US_county.csv"))
 tmp <- readr::read_csv(file_name, show_col_types = FALSE)
 svi_county_2020 <- tmp$STCNTY
 ```
@@ -195,16 +195,14 @@ svi_county_2020 <- tmp$STCNTY
 #tracts = tracts, 
 #, pop_sum = pop_sum
 
-list_all_counties <- list(total_burden = total_burden, attr_burd = attr_burd, total_burden_rate = total_burden_rate, NCHSURCodes2013 = NCHSURCodes2013, svi_county_2000 = svi_county_2000, svi_county_2010 = svi_county_2010, svi_county_2020 = svi_county_2020)
+#list_all_counties <- list(total_burden = total_burden, attr_burd = attr_burd, total_burden_rate = total_burden_rate, NCHSURCodes2013 = NCHSURCodes2013, svi_county_2000 = svi_county_2000, svi_county_2010 = svi_county_2010, svi_county_2020 = svi_county_2020)
+
+list_all_counties <- list(total_burden = total_burden, svi_county_2020 = svi_county_2020)
 
 
 ```
 
 <https://stackoverflow.com/questions/1719447/outer-equivalent-for-non-vector-lists-in-r>
-
-```{r}
-setdiff()
-```
 
 ```{r}
 outer_extended <- function(a, b, fun) {
