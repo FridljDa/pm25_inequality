@@ -160,3 +160,68 @@ search_files <- function(directory, string, ends_with = FALSE) {
 
   return(matching_files)
 }
+
+#' Create directory if it does not exist
+#'
+#' This function checks if a directory at the specified path exists.
+#' If it does not exist, the function creates it.
+#'
+#' @param dir_path A character string specifying the path to the directory to be created.
+#'
+#' @return Invisible NULL. The function is called for its side effect of creating a directory.
+#'
+#' @examples
+#' \dontrun{
+#' create_directory("path/to/your/directory")
+#' }
+#' @export
+create_directory <- function(dir_path) {
+  if (!file.exists(dir_path)) {
+    dir.create(dir_path, recursive = T)
+  }
+  invisible(NULL)
+}
+
+#' Run script based on system type
+#'
+#' This function runs a given R script file with optional arguments, using different settings depending on the current system's type.
+#' The function will also print which script was run and how long it took.
+#'
+#' @param script A string specifying the name/path of the script to be run.
+#' @param args A string specifying the arguments to be passed to the script. Default is "" (no arguments).
+#'
+#' @return NULL. This function is mainly called for its side effects (running the script and printing the results).
+#' @examples
+#' \dontrun{
+#' run_script("my_script.R")
+#' run_script("my_script.R", "--arg value")
+#' }
+#' @export
+run_script <- function(script, args = "") {
+  sysname <- Sys.info()["sysname"]
+
+  # Record the start time
+  start_time <- proc.time()
+
+  if (sysname == "Darwin") {
+    print(paste("Running script", script, "on Darwin"))
+    system(paste("Rscript", script, args))
+  } else if (sysname == "Windows") {
+    memory.limit(size = 500000)
+
+    exec <- paste0("C:/Program Files/R/R-", R.Version()$major, ".", R.Version()$minor, "/bin/Rscript.exe")
+    exec <- shQuote(exec)
+
+    print(paste("Running script", script, "on Windows"))
+    system(paste(exec, "--vanilla", script, args))
+  } else {
+    print(paste("Running script", script, "on", sysname))
+    system(paste("Rscript", script, args))
+  }
+
+  # Record the end time
+  end_time <- proc.time()
+
+  # Calculate and print the time difference
+  print(paste("Time taken to run script", script, ":", as.numeric(end_time - start_time, "secs"), "seconds"))
+}

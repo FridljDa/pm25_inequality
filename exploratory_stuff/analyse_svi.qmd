@@ -13,6 +13,8 @@ https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html?
 ```{r}
 library(dplyr)
 library(readr)
+library(here)
+library(readxl)
 ```
 
 ```{r}
@@ -24,13 +26,13 @@ svi_county <- list()
 
 # Loop through each year and read the corresponding CSV file into the list
 for (year in years) {
-  file_name <- paste0("data/xx_svi/SVI_", year, "_US_county.csv")
+  file_name <- here(paste0("data/xx_svi/SVI_", year, "_US_county.csv"))
   svi_county[[as.character(year)]] <- read_csv(file_name, show_col_types = FALSE)
 }
 ```
 
 ```{r}
-rural_urban_class <- read_csv("data/rural_urban_class.csv", show_col_types = FALSE)
+rural_urban_class <- read_csv(here("data/rural_urban_class.csv"), show_col_types = FALSE)
   #filter(fromYear == 2010)
 rural_urban_class <- rural_urban_class  %>% split(rural_urban_class$fromYear)
 ```
@@ -38,6 +40,7 @@ rural_urban_class <- rural_urban_class  %>% split(rural_urban_class$fromYear)
 The four summary theme ranking variables, detailed in the Data Dictionary below, are: • Socioeconomic Status - RPL_THEME1 • Household Characteristics - RPL_THEME2 • Racial & Ethnic Minority Status - RPL_THEME3 • Housing Type & Transportation - RPL_THEME4 Overall tract rankings: We summed the sums for each theme, ordered the tracts, and then calculated overall percentile rankings. Please note taking the sum of the sums for each theme is the same as summing individual variable rankings. The overall summary ranking variable is RPL_THEMES.
 
 ```{r}
+SVI_2020_US_county <- svi_county[["2020"]]
 SVI_2020_US_county %>% select(starts_with("RPL_"))
 ```
 
@@ -45,11 +48,19 @@ SVI_2020_US_county %>% select(starts_with("RPL_"))
 range(SVI_2020_US_county$RPL_THEMES)
 ```
 
+## Rural urban class
+
+```{r}
+NCHSURCodes2013 <- read_excel(here("data/NCHSURCodes2013.xlsx"))
+```
+
 ## compare county fips
 
 ```{r}
 # Function to calculate set proportions and return/print elements in the intersection, vector1 only, and vector2 only
 calculate_set_proportions <- function(vector1, vector2, print_proportions = FALSE) {
+  vector1 <- as.numeric(vector1)
+  vector2 <- as.numeric(vector2)
   # Convert vectors to sets (unique elements)
   set1 <- unique(vector1)
   set2 <- unique(vector2)
@@ -91,9 +102,17 @@ calculate_set_proportions <- function(vector1, vector2, print_proportions = FALS
 ```
 
 ```{r}
-set_comp <- calculate_set_proportions(rural_urban_class$FIPS.code, SVI_2020_US_county$FIPS, print_proportions = TRUE)
+set_comp <- calculate_set_proportions(#
+  rural_urban_class[[1]]$FIPS.code,
+  #NCHSURCodes2013$`FIPS code`,
+  SVI_2020_US_county$FIPS, 
+  print_proportions = TRUE)
 ```
 
 ```{r}
 set_comp$vector1_only_elements
+```
+
+```{r}
+set_comp$vector2_only_elements
 ```

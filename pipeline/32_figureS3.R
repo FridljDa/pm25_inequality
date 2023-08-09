@@ -34,12 +34,6 @@ min_ageI <- args[13]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
-  # summaryDir <- "/Users/default/Desktop/data_summary_old"
-  figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-
-  summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
 
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
@@ -58,6 +52,9 @@ rm(file_list)
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
+pm_summ <- pm_summ %>%
+  filter(Region == "United States") #TODO
+
 
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == scenarioI)
@@ -69,7 +66,7 @@ g1 <- ggplot(pm_summ1, aes(x = Year, y = value, color = Ethnicity))
 
 pm_summ2 <- pm_summ %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
 pm_summ2$Education <- factor(pm_summ2$Education,                 # Relevel group factor
-                             levels = c("High school graduate or lower", 
+                             levels = c("High school graduate or lower",
                                         "Some college education but no 4-year college degree",
                                         "4-year college graduate or higher"))
 
@@ -77,7 +74,7 @@ g2 <- ggplot(pm_summ2, aes(x = Year, y = value, color = Education))
 
 pm_summ3 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year >= 2000)
 pm_summ3$rural_urban_class <- factor(pm_summ3$rural_urban_class,                 # Relevel group factor
-                                       levels = c("Large metro", 
+                                       levels = c("Large metro",
                                                   "Small-medium metro",
                                                   "Non metro"))
 
@@ -135,7 +132,7 @@ legend_plots <- lapply(plots, function(g) {
 
 plots <- lapply(plots, function(g) {
   g +
-    theme(legend.position = "none", axis.title.y = element_blank()) 
+    theme(legend.position = "none", axis.title.y = element_blank())
 })
 
 ## --- arrange plots----

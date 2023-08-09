@@ -1,0 +1,245 @@
+---
+title: "missing_counties"
+output: html_document
+date: 08.12.2022
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+We want to figure out, why some counties are missing
+
+```{r loading packages}
+# load packages, install if missing
+library(data.table)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(here)
+library(stringr)
+library(ComplexHeatmap)
+
+options(bitmapType = "cairo")
+year <- 1999
+```
+
+load demog
+
+```{r, eval = FALSE}
+file_list <- list.files(here("data/05_demog", year))
+cens <- lapply(file_list, function(file) fread(here("data/05_demog", year, file)))
+cens <- rbindlist(cens)
+
+cens <- cens %>%
+  mutate(county = sprintf("%s%03d", state, county) %>% as.numeric()) %>%
+  select(county) %>%
+  distinct()
+cens <- unlist(cens)
+cens <- as.numeric(cens)
+```
+
+```{r}
+file_list <- list.files(here("data/02_tracts", year))
+
+tracts <- lapply(file_list, function(file){
+  tracts_i <- readRDS(here("data/02_tracts", year, file))
+  tracts_i$GEO_ID
+} )
+tracts <- unlist(tracts)
+
+tracts <- sapply(tracts, function(GEO_ID) 
+  str_sub(GEO_ID, 1, 5))
+tracts <- unique(tracts)
+tracts <- as.numeric(tracts)
+```
+
+```{r, eval = FALSE}
+file_list <- list.files(here("data/05_demog", "1990"))
+cens_1990 <- lapply(file_list, function(file) fread(here("data/05_demog", "1990", file)))
+cens_1990 <- rbindlist(cens_1990)
+
+cens_1990 <- cens_1990 %>%
+  mutate(county = sprintf("%s%03d", state, county) %>% as.numeric()) %>%
+  select(county) %>%
+  distinct()
+cens_1990 <- unlist(cens_1990)
+cens_1990 <- as.numeric(cens_1990)
+```
+
+```{r, eval = FALSE}
+file_list <- list.files(here("data/05_demog", 2000))
+cens_2000 <- lapply(file_list, function(file) fread(here("data/05_demog", 2000, file)))
+cens_2000 <- rbindlist(cens_2000)
+
+cens_2000 <- cens_2000 %>%
+  mutate(county = sprintf("%s%03d", state, county) %>% as.numeric()) %>%
+  select(county) %>%
+  distinct()
+cens_2000 <- unlist(cens_2000)
+cens_2000 <- as.numeric(cens_2000)
+```
+
+<https://www.census.gov/programs-surveys/geography/guidance/geo-identifiers.html>
+
+```{r}
+crosswalk_1990_2010 <- fread(here("data/crosswalk_1990_2010.csv"))
+
+crosswalk_1990_2010 <- crosswalk_1990_2010 %>%
+  mutate(
+    county1990_cross_should = str_sub(trtid90, 1, 5),
+    county1990_cross_is = str_sub(trtid90, 1, -6),
+    county2010_cross_should = str_sub(trtid10, 1, 5),
+    county2010_cross_is = str_sub(trtid10, 1, -6)
+  )
+
+county1990_cross_should <- unique(crosswalk_1990_2010$county1990_cross_should)
+county1990_cross_is <- unique(crosswalk_1990_2010$county1990_cross_is)
+county2010_cross_should <- unique(crosswalk_1990_2010$county2010_cross_should)
+county2010_cross_is <- unique(crosswalk_1990_2010$county2010_cross_is)
+```
+
+```{r}
+total_burden_rate <- 
+  fread(here(paste0("data/13_total_burden_rate/county/nvss/total_burden_",year,".csv")))
+
+total_burden_rate <- total_burden_rate %>%
+  select(county) %>%
+  distinct()
+total_burden_rate <- unlist(total_burden_rate)
+total_burden_rate <- as.numeric(total_burden_rate)
+```
+
+```{r}
+pop_sum <- fread(here(paste0("data/12_population_summary/county/pop_sum_", year,".csv")))
+
+pop_sum <- pop_sum %>%
+  select(county) %>%
+  distinct()
+pop_sum <- unlist(pop_sum)
+pop_sum <- as.numeric(pop_sum)
+```
+
+```{r}
+file_list <- list.files(here("data/14_attr_burd/county/nvss"))
+file_list <- file_list[grep(year, file_list)]
+ 
+attr_burd <- lapply(file_list, function(file) fread(here("data/14_attr_burd/county/nvss", file)))
+attr_burd <- rbindlist(attr_burd, use.names = TRUE)
+
+attr_burd <- attr_burd %>%
+  select(county) %>%
+  distinct()
+attr_burd <- unlist(attr_burd)
+attr_burd <- as.numeric(attr_burd)
+```
+
+load dem.agr
+
+```{r}
+file_list <- list.files(here("data/06_dem.agr/county", year))
+ces_agr <- lapply(file_list, function(file) fread(here("data/06_dem.agr/county", year, file)))
+ces_agr <- rbindlist(ces_agr)
+ces_agr <- ces_agr %>%
+  select(county) %>%
+  distinct()
+ces_agr <- unlist(ces_agr)
+ces_agr <- as.numeric(ces_agr)
+```
+
+read tot burden
+
+```{r}
+total_burden <- fread(here(paste0("data/09_total_burden_parsed/county/nvss/total_burden_nvss_", year, ".csv")))
+
+total_burden <- total_burden %>%
+  select(county) %>%
+  distinct()
+total_burden <- unlist(total_burden)
+total_burden <- as.numeric(total_burden)
+```
+
+```{r}
+NCHSURCodes2013 <- readxl::read_excel(here("data/NCHSURCodes2013.xlsx"))
+NCHSURCodes2013 <- NCHSURCodes2013$`FIPS code`
+```
+
+## SVI
+
+```{r}
+# Initialize an empty list to store the data frames for each year
+svi_county <- list()
+
+file_name <- here(paste0("data/xx_svi/SVI_", 2000, "_US_county.csv"))
+tmp <- readr::read_csv(file_name, show_col_types = FALSE)
+svi_county_2000 <- tmp$STCOFIPS
+
+file_name <- here(paste0("data/xx_svi/SVI_", 2010, "_US_county.csv"))
+tmp <- readr::read_csv(file_name, show_col_types = FALSE)
+svi_county_2010 <- tmp$FIPS
+
+file_name <- here(paste0("data/xx_svi/SVI_", 2020, "_US_county.csv"))
+tmp <- readr::read_csv(file_name, show_col_types = FALSE)
+svi_county_2020 <- tmp$STCNTY
+```
+
+```{r}
+# county1990_cross_is = county1990_cross_is,
+#county2010_cross_is = county2010_cross_is,
+#county1990_cross_should = county1990_cross_should, 
+#county2010_cross_should = county2010_cross_should,
+#cens = cens, ces_agr = ces_agr, 
+#cens_2000 = cens_2000, cens_1990 = cens_1990,
+#tracts = tracts, 
+#, pop_sum = pop_sum
+
+list_all_counties <- list(total_burden = total_burden, attr_burd = attr_burd, total_burden_rate = total_burden_rate, NCHSURCodes2013 = NCHSURCodes2013, svi_county_2000 = svi_county_2000, svi_county_2010 = svi_county_2010, svi_county_2020 = svi_county_2020)
+
+
+```
+
+<https://stackoverflow.com/questions/1719447/outer-equivalent-for-non-vector-lists-in-r>
+
+```{r}
+setdiff()
+```
+
+```{r}
+outer_extended <- function(a, b, fun) {
+  outer(a, b, function(x, y) vapply(seq_along(x), function(i) fun(x[[i]], y[[i]]), numeric(1)))
+}
+```
+
+```{r}
+difference_matrix <- outer_extended(
+  list_all_counties,
+  list_all_counties,
+  function(counties1, counties2) {
+    counties1 <- as.numeric(counties1)
+    counties2 <- as.numeric(counties2)
+    
+    counties1 <- unique(counties1)
+    counties2 <- unique(counties1)
+
+    difference <- setdiff(counties2, counties1)
+    total <- union(counties2, counties1)
+    difference <- length(difference) / length(total)
+    #round(difference, 2)
+    difference * 100
+  }
+)
+colnames(difference_matrix) <- names(list_all_counties)
+rownames(difference_matrix) <- names(list_all_counties)
+difference_matrix
+```
+
+```{r}
+list_all_counties_lengths <- sapply(list_all_counties, length)
+column_ha = HeatmapAnnotation(number = list_all_counties_lengths)
+```
+
+```{r}
+Heatmap(difference_matrix, top_annotation = column_ha)
+```
