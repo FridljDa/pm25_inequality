@@ -48,7 +48,8 @@ test_that("Value replacement is successful", {
 test_that("No replacement when 'from' value is not in the column", {
   df <- data.frame(col1 = c(1, 2, 3, 4), col2 = c("a", "b", "c", "d"), stringsAsFactors = FALSE)
   findreplace <- data.frame(replacecolumns = c("col1", "col2"), from = c(100, "z"), to = c(1000, "zz"), stringsAsFactors = FALSE)
-  df <- replace_values(df, findreplace)
+
+  expect_warning(df <- replace_values(df, findreplace))
 
   expect_equal(df$col1[1], 1)  # unchanged
   expect_equal(df$col2[1], "a")  # unchanged
