@@ -1,0 +1,102 @@
+---
+title: "explore_what_is_going_on"
+format: html
+editor: visual
+---
+
+```{r}
+library(here)
+library(data.table)
+library(magrittr)
+library(pmInequalityAnalysis)
+devtools::load_all()
+```
+
+```{r}
+year <- 2010
+```
+
+```{r, eval = FALSE}
+file_list <- list.files(here("data/05_demog", year))
+cens <- lapply(file_list, function(file) read.csv(here("data/05_demog", year, file)))
+cens <- rbindlist(cens)
+
+cens <- cens %>%
+  mutate(county = sprintf("%s%03d", state, county) %>% as.numeric()) %>%
+  select(county) %>%
+  distinct()
+cens <- unlist(cens)
+cens <- as.numeric(cens)
+```
+
+load dem.agr
+
+```{r}
+file_list <- list.files(here("data/06_dem.agr/county", year))
+ces_agr_df <- lapply(file_list, function(file) fread(here("data/06_dem.agr/county", year, file)))
+ces_agr_df <- rbindlist(ces_agr_df)
+table(ces_agr_df$rural_urban_class)
+```
+
+```{r}
+ces_agr <- ces_agr_df %>%
+  select(county) %>%
+  distinct()
+ces_agr <- unlist(ces_agr)
+ces_agr <- as.numeric(ces_agr)
+```
+
+```{r, eval = FALSE}
+file_list <- list.files("~/Desktop/1995")
+ces_agr_1995_df <- lapply(file_list, function(file) fread(here("~/Desktop/1995", file)))
+ces_agr_1995_df <- rbindlist(ces_agr_1995_df)
+table(ces_agr_1995_df$rural_urban_class)
+```
+
+```{r, eval = FALSE}
+ces_agr_1995 <- ces_agr_1995_df %>%
+  select(county) %>%
+  distinct()
+ces_agr_1995 <- unlist(ces_agr_1995)
+ces_agr_1995 <- as.numeric(ces_agr_1995)
+```
+
+```{r, eval = TRUE}
+#cens_agr_1995_AZ <- read_csv("data/06_dem.agr/county/1995/cens_agr_1995_AZ.csv") %>% 
+#  select(county) %>%
+#  unlist
+
+rural_urban_class <- read_csv("data/rural_urban_class.csv") %>% 
+  select(county = FIPS.code) %>%
+  unlist
+
+rural_urban_class_1995 <- read_csv("/Volumes/DanielDrive/PM2.5-attributable-mortality-analysis-private_20221216/data/rural_urban_class.csv") %>% 
+  select(county = FIPS.code) %>%
+  unlist
+
+```
+
+```{r}
+list_all_counties <- list(#cens_agr_1995_AZ_20230809 = cens_agr_1995_AZ_20230809,
+                          #cens_agr_1995_AZ = cens_agr_1995_AZ,
+                          rural_urban_class = rural_urban_class,
+                          rural_urban_class_1995 = rural_urban_class_1995,
+                          #cens = cens,
+                          ces_agr = ces_agr,
+                          ces_agr_1995 = ces_agr_1995
+                          )
+```
+
+```{r}
+dif <- outer_difference_heatmap(list_all_counties)
+dif
+```
+
+```{r}
+dif@matrix
+```
+
+```{r}
+ces_agr[order(ces_agr)]
+setdiff( ces_agr, rural_urban_class)
+```
