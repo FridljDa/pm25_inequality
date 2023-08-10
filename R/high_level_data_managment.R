@@ -28,6 +28,10 @@ read_data <- function(path) {
   column_names_present <- colnames(first_row)
 
   col_types_data <- cols(
+    pop_size = col_double(),
+    pm = col_double(), prop = col_double(),
+    state = col_integer(),
+    variable = col_character(),
     Year = col_integer(),
     min_age = col_integer(), max_age = col_integer(),
     county = col_integer(),
@@ -105,6 +109,10 @@ read_data <- function(path) {
 
   column_names_available <- names(col_types_data[["cols"]])
   column_names_intersection <- intersect(column_names_available, column_names_present)
+  column_names_dif <- setdiff(column_names_present, column_names_available)
+  if (length(column_names_dif) > 0) {
+    message("No col_types specified for: ", paste(column_names_dif, collapse = ", "))
+  }
 
   col_types_data[["cols"]] <- col_types_data[["cols"]][column_names_intersection]
 

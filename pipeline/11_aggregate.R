@@ -7,7 +7,7 @@
 #*
 
 # clear memory
-#rm(list = ls(all = TRUE))
+# rm(list = ls(all = TRUE))
 
 # load packages
 library(dplyr)
@@ -27,7 +27,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 1995
+  year <- 2001
   agr_by <- "nation"
 
   dataDir <- "data"
@@ -58,7 +58,7 @@ dir.create(cens_agrDir, recursive = T, showWarnings = F)
 
 # load states, so we can loop over them
 states <- file.path(tmpDir, "states.csv") %>%
-  fread() %>%
+  read_csv() %>%
   as.data.frame()
 
 
@@ -133,7 +133,7 @@ for (i in seq_len(nrow(states))) {
   cens_agr <- inner_join(trac_censData,
     exp_tracData,
     by = "GEO_ID",
-    multiple = "all" #matching multiple because of multiple scenarios
+    multiple = "all" # matching multiple because of multiple scenarios
   ) %>%
     group_by(state, county, variable, scenario, pm) %>%
     # calculate number of persons of exposed to particulare level of exposure,
@@ -142,48 +142,20 @@ for (i in seq_len(nrow(states))) {
     filter(pop_size != 0)
 
   cens_agr <- cens_agr %>%
-    group_by(state, county, variable, scenario) %>% #no pm
+    group_by(state, county, variable, scenario) %>% # no pm
     mutate(prop = pop_size / sum(pop_size)) %>%
     ungroup()
 
   cens_agr <- cens_agr %>% mutate(county = sprintf("%s%03d", state, county) %>% as.numeric())
-  #cens_agr2 <- cens_agr
-  #add rural classification
-  corresponding_year <- setNames(c(1990, rep(2010,9),2000,rep(2010,8),2000,rep(2010,7)), 1990:2016) #TODO
-  rural_urban_class <- read.csv(file.path(dataDir, "rural_urban_class.csv")) %>%
-    filter(fromYear == corresponding_year[[as.character(year)]]) %>%
-    select(FIPS.code, rural_urban_class)
-  rm(corresponding_year)
 
-  if(year %in% 2000:2016){
-    test_that("11_aggregate anti join rural urban class",{
-      anti_joined <- anti_join(cens_agr, rural_urban_class, by = c("county"="FIPS.code")) %>%
-        group_by(state, county) %>%
-        summarise(pop_size = sum(pop_size), n = n())
 
-      expect_equal(0, nrow(anti_joined))
-    })
-  }
-
+  # add rural classification and svi
   cens_agr <- cens_agr %>%
-    left_join(rural_urban_class, by = c("county"="FIPS.code")) %>%
-    mutate(rural_urban_class = as.character(rural_urban_class),
-           rural_urban_class = replace_na(rural_urban_class, "Unknown"))
+    mutate(Year = year) %>%
+    add_rural_urban_class(FIPS.code.column = "county") %>%
+    add_social_vuln_index(FIPS.code.column = "county") %>%
+    mutate(Year = NULL)
 
-  # add rural classification
-  #browser()
-  #cens_agr2$Year <- year
-  #cens_agr2 <- cens_agr2 %>%
-  #mutate(Year = year) %>%
-  #  add_rural_urban_class(FIPS.code.column ="county") %>%
-  #  mutate(Year = NULL)
-
-  table(cens_agr$rural_urban_class)
-  #table(cens_agr2$rural_urban_class)
-  #browser()
-  #add social vuln index
-  #cens_agr <- cens_agr %>%
-  #  add_social_vuln_index(FIPS.code.column ="county")
 
   fwrite(cens_agr, cens_agrDirCX)
   toc()
@@ -200,62 +172,69 @@ if (agr_by != "county") {
     cens_agrDirX <- paste0("cens_agr_", toString(year), "_", region, ".csv") %>%
       file.path(cens_agrDir, .)
 
-    if (!file.exists(cens_agrDirX)) {
-      tic(paste("Aggregated Census data in", agr_by, region, "in year", year, "by pm"))
-      statesX <- states[states[, agr_by] == region, "STUSPS"]
-
-      # rbind all states from this region
-      cens_agr <- lapply(statesX, function(STUSPS) {
-        cens_agrDir <- file.path(cens_agrDirC, paste0("cens_agr_", toString(year), "_", STUSPS, ".csv"))
-        if (!file.exists(cens_agrDir) & year < 2000 & STUSPS %in% c("AK", "HI")) { #
-          return(NULL)
-        } else {
-          return(fread(cens_agrDir))
-        }
-      }) %>%
-        rbindlist() %>%
-        as.data.frame()
-
-      # cens_agr$rural_urban_class <- NULL
-      if (nrow(cens_agr) > 0) {
-        cens_agr1 <- cens_agr %>%
-          group_by(variable, scenario, pm) %>%
-          summarise(pop_size = sum(pop_size)) %>%
-          mutate(rural_urban_class = "666")
-
-        cens_agr2 <- cens_agr %>%
-          filter(!is.na(rural_urban_class)) %>%
-          group_by(variable, rural_urban_class, scenario, pm) %>%
-          summarise(pop_size = sum(pop_size)) %>%
-          mutate(rural_urban_class = as.character(rural_urban_class))
-
-        cens_agr <- rbind(cens_agr1, cens_agr2)
-        rm(cens_agr1, cens_agr2)
-
-        # add proportions
-        cens_agr <- cens_agr %>%
-          group_by(variable, rural_urban_class, scenario) %>%
-          mutate(prop = pop_size / sum(pop_size)) %>%
-          ungroup()
-
-        # test, check
-        test_that("06_aggregate agr_by", {
-          cens_agr %>%
-            group_by(variable, rural_urban_class, scenario) %>%
-            summarise(sum_prop = sum(prop)) %>%
-            apply(1, function(row) {
-              expect_equal(1, row[["sum_prop"]] %>% as.numeric())
-            })
-          expect_false(any(is.na(cens_agr)))
-        })
-
-        # add region
-        cens_agr[, agr_by] <- region
-
-        write.csv(cens_agr, cens_agrDirX, row.names = FALSE)
-      }
-
-      toc()
+    if (file.exists(cens_agrDirX)) {
+      next
     }
+    # if (!file.exists(cens_agrDirX)) {
+    tic(paste("Aggregated Census data in", agr_by, region, "in year", year, "by pm"))
+    statesX <- states[states[, agr_by] == region, "STUSPS"]
+
+    # rbind all states from this region
+    cens_agr <- lapply(statesX, function(STUSPS) {
+      cens_agrDir <- file.path(cens_agrDirC, paste0("cens_agr_", toString(year), "_", STUSPS, ".csv"))
+      if (!file.exists(cens_agrDir) & year < 2000 & STUSPS %in% c("AK", "HI")) { #
+        return(NULL)
+      } else {
+        return(read_data(cens_agrDir))
+      }
+    }) %>%
+      rbindlist() %>%
+      as.data.frame()
+
+    # cens_agr$rural_urban_class <- NULL
+    if (nrow(cens_agr) <= 0) {
+      return(NULL)
+    }
+    cens_agr_all <- cens_agr %>%
+      group_by(variable, scenario, pm) %>%
+      summarise(pop_size = sum(pop_size)) %>%
+      mutate(rural_urban_class = "666", svi_bin = "666") %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+      mutate(prop = pop_size / sum(pop_size))
+
+    cens_agr_rural_urban_class <- cens_agr %>%
+      filter(!is.na(rural_urban_class) & rural_urban_class != "Unknown") %>%
+      group_by(variable, rural_urban_class, scenario, pm) %>%
+      summarise(pop_size = sum(pop_size)) %>%
+      mutate(svi_bin = "666") %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+      mutate(prop = pop_size / sum(pop_size))
+
+    cens_agr_svi <- cens_agr %>%
+      filter(!is.na(svi_bin) & svi_bin != "Unknown") %>%
+      group_by(variable, svi_bin, scenario, pm) %>%
+      summarise(pop_size = sum(pop_size)) %>%
+      mutate(rural_urban_class = "666") %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+      mutate(prop = pop_size / sum(pop_size))
+
+    cens_agr <- rbind(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
+    rm(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
+
+    # add proportions
+
+    cens_agr_check <- cens_agr %>%
+      group_by(variable, rural_urban_class, svi_bin, scenario) %>%
+      summarise(sum_prop = sum(prop))
+
+    assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+
+    # add region
+    cens_agr[, agr_by] <- region
+
+    write.csv(cens_agr, cens_agrDirX, row.names = FALSE)
+
+
+    toc()
   }
 }
