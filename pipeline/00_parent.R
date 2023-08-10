@@ -87,10 +87,10 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
 #no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
-no_figure_scripts_list <- no_figure_scripts_list_full[c(18,21,22,23)] #3,14,
+no_figure_scripts_list <- no_figure_scripts_list_full[c(11)] #3,14,
 #years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- 1994
-years <- 1990:1998
+years <- 1995
 # years <- 1998 #,1990,1991
 source <- "nvss"
 for (agr_by in agr_bys) {
@@ -118,7 +118,7 @@ for (agr_by in agr_bys) {
         propOfAttrBurdDir = "data/16_prop_of_attr_burd" #20
       )
       for(no_figure_script in no_figure_scripts_list){
-        #run_script(script = no_figure_script, args = args)
+        run_script(script = no_figure_script, args = args)
       }
       print(paste(year, agr_by))
     }
@@ -145,7 +145,7 @@ args <- paste(
 
 #run_script(script = "pipeline/24_summary_attr_total_burd.R", args = args)
 #run_script(script = summary.script, args = args)
-run_script(script = "pipeline/25_summary_other.R", args = args)
+#run_script(script = "pipeline/25_summary_other.R", args = args)
 
 
 args <- paste(
@@ -163,4 +163,4 @@ args <- paste(
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
   min_age = 65 #13
 )
-for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
+#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)

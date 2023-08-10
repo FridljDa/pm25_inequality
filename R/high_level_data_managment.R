@@ -37,7 +37,7 @@ read_data <- function(path) {
       "Non metro", "3",
       "All", "666"
     )),
-    RPL_THEMES_bins = col_factor(levels = c(
+    svi_bin = col_factor(levels = c(
       "low svi", "1",
       "middle svi", "2",
       "high svi", "3",

@@ -1,5 +1,42 @@
 #fips code handling
 
+#' Calculate the Difference Matrix
+#'
+#' This function calculates a difference matrix using an extended version of the `outer` function.
+#' It applies a specific function to calculate the differences between counties and returns a heatmap.
+#'
+#' @param list_all_counties A list containing information about all counties.
+#' @return A heatmap of the difference matrix.
+#' @importFrom ComplexHeatmap Heatmap HeatmapAnnotation
+#' @export
+outer_difference_heatmap <- function(list_all_counties) {
+  outer_extended <- function(a, b, fun) {
+    outer(a, b, function(x, y) vapply(seq_along(x), function(i) fun(x[[i]], y[[i]]), numeric(1)))
+  }
+
+  difference_matrix <- outer_extended(
+    list_all_counties,
+    list_all_counties,
+    function(counties1, counties2) {
+
+      difference <- setdiff(counties2, counties1)
+      total <- union(counties2, counties1)
+      difference <- length(difference) / length(total)
+    }
+  )
+
+  list_all_counties <- lapply(list_all_counties, unique)
+  list_all_counties <- lapply(list_all_counties, as.numeric)
+
+  colnames(difference_matrix) <- names(list_all_counties)
+  rownames(difference_matrix) <- names(list_all_counties)
+
+  list_all_counties_lengths <- sapply(list_all_counties, length)
+  column_ha = ComplexHeatmap::HeatmapAnnotation(number = list_all_counties_lengths)
+
+  return(ComplexHeatmap::Heatmap(difference_matrix, top_annotation = column_ha))
+}
+
 
 if(FALSE){
 

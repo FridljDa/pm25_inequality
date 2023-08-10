@@ -101,7 +101,7 @@ simplify_columns_df <- function(df) {
 #' findreplace <- data.frame(replacecolumns = c("a", "b"), from = c("1", "a"), to = c("10", "z"))
 #' df <- replace_values(df, findreplace)
 #'
-replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", silent = TRUE) {
+replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_string = "Unique_NA_String", silent = TRUE) {
   df <- as.data.frame(df)
   findreplace <- as.data.frame(findreplace)
 
@@ -120,9 +120,9 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
   }
 
   # Check if findreplace contains duplicate combinations of replacecolumns and from
-  findreplace <- findreplace %>%
-    select(replacecolumns, from, to) %>%
-    distinct()
+  #findreplace <- findreplace %>%
+  #  select(replacecolumns, from, to) %>%
+  #  distinct()
 
   duplicates <- findreplace[duplicated(findreplace[, c("replacecolumns", "from")]), ]
 
@@ -137,7 +137,7 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
 
   # reduce everything
   df <- df %>%
-    simplify_columns_df
+    simplify_columns_df()
 
 
   # Replace NA values with the unique string in df and findreplace
@@ -145,7 +145,8 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
   findreplace <- replace(findreplace, is.na(findreplace), NA_string)
 
   # Pre-filter findreplace
-  findreplace <- dplyr::filter(findreplace, replacecolumns %in% colnames(df))
+  findreplace <- findreplace %>%
+        dplyr::filter(replacecolumns %in% colnames(df))
 
   for (replacecolumn in unique(findreplace$replacecolumns)) {
     if (silent == FALSE) cat("replacing ", replacecolumn, "\n")
@@ -155,7 +156,7 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
 
     # reduce everything
     findreplace_column <- findreplace_column %>%
-        simplify_columns_df %>%
+      simplify_columns_df() %>%
       dplyr::filter(from %in% df[, replacecolumn])
 
     replacement <- df %>%
@@ -183,7 +184,12 @@ replace_values <- function(df, findreplace, NA_string = "Unique_NA_String", sile
       print(head(df))
     }
 
-    df[, replacecolumn] <- dplyr::coalesce(replacement$to, df[, replacecolumn])
+    #if keep_value_if_missing = FALSE, replace missing values with NA
+    if(keep_value_if_missing){
+      df[, replacecolumn] <- dplyr::coalesce(replacement$to, df[, replacecolumn])
+    }else{
+      df[, replacecolumn] <- replacement$to
+    }
   }
 
   # Convert the unique string back to NA

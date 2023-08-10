@@ -9,6 +9,7 @@ add_rural_urban_class(
   FIPS.code.column = "FIPS.code",
   Year.colum = "Year",
   path_to_rural_urban_class = "data/rural_urban_class.csv",
+  silent = TRUE,
   corresponding_year = setNames(c(1990, rep(2010, 9), 2000, rep(2010, 8), 2000, rep(2010,
     7)), 1990:2016)
 )

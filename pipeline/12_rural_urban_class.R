@@ -12,6 +12,8 @@ options(scipen = 10000, dplyr.summarise.inform = FALSE, dplyr.join.inform = FALS
 args <- commandArgs(trailingOnly = TRUE)
 dataDir <- args[2]
 censDir <- args[8]
+dataDir <- "data"
+censDir <- "data/05_demog"
 
 # Read rural and urban classification data
 rural_urban_class_or <- suppressMessages(

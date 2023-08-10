@@ -7,7 +7,7 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages
 library(dplyr)
@@ -18,6 +18,7 @@ library(tidyverse)
 library(readxl)
 library(stringr)
 library(tictoc)
+devtools::load_all()
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -26,7 +27,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2009
+  year <- 1995
   agr_by <- "nation"
 
   dataDir <- "data"
@@ -75,6 +76,7 @@ for (i in seq_len(nrow(states))) {
   if (file.exists(cens_agrDirCX)) {
     next
   }
+
   # if not calculated for this state yet
   # if (!file.exists(cens_agrDirCX)) {
   tic(paste("Aggregated Census data in", name, "in year", year, "by pm and county"))
@@ -130,7 +132,8 @@ for (i in seq_len(nrow(states))) {
 
   cens_agr <- inner_join(trac_censData,
     exp_tracData,
-    by = "GEO_ID"
+    by = "GEO_ID",
+    multiple = "all" #matching multiple because of multiple scenarios
   ) %>%
     group_by(state, county, variable, scenario, pm) %>%
     # calculate number of persons of exposed to particulare level of exposure,
@@ -139,22 +142,22 @@ for (i in seq_len(nrow(states))) {
     filter(pop_size != 0)
 
   cens_agr <- cens_agr %>%
-    group_by(state, county, variable, scenario) %>%
+    group_by(state, county, variable, scenario) %>% #no pm
     mutate(prop = pop_size / sum(pop_size)) %>%
     ungroup()
 
   cens_agr <- cens_agr %>% mutate(county = sprintf("%s%03d", state, county) %>% as.numeric())
-
-  # add rural classification
-  corresponding_year <- setNames(c(1990, rep(2010, 9), 2000, rep(2010, 8), 2000, rep(2010, 7)), 1990:2016) # TODO
+  #cens_agr2 <- cens_agr
+  #add rural classification
+  corresponding_year <- setNames(c(1990, rep(2010,9),2000,rep(2010,8),2000,rep(2010,7)), 1990:2016) #TODO
   rural_urban_class <- read.csv(file.path(dataDir, "rural_urban_class.csv")) %>%
     filter(fromYear == corresponding_year[[as.character(year)]]) %>%
     select(FIPS.code, rural_urban_class)
   rm(corresponding_year)
 
-  if (year %in% 2000:2016) {
-    test_that("11_aggregate anti join rural urban class", {
-      anti_joined <- anti_join(cens_agr, rural_urban_class, by = c("county" = "FIPS.code")) %>%
+  if(year %in% 2000:2016){
+    test_that("11_aggregate anti join rural urban class",{
+      anti_joined <- anti_join(cens_agr, rural_urban_class, by = c("county"="FIPS.code")) %>%
         group_by(state, county) %>%
         summarise(pop_size = sum(pop_size), n = n())
 
@@ -163,11 +166,24 @@ for (i in seq_len(nrow(states))) {
   }
 
   cens_agr <- cens_agr %>%
-    left_join(rural_urban_class, by = c("county" = "FIPS.code")) %>%
-    mutate(
-      rural_urban_class = as.character(rural_urban_class),
-      rural_urban_class = replace_na(rural_urban_class, "Unknown")
-    )
+    left_join(rural_urban_class, by = c("county"="FIPS.code")) %>%
+    mutate(rural_urban_class = as.character(rural_urban_class),
+           rural_urban_class = replace_na(rural_urban_class, "Unknown"))
+
+  # add rural classification
+  #browser()
+  #cens_agr2$Year <- year
+  #cens_agr2 <- cens_agr2 %>%
+  #mutate(Year = year) %>%
+  #  add_rural_urban_class(FIPS.code.column ="county") %>%
+  #  mutate(Year = NULL)
+
+  table(cens_agr$rural_urban_class)
+  #table(cens_agr2$rural_urban_class)
+  #browser()
+  #add social vuln index
+  #cens_agr <- cens_agr %>%
+  #  add_social_vuln_index(FIPS.code.column ="county")
 
   fwrite(cens_agr, cens_agrDirCX)
   toc()

@@ -205,39 +205,6 @@ list_all_counties <- list(total_burden = total_burden, svi_county_2020 = svi_cou
 <https://stackoverflow.com/questions/1719447/outer-equivalent-for-non-vector-lists-in-r>
 
 ```{r}
-outer_extended <- function(a, b, fun) {
-  outer(a, b, function(x, y) vapply(seq_along(x), function(i) fun(x[[i]], y[[i]]), numeric(1)))
-}
+outer_difference_heatmap(list_all_counties)
 ```
 
-```{r}
-difference_matrix <- outer_extended(
-  list_all_counties,
-  list_all_counties,
-  function(counties1, counties2) {
-    counties1 <- as.numeric(counties1)
-    counties2 <- as.numeric(counties2)
-    
-    counties1 <- unique(counties1)
-    counties2 <- unique(counties1)
-
-    difference <- setdiff(counties2, counties1)
-    total <- union(counties2, counties1)
-    difference <- length(difference) / length(total)
-    #round(difference, 2)
-    difference * 100
-  }
-)
-colnames(difference_matrix) <- names(list_all_counties)
-rownames(difference_matrix) <- names(list_all_counties)
-difference_matrix
-```
-
-```{r}
-list_all_counties_lengths <- sapply(list_all_counties, length)
-column_ha = HeatmapAnnotation(number = list_all_counties_lengths)
-```
-
-```{r}
-Heatmap(difference_matrix, top_annotation = column_ha)
-```

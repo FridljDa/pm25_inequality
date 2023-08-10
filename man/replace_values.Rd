@@ -4,7 +4,13 @@
 \alias{replace_values}
 \title{Replace specific values in a dataframe}
 \usage{
-replace_values(df, findreplace, NA_string = "Unique_NA_String", silent = TRUE)
+replace_values(
+  df,
+  findreplace,
+  keep_value_if_missing = TRUE,
+  NA_string = "Unique_NA_String",
+  silent = TRUE
+)
 }
 \arguments{
 \item{df}{A dataframe with the columns to replace values in.}

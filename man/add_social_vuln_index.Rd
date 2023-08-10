@@ -7,7 +7,9 @@
 add_social_vuln_index(
   df,
   FIPS.code.column = "FIPS.code",
-  path_to_svi = "data/08_svi/svi_lookup_table.csv"
+  Year.colum = "Year",
+  path_to_svi = "data/08_svi/svi_lookup_table.csv",
+  silent = TRUE
 )
 }
 \arguments{
