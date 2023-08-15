@@ -1,3 +1,4 @@
+
 #read_data
 #' Read Data from CSV file
 #'
@@ -13,10 +14,7 @@
 #' @examples
 #' df <- read_data("path/to/your/file.csv")
 #'
-#' @importFrom readr read_csv
-#' @importFrom readr cols
-#' @importFrom readr col_integer
-#' @importFrom readr col_factor
+#' @import readr
 read_data <- function(path) {
   # Read the first row of the CSV file
   first_row <- readr::read_csv(path,
@@ -33,8 +31,12 @@ read_data <- function(path) {
     state = col_integer(),
     variable = col_character(),
     Year = col_integer(),
+    fromYear = col_integer(),
     min_age = col_integer(), max_age = col_integer(),
     county = col_integer(),
+    FIPS.code = col_integer(),
+    tract = col_integer(),
+    GEO_ID = col_character(),
     rural_urban_class = col_factor(levels = c(
       "Large metro", "1",
       "Small-medium metro", "2",

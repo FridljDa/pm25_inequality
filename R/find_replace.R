@@ -57,8 +57,9 @@ convert_columns_to_numeric <- function(df) {
 #' df <- data.frame(a = c("1", "2", "3"), b = as.factor(c("a", "b", "c")))
 #' df <- simplify_columns_df(df)
 #'
-simplify_columns_df <- function(df) {
-  for (column in colnames(df)) {
+simplify_columns_df <- function(df, columns = colnames(df)) {
+  #TODO check that all columns present in df
+  for (column in columns) {
     # Try to convert character columns to numeric if possible
     if (is.character(df[[column]]) && can_be_numeric(df[[column]])) {
       # Convert from character to numeric and then back to character
@@ -120,10 +121,6 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
   }
 
   # Check if findreplace contains duplicate combinations of replacecolumns and from
-  #findreplace <- findreplace %>%
-  #  select(replacecolumns, from, to) %>%
-  #  distinct()
-
   duplicates <- findreplace[duplicated(findreplace[, c("replacecolumns", "from")]), ]
 
   if (nrow(duplicates) > 0) {
@@ -134,11 +131,6 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
   }
 
   if (!silent) cat("running replace_values", "\n")
-
-  # reduce everything
-  df <- df %>%
-    simplify_columns_df()
-
 
   # Replace NA values with the unique string in df and findreplace
   df <- replace(df, is.na(df), NA_string)
@@ -155,8 +147,12 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
       dplyr::mutate(replacecolumns = NULL)
 
     # reduce everything
+    df <- df %>%
+      simplify_columns_df(columns = replacecolumn)
+
+    # reduce everything
     findreplace_column <- findreplace_column %>%
-      simplify_columns_df() %>%
+      simplify_columns_df(columns = "from") %>%
       dplyr::filter(from %in% df[, replacecolumn])
 
     replacement <- df %>%
@@ -194,7 +190,7 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
 
   # Convert the unique string back to NA
   df <- replace(df, df == NA_string, NA)
-  df <- convert_columns_to_numeric(df)
+  #df <- convert_columns_to_numeric(df)
 
   return(df)
 }

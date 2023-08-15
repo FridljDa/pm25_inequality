@@ -7,7 +7,6 @@
 #'
 #' @param list_all_counties A list containing information about all counties.
 #' @return A heatmap of the difference matrix.
-#' @importFrom ComplexHeatmap Heatmap HeatmapAnnotation
 #' @export
 outer_difference_heatmap <- function(list_all_counties) {
   outer_extended <- function(a, b, fun) {
