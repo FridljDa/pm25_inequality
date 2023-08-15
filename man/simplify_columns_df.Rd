@@ -4,7 +4,7 @@
 \alias{simplify_columns_df}
 \title{Simplify Data Frame Columns}
 \usage{
-simplify_columns_df(df)
+simplify_columns_df(df, columns = colnames(df))
 }
 \arguments{
 \item{df}{A data frame containing the columns to be simplified.}

@@ -29,5 +29,4 @@ using a lookup table provided in a CSV file.
 \examples{
 # Assuming existence of a dataframe 'df' with a "FIPS.code" column
 df_with_svi <- add_social_vuln_index(df)
-
 }

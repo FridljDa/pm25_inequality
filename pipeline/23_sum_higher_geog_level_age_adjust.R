@@ -44,13 +44,6 @@ files <- list.files(file.path(attr_burdenDir, "nvss"))
 files <- files[grepl(year, files)]
 attr_burden <- lapply(files, function(file) fread(file.path(attr_burdenDir, "nvss", file))) %>% rbindlist(use.names = TRUE)
 
-##---get county -rural urban class---
-rural_urban_class_df <- read_csv("data/rural_urban_class.csv", show_col_types = FALSE)
-rural_urban_class_df <- rural_urban_class_df %>%
-  filter(fromYear <= year) %>%
-  filter(fromYear == max(fromYear)) %>%
-  select(-fromYear)
-
 ## --sum up geographic levels from county----
 
 if (agr_by == "county") {

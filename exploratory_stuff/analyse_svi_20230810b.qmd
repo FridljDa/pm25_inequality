@@ -49,7 +49,6 @@ rural_urban_class <- rural_urban_class  %>%
 names(rural_urban_class) <- paste0("rural_urban_class_",names(rural_urban_class))
 ```
 
-
 ```{r}
 file_list <- list.files(here("data/06_dem.agr/county", year_dem))
 ces_agr_df <- lapply(file_list, function(file) fread(here("data/06_dem.agr/county", year_dem, file)))
@@ -63,6 +62,7 @@ ces_agr <- as.numeric(ces_agr)
 ```
 
 ## compare county fips
+
 ```{r}
 list_of_counties <- list(
   ces_agr = ces_agr %>% as.numeric(),

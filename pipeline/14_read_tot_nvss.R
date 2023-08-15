@@ -32,7 +32,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   agr_by <- "county"
-  year <- 1995
+  year <- 2002
 } else {
   year <- args[1]
   agr_by <- args[10]
@@ -202,7 +202,7 @@ if ("fipsctyr" %in% colnames(total_burden_agr_by)) {
   rm(is_missing)
 } else if (!("fipsctyr" %in% colnames(total_burden)) & "countyrs" %in% colnames(total_burden)) {
   # Append "rural_urban_class" column to selectcolumns
-  selectcolumns <- c(selectcolumns, "rural_urban_class" = "countyrs")
+  selectcolumns <- c(selectcolumns, "rural_urban_class" = "countyrs", "svi_bin" = "countyrs")
 
   is_missing <- function(x) {
     return(is.na(x) | x == 0)
@@ -216,8 +216,9 @@ if ("fipsctyr" %in% colnames(total_burden_agr_by)) {
 
   rm(is_missing)
 } else {
-  selectcolumns <- c(selectcolumns, "rural_urban_class" = "rural_urban_class")
+  selectcolumns <- c(selectcolumns, "rural_urban_class" = "rural_urban_class", "svi_bin" = "svi_bin")
   total_burden$rural_urban_class <- NA
+  total_burden$svi_bin <- NA
 }
 
 if (agr_by == "nation") {
@@ -251,7 +252,6 @@ findreplace_agr_by_year <- findreplace %>%
   )
 
 # TODO delete test
-# browser()
 total_burden_agr_by <- replace_values(total_burden_agr_by, findreplace_agr_by_year)
 
 ### --- deal with education---
@@ -277,17 +277,29 @@ total_burden_agr_by <- total_burden_agr_by %>%
 # print(1 - sum(as.integer(total_burden_agr_by$interested_state)) / nrow(total_burden_agr_by))
 ## --- seperate stuff----
 # add all rural_urban_class
+
 total_burden_agr_by_all_urb <- total_burden_agr_by %>%
-  group_summarize_add_column(
-    column = "rural_urban_class",
-    new_col_value = as.factor(666)
-  )
+  group_by_at(setdiff(colnames(total_burden_agr_by), c("rural_urban_class", "Deaths"))) %>%
+  summarise(Deaths = sum(Deaths)) %>%
+  mutate(rural_urban_class = as.factor(666))
+
+total_burden_agr_by_all <- total_burden_agr_by %>%
+  group_by_at(setdiff(colnames(total_burden_agr_by), c("rural_urban_class", "svi_bin", "Deaths"))) %>%
+  summarise(Deaths = sum(Deaths)) %>%
+  mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
+
+total_burden_agr_by_svi <- total_burden_agr_by %>%
+  group_by_at(setdiff(colnames(total_burden_agr_by), c("svi_bin", "Deaths"))) %>%
+  summarise(Deaths = sum(Deaths)) %>%
+  mutate(svi_bin = as.factor(666))
 
 
 if (agr_by == "county") {
   total_burden_agr_by <- total_burden_agr_by_all_urb %>% distinct()
 } else {
-  total_burden_agr_by <- rbind(total_burden_agr_by, total_burden_agr_by_all_urb) %>% distinct()
+  total_burden_agr_by <- rbind(total_burden_agr_by_all_urb,
+                               total_burden_agr_by_all,
+                               total_burden_agr_by_svi) %>% distinct()
 }
 
 rm(total_burden_agr_by_all_urb)
@@ -489,7 +501,8 @@ total_burden_agr_by <- total_burden_agr_by %>%
     # Race != "Guama" &
     min_age != "Unknown" &
     Education != "Unknown" &
-    rural_urban_class != "Unknown") %>%
+    rural_urban_class != "Unknown" &
+    svi_bin != "Unknown") %>%
   mutate(min_age = as.numeric(min_age), max_age = as.numeric(max_age))
 
 #---write csv---
@@ -503,7 +516,3 @@ tic.log()
 cat("\n\n")
 # sink()
 # }
-
-
-doParallel::stopImplicitCluster()
-closeAllConnections()

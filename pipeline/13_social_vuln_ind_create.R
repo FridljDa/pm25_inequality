@@ -8,7 +8,7 @@ svi.dir <- "data/08_svi"
 svi.lookup.table <- file.path(svi.dir, "svi_lookup_table.csv")
 
 if(file.exists(svi.lookup.table)){
- # quit()
+  quit()
 }
 
 #read svi indices
@@ -29,9 +29,19 @@ svi_county_2010 <- svi_county_2010 %>%
   mutate(fromYear = 2010) %>%
   filter(svi != -999)
 
+svi_county_2014 <- svi_county_2014 %>%
+  select(county = FIPS, svi = RPL_THEMES) %>%
+  mutate(fromYear = 2014) %>%
+  filter(svi != -999)
+
+svi_county_2016 <- svi_county_2016 %>%
+  select(county = FIPS, svi = RPL_THEMES) %>%
+  mutate(fromYear = 2016) %>%
+  filter(svi != -999)
+
 svi_county_2020 <- svi_county_2020 %>%
   select(county = STCNTY, svi = RPL_THEMES) %>%
-  mutate(fromYear = 2000)
+  mutate(fromYear = 2020)
 #TODO which county version?
 #TODO cross walk as in rural_urban_class?
 #load("data/ihme_fips.rda")
@@ -44,14 +54,20 @@ svi_county_2000 <- svi_county_2000 %>%
 svi_county_2010 <- svi_county_2010 %>%
   mutate(svi_bin = cut(svi, breaks = n_breaks, labels = FALSE) %>% as.factor())
 
+svi_county_2014 <- svi_county_2014 %>%
+  mutate(svi_bin = cut(svi, breaks = n_breaks, labels = FALSE) %>% as.factor())
+
+svi_county_2016 <- svi_county_2016 %>%
+  mutate(svi_bin = cut(svi, breaks = n_breaks, labels = FALSE) %>% as.factor())
+
 svi_county_2020 <- svi_county_2020 %>%
   mutate(svi_bin = cut(svi, breaks = n_breaks, labels = FALSE) %>% as.factor())
 
-svi_county <- rbind(svi_county_2000, svi_county_2010, svi_county_2020)
+svi_county <- rbind(svi_county_2000, svi_county_2010, svi_county_2014, svi_county_2016, svi_county_2020)
 
 svi_county <- svi_county %>%
   select(fromYear, county, svi_bin)
 
 write.csv(svi_county, file = svi.lookup.table, row.names = FALSE)
 
-
+table(svi_county$fromYear, svi_county$svi_bin)

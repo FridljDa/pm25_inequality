@@ -7,42 +7,37 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat",  "readxl", "tictoc") #"tidyverse",
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(testthat)
+  library(readxl)
+  library(tictoc)
+  library(stringr)
+})
+devtools::load_all()
 
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
-dataDir <- args[2]
-tmpDir <- args[3]
-totalBurdenParsedDir <- args[13]
-
-# TODO delete
 if (rlang::is_empty(args)) {
-  tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
-  totalBurdenParsedDir <- "/Users/default/Desktop/paper2021/data/09_total_burden_parsed"
-  dataDir <- "/Users/default/Desktop/paper2021/data"
-
-  # dataDir <- "C:/Users/Daniel/Desktop/paper2021/data/data"
-  # tmpDir <- "C:/Users/Daniel/Desktop/paper2021/data/tmp"
-  # totalBurdenParsedDir<- "C:/Users/Daniel/Desktop/paper2021/data/09_total_burden_parsed"
-
-  tmpDir <- "/Volumes/fridljand/R/HIGH/data/tmp"
-  totalBurdenParsedDir <- "/Volumes/fridljand/R/HIGH/data/09_total_burden_parsed"
-  dataDir <- "/Volumes/fridljand/R/HIGH/data"
 
   tmpDir <- "data/tmp"
   totalBurdenParsedDir <- "data/09_total_burden_parsed"
   dataDir <- "data"
+}else{
+  dataDir <- args[2]
+  tmpDir <- args[3]
+  totalBurdenParsedDir <- args[13]
 }
+
 findreplaceDir <- file.path(totalBurdenParsedDir, "findreplace.csv")
 states <- file.path(tmpDir, "states.csv") %>% read.csv()
 rural_urban_class <- read.csv(file.path(dataDir, "rural_urban_class.csv"))
@@ -388,27 +383,27 @@ findreplaces6 <- merge(
 
 findreplaces_county <- rbind(findreplaces4, findreplaces5, findreplaces6)
 rm(findreplaces4, findreplaces5, findreplaces6, maximum_number_counties, concat)
-### ---- rural_urban_class---
-findreplaces7 <- left_join(
-  rural_urban_class %>% 
-    mutate(FIPS.code = as.character(FIPS.code)),
-  findreplaces_county,
-  by = c("FIPS.code" = "to"),
-  relationship = "many-to-many"
-)
 
-findreplaces7 <- findreplaces7 %>%
+### ---- rural_urban_class---
+#TODO
+#findreplaces_rural_urban_class <- findreplaces_county %>%
+#  select(Year, from) %>%
+#  filter(grepl("^\\d", from)) %>%
+  #mutate() %>%
+#  add_rural_urban_class(FIPS.code.column = "from") %>%
+#  mutate(replacecolumns = "rural_urban_class")
+
+findreplaces_rural_urban_class <- rural_urban_class %>%
+  mutate(FIPS.code = as.character(FIPS.code)) %>%
+  left_join(findreplaces_county, by = c("FIPS.code" = "to")) %>%
   filter(fromYear <= Year) %>%
   group_by(FIPS.code, Year) %>%
   filter(fromYear == max(fromYear)) %>%
-  mutate(fromYear = NULL) %>%
-  ungroup()
-
-findreplaces7 <- findreplaces7 %>%
-  select("Year", "from", "to" = "rural_urban_class") %>%
+  ungroup() %>%
+  select(Year, from, to = rural_urban_class) %>%
   mutate(replacecolumns = "rural_urban_class")
 
-findreplaces7 <- rbind(
+findreplaces_rural_urban_class <- rbind(
   findreplaces_county %>%
     filter(to == "Unknown") %>%
     mutate(replacecolumns = "rural_urban_class"),
@@ -420,11 +415,29 @@ findreplaces7 <- rbind(
       to = c(5, 6)
     )
   ),
-  findreplaces7
+  findreplaces_rural_urban_class
 )
 
+##-----svi_bin------
 
-findreplaces <- rbind(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016, findreplaces_county, findreplaces7)
+findreplaces_svi_bin_after_2000 <- findreplaces_county %>%
+  select(Year, from) %>%
+  filter(Year >= 2000) %>%
+  #filter(can_be_numeric(from)) %>%
+  filter(grepl("^\\d", from)) %>%
+  #mutate() %>%
+  add_social_vuln_index(FIPS.code.column = "from") %>%
+  dplyr::mutate(replacecolumns = "svi_bin") %>%
+  select(Year, replacecolumns, from, to = svi_bin)
+
+findreplaces_svi_bin_before_2000 <- findreplaces_county %>%
+  select(Year, from) %>%
+  filter(Year < 2000) %>%
+  mutate(replacecolumns = "svi_bin", to = "Unknown") %>%
+  select(Year, replacecolumns, from, to)
+
+findreplaces <- rbind(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016,
+                      findreplaces_county, findreplaces_rural_urban_class, findreplaces_svi_bin_after_2000, findreplaces_svi_bin_before_2000)
 
 write.csv(findreplaces, findreplaceDir, row.names = FALSE)
-rm(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016, findreplaces7)
+rm(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016, findreplaces_rural_urban_class)
