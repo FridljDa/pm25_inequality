@@ -87,10 +87,10 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
 #no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
-no_figure_scripts_list <- no_figure_scripts_list_full[c(11)] #3,14,
+no_figure_scripts_list <- no_figure_scripts_list_full[c(11, 13, 15, 16)] #3,14,
 #years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- 1994
-years <- 1995
+years <- 2002
 # years <- 1998 #,1990,1991
 source <- "nvss"
 for (agr_by in agr_bys) {
