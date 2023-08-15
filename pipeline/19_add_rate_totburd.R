@@ -10,11 +10,14 @@
 # rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-library(dplyr)
-library(magrittr)
-library(data.table)
-library(tidyverse)
-library(tictoc)
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(tidyverse)
+  library(tictoc)
+})
+
 
 devtools::load_all()
 
@@ -27,7 +30,6 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   year <- 2002
 
-  dataDir <- "data"
   tmpDir <- "data/tmp"
   agr_by <- "county"
   totalBurdenParsedDir <- "data/09_total_burden_parsed"
@@ -36,7 +38,6 @@ if (rlang::is_empty(args)) {
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
 } else {
   year <- args[1]
-  dataDir <- args[2]
   tmpDir <- args[3]
   agr_by <- args[10]
   # pafDir <- args[11]
@@ -53,7 +54,6 @@ totalBurdenParsed2Dir <- file.path(totalBurdenParsed2Dir, paste0("total_burden_"
 if (file.exists(totalBurdenParsed2Dir)) {
   quit()
 }
-## ----calculations----
 
 ## ---read total burden parsed data----
 total_burden <- file.path(totalBurdenParsedDir, agr_by, "nvss", paste0("total_burden_nvss_", year, ".csv")) %>%
@@ -66,7 +66,9 @@ total_burden <- total_burden %>%
 
 if (agr_by == "nation") {
   total_burden <- total_burden %>%
-    complete(Year, nation, source, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class, nesting(label_cause, attr),
+    complete(Year, nation, source,
+             nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education),
+             rural_urban_class, nesting(label_cause, attr),
       fill = list(Deaths = 0)
     ) %>%
     mutate_at(c("nation"), as.factor)
@@ -110,6 +112,7 @@ if (agr_by == "nation") {
   pop_summary3 <- NULL
 }
 
+browser()
 pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct()
 
 pop_summary <- pop_summary %>%
@@ -131,11 +134,12 @@ if (agr_by == "nation") {
     ) %>%
     mutate_at(c("STATEFP"), as.factor)
 } else if (agr_by == "county") {
-  pop_summary <- pop_summary %>%
+  browser()
+  #pop_summary <- pop_summary %>%
     # complete(Year, county, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
     #         fill = list(Population = 0)
     # )%>%
-    mutate_at(c("county"), as.factor)
+  #  mutate_at(c("county"), as.factor)
 
   # pop_summary <- pop_summary %>% filter(Race != "All")
 }
@@ -144,19 +148,6 @@ tic(paste("added YLL and age-adjusted rate to total burden in", year, agr_by))
 # Deaths
 total_burden$measure1 <- "Deaths"
 total_burden <- total_burden %>% dplyr::rename(value = Deaths)
-
-# YLL
-#lifeExpectancy <- read.csv(file.path(dataDir, "IHME_GBD_2019_TMRLT_Y2021M01D05.csv"))
-#total_burden_yll <- total_burden %>%
-#  dplyr::mutate(
-#    Life.Expectancy = lifeExpectancy$Life.Expectancy[findInterval(max_age, lifeExpectancy$Age)], # TODO max_age?
-#    value = value * Life.Expectancy,
-#    measure1 = "YLL",
-#    Life.Expectancy = NULL
-#  )
-
-#total_burden <- rbind(total_burden, total_burden_yll)
-#rm(lifeExpectancy, total_burden_yll)
 
 #------measure 2: absolute number, crude rate and age-standartised rates-----
 # absolute number
