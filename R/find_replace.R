@@ -153,13 +153,15 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
     # reduce everything
     findreplace_column <- findreplace_column %>%
       simplify_columns_df(columns = "from") %>%
-      dplyr::filter(from %in% df[, replacecolumn])
+      dplyr::filter(from %in% df[, replacecolumn]) %>%
+      distinct()
 
     replacement <- df %>%
       dplyr::select(all_of(replacecolumn)) %>%
       dplyr::left_join(findreplace_column,
         by = setNames("from", replacecolumn)
       )
+    stopifnot(nrow(replacement) == nrow(df))
 
     missing <- replacement %>%
       dplyr::filter(is.na(to)) %>%

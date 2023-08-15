@@ -40,20 +40,20 @@ pop.summary <- lapply(file_list, function(file){
   ethnicity_ind <- sapply(possible_ethnicitys, function(ethnicity) any(pop.summary == ethnicity))
   ethnicity <- possible_ethnicitys[ethnicity_ind]
   ethnicity <- ethnicity[!is.na(ethnicity)]
-  
+
   possible_years <- 1990:2016
   title <- c(pop.summary[[1, 1]],colnames(pop.summary))
   year <- stringr::str_sub(title, -4, -1)
   year <- as.integer(year)
   year <- year[!is.na(year)]
-  
+
   education_levels_title <- which(pop.summary == "Educational Attainment", arr.ind = TRUE)
   education_levels_row <- education_levels_title[1, "row"] + 1
   education_levels_col <- (education_levels_title[1, "col"] + 1):ncol(pop.summary)
   education_levels <- pop.summary[education_levels_row, education_levels_col]
   education_levels <- unlist(education_levels)
   unname(education_levels)
-  
+
   lower_age_row <- rbind(which(pop.summary == c("25 to 29 years"), arr.ind = TRUE),which(pop.summary == c("..25 to 29 years"), arr.ind = TRUE))
   higher_age_row <- rbind(which(pop.summary == c("75 years and over"), arr.ind = TRUE),which(pop.summary == c("..75 years and over"), arr.ind = TRUE))
 
@@ -65,21 +65,21 @@ pop.summary <- lapply(file_list, function(file){
   age_groups <- as.data.frame(do.call(rbind, age_groups))
   colnames(age_groups) <- c("min_age", "max_age")
   age_groups[nrow(age_groups),"max_age"] <- 150
-  
+
   pop.summary <- pop.summary[age_groups_pos, education_levels_col]
   colnames(pop.summary) <- education_levels
   pop.summary <- cbind(age_groups, pop.summary)
-  
+
   pop.summary <- pop.summary %>%
     pivot_longer(-c("min_age", "max_age"),
                  names_to = "Education2",
                  values_to = "Population"
-    ) 
-   
+    )
+
   pop.summary <- pop.summary %>% mutate(Population = ifelse(Population == "-",
                                                          0,
                                                          1000 * as.numeric(Population))) # Numbers in thousands
-  
+
   replace1 <- data.frame(
     Education2= c(
       "None", "1st - 4th grade", "5th - 6th grade", "7th - 8th grade", "9th grade",
@@ -87,15 +87,15 @@ pop.summary <- lapply(file_list, function(file){
       "Associate's degree, academic", "Bachelor's degree", "Master's degree", "Professional degree", "Doctoral degree"
     ),
     Education = c(rep("lower",9), rep("middle",4), rep("higher",4))
-  ) 
-  
+  )
+
   pop.summary <- pop.summary %>%
     left_join(replace1, by = "Education2") %>%
     group_by(min_age, max_age, Education) %>%
     summarise(Population = sum(Population))
-  
+
   pop.summary$ethnicity2 <- ethnicity
-  
+
   pop.summary$Year <- year
 
   pop.summary
@@ -117,5 +117,6 @@ pop.summary <- pop.summary %>%
 pop.summary$nation <- "us"
 pop.summary$Gender.Code <- 'A'
 pop.summary$rural_urban_class <- 666
+pop.summary$svi_bin <- 666
 pop.summary$source2 <- "cens2"
 write.csv(pop.summary, pop.summary.dir, row.names = FALSE)

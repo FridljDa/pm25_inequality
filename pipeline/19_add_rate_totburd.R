@@ -56,7 +56,6 @@ if (!file.exists(totalBurdenParsed2Dir)) {
   total_burden <- file.path(totalBurdenParsedDir, agr_by, "nvss", paste0("total_burden_nvss_", year, ".csv")) %>%
     read_data()
 
-
   # }
   total_burden <- total_burden %>%
     filter(rural_urban_class != "Unknown") %>%

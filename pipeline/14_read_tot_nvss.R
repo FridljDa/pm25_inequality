@@ -31,7 +31,7 @@ options(dplyr.join.inform = FALSE)
 
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
-  agr_by <- "county"
+  agr_by <- "nation"
   year <- 2002
 } else {
   year <- args[1]
@@ -87,9 +87,12 @@ if (all(sapply(paths, file.exists))) quit()
 totalBurdenDirX <- file.path(totalBurdenDir, file_list[grepl(year, file_list)])
 ## ----- read total burden ---------
 total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year) # , fix_states = FALSE
+if(FALSE){
+  total_burden <- total_burden %>% sample_n(2000)
+}
 # total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year)
 # filter out rows where everything is just na
-# total_burden <- data.table::fread(cmd = paste("unzip -p", totalBurdenDirX))
+#total_burden <- data.table::fread(cmd = paste("unzip -p", totalBurdenDirX))
 
 total_burden <- total_burden %>%
   # filter(rowSums(is.na(.)) != ncol(.))
@@ -122,7 +125,7 @@ tic(paste("read", year, "total burden data"), quiet = FALSE)
 print(paste("read", year, "total burden data"))
 
 if (year %in% 1990:1995) {
-  selectcolumns <- c( # TODO year
+  selectcolumns <- c(
     "Year" = "datayear",
     "label_cause" = "ucod", # record_1/enum_1
     # "Education" = "educ", # 52-53
@@ -188,7 +191,7 @@ if (year %in% 1990:1995) {
 if (!"staters" %in% colnames(total_burden_agr_by)) total_burden_agr_by$staters <- NA
 
 if ("fipsctyr" %in% colnames(total_burden_agr_by)) {
-  # selectcolumns <- c(selectcolumns, "rural_urban_class" = "fipsctyr") #TODO
+  selectcolumns <- c(selectcolumns, "rural_urban_class" = "fipsctyr", "svi_bin" = "fipsctyr")
   is_missing <- function(x) {
     return(is.na(x) | x == 0 | grepl("ZZZ$", x))
   }
@@ -237,6 +240,7 @@ if (agr_by == "nation") {
 # https://www.nber.org/research/data/mortality-data-vital-statistics-nchs-multiple-cause-death-data
 total_burden_agr_by <- total_burden_agr_by %>% select(all_of(selectcolumns))
 
+
 #Don't want rows with too many NA values
 total_burden_agr_by <- total_burden_agr_by %>%
   filter(rowSums(is.na(.)) < 4)
@@ -250,8 +254,6 @@ findreplace_agr_by_year <- findreplace %>%
     replacecolumns %in% colnames(total_burden_agr_by),
     Year == year
   )
-
-# TODO delete test
 total_burden_agr_by <- replace_values(total_burden_agr_by, findreplace_agr_by_year)
 
 ### --- deal with education---
@@ -263,7 +265,7 @@ if ("Education2003" %in% colnames(total_burden_agr_by)) {
   total_burden_agr_by <- total_burden_agr_by %>%
     mutate(
       Education = replace_missing_vectors(Education2003, Education1989, is_missing, "Education"),
-      Education = replace_na(Education, "Unknown"), # TODO
+      Education = replace_na(Education, "Unknown"),
       Education1989 = NULL, Education2003 = NULL
     )
 
@@ -293,10 +295,12 @@ total_burden_agr_by_svi <- total_burden_agr_by %>%
   summarise(Deaths = sum(Deaths)) %>%
   mutate(svi_bin = as.factor(666))
 
+#TODO this does not make sense
 
 if (agr_by == "county") {
-  total_burden_agr_by <- total_burden_agr_by_all_urb %>% distinct()
+  total_burden_agr_by <- total_burden_agr_by_all %>% distinct()
 } else {
+  total_burden_agr_by_copy <- total_burden_agr_by
   total_burden_agr_by <- rbind(total_burden_agr_by_all_urb,
                                total_burden_agr_by_all,
                                total_burden_agr_by_svi) %>% distinct()
@@ -399,7 +403,7 @@ total_burden_agr_by <- total_burden_agr_by %>%
 
 if ("STATEFP" %in% colnames(total_burden_agr_by)) {
   total_burden_agr_by <- total_burden_agr_by %>%
-    filter(STATEFP != "oth") # TODO
+    filter(STATEFP != "oth")
 }
 
 total_burden_agr_by <- total_burden_agr_by %>% tidyr::unite("Ethnicity", c("Race", "Hispanic.Origin"), sep = ", ", remove = F)
@@ -495,7 +499,6 @@ print(paste("In", year, "rows in the mortality counts were excluded due to missi
 print(suppressed_deaths)
 print(paste0("(total number of deaths considered: ", numberDeaths_afterfiltering, ")"))
 
-
 total_burden_agr_by <- total_burden_agr_by %>%
   filter(Hispanic.Origin != "Unknown" &
     # Race != "Guama" &
@@ -506,6 +509,7 @@ total_burden_agr_by <- total_burden_agr_by %>%
   mutate(min_age = as.numeric(min_age), max_age = as.numeric(max_age))
 
 #---write csv---
+table(total_burden_agr_by$rural_urban_class, total_burden_agr_by$svi_bin)
 
 total_burden_agr_by <- total_burden_agr_by %>% tibble::add_column(source = "nvss")
 fwrite(total_burden_agr_by, totalBurdenParsedDirX)

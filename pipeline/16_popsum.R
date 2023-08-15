@@ -119,6 +119,7 @@ cdc_pop <- cdc_pop %>%
 
 cdc_pop <- cdc_pop %>% tibble::add_column(Education = 666)
 cdc_pop <- cdc_pop %>% tibble::add_column(rural_urban_class = 666)
+cdc_pop <- cdc_pop %>% tibble::add_column(svi_bin = 666)
 cdc_pop$min_age[cdc_pop$min_age == "85+"] <- 85
 cdc_pop$max_age[cdc_pop$max_age == "85+"] <- 150
 cdc_pop$min_age <- as.numeric(cdc_pop$min_age)
