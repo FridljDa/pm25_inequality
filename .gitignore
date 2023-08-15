@@ -12,3 +12,4 @@ data/09_total_burden_parsed/STATEFP/nvss
 data/15_summary/attr_burd_nation.csv
 data/nhgis0002_ds120_1990_tract.csv
 data/08_total_burden/nvss
+data/09_total_burden_parsed
