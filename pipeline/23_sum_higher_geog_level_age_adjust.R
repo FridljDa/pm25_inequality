@@ -44,7 +44,7 @@ if (file.exists(summaryHigherDir)) {
 attr_burdenDir <- file.path(attr_burdenDir, "county")
 files <- list.files(file.path(attr_burdenDir, "nvss"))
 files <- files[grepl(year, files)]
-attr_burden <- lapply(files, function(file) fread(file.path(attr_burdenDir, "nvss", file))) %>% rbindlist(use.names = TRUE)
+attr_burden <- lapply(files, function(file) read_data(file.path(attr_burdenDir, "nvss", file))) %>% rbindlist(use.names = TRUE)
 
 ## --sum up geographic levels from county----
 
