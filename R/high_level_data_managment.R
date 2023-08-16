@@ -27,7 +27,7 @@ read_data <- function(path) {
 
   col_types_data <- cols(
     source2 = col_factor(levels = c("Census")),
-    attr = col_factor(levels = c("overall", "total")),
+    attr = col_factor(levels = c("overall", "total", "attributable")),
     label_cause = col_factor(levels = c("all-cause",  "ncd_lri",
                                               "cvd_ihd", "cvd_stroke",
                                               "neo_lung", "resp_copd",

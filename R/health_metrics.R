@@ -89,7 +89,7 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
 add_years_of_life_lost <- function(df, path_life_expectancy = "data/IHME_GBD_2019_TMRLT_Y2021M01D05.csv"){
   #TODO check df
 }
-if(FALSE){
+#if(FALSE){
   #' Calculate Crude Rate
   #'
   #' This function calculates the crude rate for a given total burden and population summary.
@@ -99,40 +99,40 @@ if(FALSE){
   #' @return A data frame containing the crude rate.
   #' @importFrom dplyr inner_join filter mutate group_by_at summarise
   #' @export
-  add_crude_rate <- function(total_burden, pop_summary) {
+#  add_crude_rate <- function(total_burden, pop_summary) {
     # Validate total_burden
-    if (!"value" %in% names(total_burden)) {
-      stop("total_burden must contain the 'value' column")
-    }
+#    if (!"value" %in% names(total_burden)) {
+#      stop("total_burden must contain the 'value' column")
+#    }
 
     # Validate pop_summary
-    if (!"Population" %in% names(pop_summary)) {
-      stop("pop_summary must contain the 'Population' column")
-    }
-
+#    if (!"Population" %in% names(pop_summary)) {
+#      stop("pop_summary must contain the 'Population' column")
+#    }
+#
     # Aggregate population summary by grouping variables, excluding "min_age", "max_age", "source2", and "Population"
-    pop_summary_agr <- pop_summary %>%
-      group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
-      summarise(Population = sum(Population))
+#    pop_summary_agr <- pop_summary %>%
+#      group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
+#      summarise(Population = sum(Population))
     #TODO how is age relevant?
 
     # Join total burden with aggregated population summary, filter out zero populations, and calculate crude rate
-    total_burden_crude <- total_burden %>%
-      inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
-      filter(Population > 0) %>%
-      mutate(
-        value = 100000 * (value / Population), # Calculate crude rate per 100,000 population
-        value = ifelse(is.nan(value), 0, value), # Replace NaN with 0
-        measure2 = "crude rate",
-        Population = NULL
-      )
+#    total_burden_crude <- total_burden %>%
+#      inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
+#      filter(Population > 0) %>%
+#      mutate(
+#        value = 100000 * (value / Population), # Calculate crude rate per 100,000 population
+#        value = ifelse(is.nan(value), 0, value), # Replace NaN with 0
+#        measure2 = "crude rate",
+#        Population = NULL
+#      )
 
     # Filter out NA values (if any)
-    total_burden_crude <- total_burden_crude %>% filter(!is.na(value))
+#    total_burden_crude <- total_burden_crude %>% filter(!is.na(value))
 
-    total_burden_crude
-  }
-}
+#    total_burden_crude
+#  }
+#}
 
 
 
