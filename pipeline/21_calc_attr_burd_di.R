@@ -10,13 +10,14 @@
 # rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c(
-  "dplyr", "magrittr", "data.table", "tidyverse", "tictoc"
-)
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(tidyverse)
+  library(tictoc)
+})
 
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 devtools::load_all()
@@ -27,7 +28,7 @@ args <- commandArgs(trailingOnly = T)
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 1995
+  year <- 2002
   agr_by <- "county"
   source <- "nvss"
 
@@ -55,7 +56,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  quit()
+  #quit()
 }
 
 
