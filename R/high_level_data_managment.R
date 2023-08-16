@@ -26,6 +26,12 @@ read_data <- function(path) {
   column_names_present <- colnames(first_row)
 
   col_types_data <- cols(
+    source2 = col_factor(levels = c("Census")),
+    attr = col_factor(levels = c("overall", "total")),
+    label_cause = col_factor(levels = c("all-cause",  "ncd_lri",
+                                              "cvd_ihd", "cvd_stroke",
+                                              "neo_lung", "resp_copd",
+                                              "lri", "t2_dm")),
     pop_size = col_double(),
     pm = col_double(), prop = col_double(),
     state = col_integer(),
@@ -37,6 +43,7 @@ read_data <- function(path) {
     FIPS.code = col_integer(),
     tract = col_integer(),
     GEO_ID = col_character(),
+    Population = col_double(),
     rural_urban_class = col_factor(levels = c(
       "Large metro", "1",
       "Small-medium metro", "2",
@@ -47,7 +54,8 @@ read_data <- function(path) {
       "low svi", "1",
       "middle svi", "2",
       "high svi", "3",
-      "All", "Unknown"
+      "All", "666",
+      "Unknown"
     )),
     Deaths = col_integer(),
     Education = col_factor(levels = c(

@@ -1,7 +1,7 @@
 #-------------------Header------------------------------------------------
 # Author: Daniel Fridljand
 # Date: 03/27/2021
-# Purpose: read total burden
+# Purpose: add rate total burden
 #
 #***************************************************************************
 #*
@@ -112,14 +112,13 @@ if (agr_by == "nation") {
   pop_summary3 <- NULL
 }
 
-browser()
 pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct()
 
 pop_summary <- pop_summary %>%
   mutate_at(c("rural_urban_class", "Education"), as.factor) %>%
   mutate(source2 = NULL)
 
-rm(pop_summary1, pop_summary2)
+rm(pop_summary1, pop_summary2, pop_summary3)
 
 if (agr_by == "nation") {
   pop_summary <- pop_summary %>%
@@ -134,7 +133,6 @@ if (agr_by == "nation") {
     ) %>%
     mutate_at(c("STATEFP"), as.factor)
 } else if (agr_by == "county") {
-  browser()
   #pop_summary <- pop_summary %>%
     # complete(Year, county, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
     #         fill = list(Population = 0)
@@ -154,14 +152,15 @@ total_burden <- total_burden %>% dplyr::rename(value = Deaths)
 total_burden$measure2 <- "absolute number"
 
 #---- crude rate -----
-total_burden_crude <- add_crude_rate(total_burden, pop_summary)
+#browser()
+#total_burden_crude <- add_crude_rate(total_burden, pop_summary) #TODO
 
 # age-standartised rates
-total_burden_age_adj <- add_age_adjusted_rate <- add_age_adjusted_rate(total_burden, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
+#total_burden_age_adj <- add_age_adjusted_rate <- add_age_adjusted_rate(total_burden, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
+#TODO
 
-
-total_burden <- rbind(total_burden, total_burden_crude, total_burden_age_adj)
-rm(total_burden_crude, total_burden_age_adj, standartpopulation, full_stand_popsize, pop_summary)
+#total_burden <- rbind(total_burden, total_burden_crude, total_burden_age_adj)
+#rm(total_burden_crude, total_burden_age_adj, standartpopulation, full_stand_popsize, pop_summary)
 
 ## ----finish------
 if (agr_by != "nation") {

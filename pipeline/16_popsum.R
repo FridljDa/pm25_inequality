@@ -7,34 +7,30 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory #test
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc")
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(tidyverse)
+  library(tictoc)
+})
 
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
+
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 options(scipen = 10000)
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
-# TODO delete
 if (rlang::is_empty(args)) {
-  agr_by <- "nation"
-  censDir <- "/Users/default/Desktop/paper2021/data/05_demog"
-  cdcPopDir <- "/Users/default/Desktop/paper2021/data/10_cdc_population"
-  pop.summary.dir <- "/Users/default/Desktop/paper2021/data/11_population_summary"
-
-  censDir <- "C:/Users/Daniel/Desktop/paper2021/data/05_demog"
-  cdcPopDir <- "C:/Users/Daniel/Desktop/paper2021/data/10_cdc_population"
-  pop.summary.dir <- "C:/Users/Daniel/Desktop/paper2021/data/11_population_summary"
+  agr_by <- "county"
 
   censDir <- "data/05_demog"
   cdcPopDir <- "data/10_cdc_population"
-  pop.summary.dir <- "data/11_population_summary"
+  pop.summary.dir <- "data/12_population_summary"
 } else {
   censDir <- args[8]
   agr_by <- args[10]

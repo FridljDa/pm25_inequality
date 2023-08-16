@@ -29,8 +29,8 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2001
-  agr_by <- "nation"
+  year <- 2002
+  agr_by <- "county"
 
   dataDir <- "data"
   tmpDir <- "data/tmp"
@@ -57,7 +57,7 @@ dir.create(pop.summary.dir, recursive = T, showWarnings = F)
 pop.summary.dirX <- file.path(pop.summary.dir, paste0("pop_sum_", year, ".csv"))
 
 if (file.exists(pop.summary.dirX)) {
-  quit()
+  #quit()
 }
 
 census_meta <- file.path(censDir, "meta", paste0("cens_meta_", toString(year), ".csv")) %>% read_data()
@@ -98,23 +98,25 @@ pop.summary <- pop.summary %>%
 
 # Summarize population by different categories
 pop.summary.all <- pop.summary %>%
-  group_by(state, variable) %>%
-  summarize(Population = sum(pop_size)) %>%
+  group_by_at(vars(all_of(setdiff(colnames(pop.summary),
+                                  c("Population", "rural_urban_class", "svi_bin"))))) %>%
+  summarize(Population = sum(Population)) %>%
   mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666)) # TODO
 
 pop.summary.rural_urban_class <- pop.summary %>%
-  group_by(state, variable, rural_urban_class) %>%
-  summarize(Population = sum(pop_size)) %>%
+  group_by_at(vars(all_of(setdiff(colnames(pop.summary),
+                                  c("Population", "svi_bin"))))) %>%
+  summarize(Population = sum(Population)) %>%
   mutate(svi_bin = as.factor(666))
 
 pop.summary.svi_bin <- pop.summary %>%
-  group_by(state, variable, svi_bin) %>%
-  summarize(Population = sum(pop_size)) %>%
+  group_by_at(vars(all_of(setdiff(colnames(pop.summary),
+                                  c("Population", "rural_urban_class")))))%>%
+  summarize(Population = sum(Population)) %>%
   mutate(rural_urban_class = as.factor(666))
 
 # Combine all summary data into one object
 pop.summary <- rbind(pop.summary.all, pop.summary.rural_urban_class, pop.summary.svi_bin)
-
 
 if (agr_by == "county") {
   pop.summary <- pop.summary %>%

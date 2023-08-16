@@ -1,8 +1,10 @@
-suppressMessages(library(dplyr, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library(magrittr, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library(data.table, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(tidyverse)
+  library(tictoc)
+})
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -17,7 +19,7 @@ if (rlang::is_empty(args)) {
   attr_burdenDir <- "data/14_attr_burd"
   summaryHigherDir <- "data/15_sum_higher_geog_level"
   agr_by <- "nation"
-  year <- 1995
+  year <- 2002
 }else{
   year <- args[1]
   dataDir <- args[2]

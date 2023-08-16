@@ -6,25 +6,33 @@
 #***************************************************************************
 
 #------------------SET-UP--------------------------------------------------
-# clear memory #test
-rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat", "tidyverse",  "tictoc")
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  library(tidyverse)
+})
 
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 options(scipen = 10000)
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
-censDir <- args[8]
-agr_by <- args[10]
-cdcPopDir <- args[15]
-pop.summary.dir <- args[16]
+if (rlang::is_empty(args)) {
+  #year <- 2002
+
+  censDir <- "data/05_demog"
+  agr_by <- "county"
+  pop.summary.dir <- "data/12_population_summary"
+
+} else {
+  censDir <- args[8]
+  agr_by <- args[10]
+  pop.summary.dir <- args[16]
+}
 
 
 pop.summary.dir <- file.path(pop.summary.dir, paste0("pop_race_educ_nation.csv"))
