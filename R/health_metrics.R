@@ -12,13 +12,22 @@
 #' @references \url{https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf}, page 125, Table VIII
 #' @export
 add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx"){
-  if (!all(c("value", "min_age", "max_age") %in% names(total_burden))) {
-    stop("total_burden must contain columns 'value', 'min_age', and 'max_age'")
+  if (!all(c("min_age", "max_age") %in% names(total_burden))) {
+    stop("total_burden must contain columns 'min_age', and 'max_age'")
+  }
+
+  if (!all(c("value") %in% names(total_burden)) & !all(c("lower","mean","upper") %in% names(total_burden))) {
+    stop("total_burden must contain columns 'value' or 'mean', 'lower', and 'upper'")
   }
 
   # Validate pop_summary
   if (!all(c("min_age", "max_age", "Population") %in% names(pop_summary))) {
     stop("pop_summary must contain columns 'min_age', 'max_age', and 'Population'")
+  }
+
+  if(any(total_burden$max_age - total_burden$min_age >= 30)){
+    #stop("age adjustment is supposed to be used for granular age bins")
+    #TODO
   }
 
   standartpopulation <- read_excel(path_to_standartpopulation)
@@ -67,19 +76,42 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
   #  mutate(min_age.x = NULL, max_age.x = NULL) %>%
   #  rename(min_age = min_age.y, max_age = max_age.y)
 
-  total_burden_age_adj <- total_burden_age_adj %>%
-    group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
-    summarise(value = sum(value)) %>%
-    ungroup()
+  if(all(c("lower","mean","upper") %in% names(total_burden))){
+    total_burden_age_adj <- total_burden_age_adj %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("lower","mean","upper"))))) %>%
+      summarise(mean = sum(mean),
+                lower = sum(lower),
+                upper = sum(upper)) %>%
+      ungroup()
 
-  total_burden_age_adj <- total_burden_age_adj %>%
-    filter(Population >= 1 & full_stand_popsize >= 1) %>%
-    dplyr::mutate(
-      value = (value * standard_popsize / Population) * (100000 / full_stand_popsize),
-      value = ifelse(is.nan(value), 0, value),
-      measure2 = "age-adjusted rate",
-      Population = NULL, standard_popsize = NULL
-    )
+    total_burden_age_adj <- total_burden_age_adj %>%
+      filter(Population >= 1 & full_stand_popsize >= 1) %>%
+      dplyr::mutate(
+        mean = (mean * standard_popsize / Population) * (100000 / full_stand_popsize),
+        mean = ifelse(is.nan(mean), 0, mean),
+        lower = (lower * standard_popsize / Population) * (100000 / full_stand_popsize),
+        lower = ifelse(is.nan(lower), 0, lower),
+        upper = (upper * standard_popsize / Population) * (100000 / full_stand_popsize),
+        upper = ifelse(is.nan(upper), 0, upper),
+        measure2 = "age-adjusted rate",
+        Population = NULL, standard_popsize = NULL
+      )
+
+  }else{
+    total_burden_age_adj <- total_burden_age_adj %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
+      summarise(value = sum(value)) %>%
+      ungroup()
+
+    total_burden_age_adj <- total_burden_age_adj %>%
+      filter(Population >= 1 & full_stand_popsize >= 1) %>%
+      dplyr::mutate(
+        value = (value * standard_popsize / Population) * (100000 / full_stand_popsize),
+        value = ifelse(is.nan(value), 0, value),
+        measure2 = "age-adjusted rate",
+        Population = NULL, standard_popsize = NULL
+      )
+  }
 
   total_burden_age_adj
 }

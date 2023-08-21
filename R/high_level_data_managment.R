@@ -33,6 +33,7 @@ read_data <- function(path) {
                                               "neo_lung", "resp_copd",
                                               "lri", "t2_dm")),
     pop_size = col_double(),
+    mean = col_double(), lower = col_double(), upper = col_double(),
     pm = col_double(), prop = col_double(),
     state = col_integer(),
     variable = col_character(),
