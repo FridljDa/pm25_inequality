@@ -169,7 +169,7 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
 
     if (nrow(missing) > 0) {
       warning(
-        paste("No value assigned in", replacecolumn, "for"),
+        paste("No value assigned in", replacecolumn, "for", nrow(missing), "elements:\n"),
         paste(missing[, 1] %>% unique(), collapse = " ")
       )
     }

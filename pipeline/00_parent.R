@@ -5,7 +5,7 @@
 # Purpose: parent file for project
 #
 #***************************************************************************
-devtools::load_all()
+pkgload::load_all()
 # create data directory, setwd
 
 ## ----------------directories of data--------------------------------------------------------------------------------
@@ -41,8 +41,8 @@ dir.create(dem.dir, recursive = T, showWarnings = F)
 # directory for demographic data grouped by PM exposure and aggregated by county/hhs region/census region
 dem.agr.dir <- file.path(data.dir, "06_dem.agr")
 dir.create(dem.agr.dir, recursive = T, showWarnings = F)
-agr_bys <- c("county", "nation") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
-#agr_bys <- c("county")
+agr_bys <- c("county") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
+#agr_bys <- c("county") #, "nation"
 
 paf.dir <- file.path(data.dir, "07_gbd_paf")
 dir.create(paf.dir, recursive = T, showWarnings = F)
