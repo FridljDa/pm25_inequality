@@ -14,13 +14,13 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  library(tidyverse)
+  #library(tidyverse)
   library(tictoc)
 })
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
-devtools::load_all()
+pkgload::load_all()
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)

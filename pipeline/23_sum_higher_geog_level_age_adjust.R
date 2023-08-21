@@ -8,7 +8,7 @@ suppressMessages({
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
-devtools::load_all()
+pkgload::load_all()
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)

@@ -4,7 +4,7 @@ library(data.table, warn.conflicts = FALSE, quietly = TRUE)
 library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
 library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
 
-devtools::load_all()
+pkgload::load_all()
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 options(scipen = 100000)

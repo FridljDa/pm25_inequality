@@ -18,7 +18,7 @@ library(tidyverse)
 library(readxl)
 library(stringr)
 library(tictoc)
-devtools::load_all()
+pkgload::load_all()
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
