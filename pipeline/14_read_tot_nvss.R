@@ -31,8 +31,8 @@ options(dplyr.join.inform = FALSE)
 
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
-  agr_by <- "nation"
-  year <- 2002
+  agr_by <- "county"
+  year <- 2003
 
   totalBurdenDir <- "data/08_total_burden/nvss"
   totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
