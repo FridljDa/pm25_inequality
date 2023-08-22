@@ -14,12 +14,12 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  library(tidyverse)
+  #library(tidyverse)
   library(tictoc)
 })
 
 
-devtools::load_all()
+pkgload::load_all()
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -72,6 +72,8 @@ if (agr_by == "nation") {
       fill = list(Deaths = 0)
     ) %>%
     mutate_at(c("nation"), as.factor)
+
+  #TODO add rural_urban_class and svi_bin marginals
 } else if (agr_by == "STATEFP") {
   total_burden <- total_burden %>%
     # complete(Year, STATEFP, source, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class, nesting(label_cause, attr),
@@ -100,9 +102,9 @@ total_burden$measure2 <- "absolute number"
 #---read population data----
 pop_summary <- get_population_data(agr_by, year)
 # age-standartised rates
-total_burden_age_adj <- add_age_adjusted_rate(total_burden, pop_summary)
+#total_burden_age_adj <- add_age_adjusted_rate(total_burden, pop_summary)
 
-total_burden <- rbind(total_burden, total_burden_crude, total_burden_age_adj)
+#total_burden <- rbind(total_burden, total_burden_age_adj)
 
 ## ----finish------
 if (agr_by != "nation") {

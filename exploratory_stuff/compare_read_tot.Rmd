@@ -1,0 +1,38 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+```{r}
+library(readr)
+library(dplyr)
+library(magrittr)
+#pkgload::load_all(here::here())
+total_burden_old <- read_csv(here::here("data/09_total_burden_parsed/county/nvss/total_burden_nvss_2002.csv"))
+total_burden_new <- read_csv(here::here("data/09_total_burden_parsed2/county/nvss/total_burden_nvss_2002.csv") )
+```
+
+```{r}
+all_old <- total_burden_old %>% filter(Race == "All" & label_cause == "all-cause" & rural_urban_class == "666" & Education == "666")
+all_new <- total_burden_new %>% filter(Race == "All" & label_cause == "all-cause"  & Education == "666")
+sum(all_old$Deaths)
+sum(all_new$Deaths)
+```
+
+```{r}
+total_burden_old <-  select(total_burden_old, -c("rural_urban_class"))
+total_burden_new <-  select(total_burden_new, -c("rural_urban_class"))
+```
+
+```{r}
+total_burden_old <- total_burden_old %>% distinct
+total_burden_new <- total_burden_new %>% distinct
+```
+
+```{r}
+test1 <- anti_join(total_burden_old, total_burden_new)
+test2 <- anti_join( total_burden_new, total_burden_old)
+```
+

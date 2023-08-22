@@ -20,7 +20,7 @@ for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }
-devtools::load_all()
+pkgload::load_all()
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
 
