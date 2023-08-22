@@ -16,9 +16,13 @@ packages <- c(
   "gridExtra", "grid", "lattice", "ggsci"
 )
 
+library(dplyr)
+library(ggplot2)
+library
+pkgload::load_all()
 for (p in packages) {
-  if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
+  #if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
+  #suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
@@ -44,7 +48,7 @@ if (rlang::is_empty(args)) {
 options(bitmapType = "cairo")
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
@@ -132,25 +136,7 @@ rm(
 
 # https://rdrr.io/cran/RColorBrewer/man/ColorBrewer.html
 # group.colors <- c(RColorBrewer::brewer.pal(6, "Dark2"), RColorBrewer::brewer.pal(5, "YlGnBu")[c(2,4,5)], RColorBrewer::brewer.pal(5, "YlOrRd")[c(2:4)])
-group.colors <- c(
-  RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
-  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2]
-)
-group.colors[c(12, 2)] <- group.colors[c(2, 12)]
-names(group.colors) <- c(
-  "NH White",
-  "Hispanic or Latino White",
-  "Black American",
-  "White",
-  "Asian or Pacific Islander",
-  "American Indian or Alaska Native",
-  "High school graduate or lower",
-  "Some college education but no 4-year college degree",
-  "4-year college graduate or higher",
-  "Non metro",
-  "Large metro",
-  "Small-medium metro"
-)
+group.colors <- get_group_colors()
 
 plots <- lapply(plots, function(g) {
   g +

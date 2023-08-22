@@ -114,7 +114,7 @@ if (agr_by != "county") {
 if (agr_by == "STATEFP") {
   total_burden <- total_burden %>%
     mutate(
-      STATEFP = str_sub(county, 1, -4) %>%
+      STATEFP = stringr::str_sub(county, 1, -4) %>%
         as.integer() %>%
         as.factor()
     )

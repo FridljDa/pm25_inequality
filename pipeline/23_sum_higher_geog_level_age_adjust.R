@@ -109,7 +109,7 @@ if(agr_by != "county"){
 if (agr_by == "STATEFP") {
   attr_burden <- attr_burden %>%
     mutate(
-      STATEFP = str_sub(county, 1, -4) %>%
+      STATEFP = stringr::str_sub(county, 1, -4) %>%
         as.integer() %>%
         as.factor()
     )
