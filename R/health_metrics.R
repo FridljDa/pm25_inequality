@@ -26,8 +26,16 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
   }
 
   if(any(total_burden$max_age - total_burden$min_age >= 30)){
-    #stop("age adjustment is supposed to be used for granular age bins")
+    stop("age adjustment is supposed to be used for granular age bins")
     #TODO
+  }
+
+  if ('svi_bin' %in% names(pop_summary)) {
+    pop_summary <- pop_summary %>% select(-svi_bin)
+  }
+
+  if ('rural_urban_class' %in% names(pop_summary)) {
+    pop_summary <- pop_summary %>% select(-rural_urban_class)
   }
 
   standartpopulation <- read_excel(path_to_standartpopulation)
@@ -59,6 +67,15 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
     ungroup()
   total_burden_age_adj$largerInterval <- NULL
   rm(total_burden_age_adj1, total_burden_age_adj2)
+
+  anti_joined <- anti_join(total_burden,
+                          total_burden_age_adj,
+                          by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+  )
+  if(nrow(anti_joined) > 0){
+    warning(paste("in add_age_adjusted_rate() population data and total_burden data not joinable in", nrow(anti_joined)," rows:"))
+    warning(head(anti_joined))
+  }
 
   # calculate age-adjusted rate
   total_burden_age_adj <- inner_join_age_right_outer(total_burden,

@@ -87,7 +87,7 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
 #no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
-no_figure_scripts_list <- no_figure_scripts_list_full[c(15, 20, 22, 24, 25, 26)] #3,14,
+no_figure_scripts_list <- no_figure_scripts_list_full[c(15, 20, 22, 24, 25, 26, 27)] #3,14,
 years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- 1994
 #years <- 2002
@@ -146,7 +146,6 @@ args <- paste(
 #run_script(script = "pipeline/24_summary_attr_total_burd.R", args = args)
 #run_script(script = summary.script, args = args)
 #run_script(script = "pipeline/25_summary_other.R", args = args)
-
 
 args <- paste(
   tmp.dir, # 1

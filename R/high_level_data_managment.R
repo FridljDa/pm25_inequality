@@ -26,7 +26,7 @@ read_data <- function(path) {
   column_names_present <- colnames(first_row)
 
   col_types_data <- cols(
-    source2 = col_factor(levels = c("Census")),
+    source2 = col_factor(levels = c("Census", "CDC", "cens2")),
     attr = col_factor(levels = c("overall", "total", "attributable")),
     label_cause = col_factor(levels = c("all-cause",  "ncd_lri",
                                               "cvd_ihd", "cvd_stroke",
@@ -103,7 +103,7 @@ read_data <- function(path) {
       "proportion of disparity to Black or African American attributable"
     )),
     Gender.Code = col_factor(levels = c(
-      "All genders", "A"
+      "All genders", "A", "F", "M"
     )),
     source = col_factor(levels = c(
       "nvss", "National Vital Statistics System"

@@ -55,7 +55,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  #quit()
+  quit()
 }
 
 

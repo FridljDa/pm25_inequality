@@ -15,9 +15,6 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   dataDir <- "data"
-  pop.summary.dir <- "data/12_population_summary"
-  totalBurdenRateDir <- "data/13_total_burden_rate"
-  summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
   agr_by <- "nation"
   year <- 2002
 } else {
@@ -28,6 +25,9 @@ if (rlang::is_empty(args)) {
   total_burdenDir <- args[18]
   summaryHigherTotalDir <- args[19]
 }
+pop.summary.dir <- "data/12_population_summary"
+totalBurdenRateDir <- "data/13_total_burden_rate"
+summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
 # should have #min_age = min_age.x, max_age = min_age.x, for age specific
 # in l184 in 21_calc_attr_burd_di.R
 
@@ -104,8 +104,8 @@ if (agr_by != "county") {
   )
   toc()
 } else {
-  total_burden$rural_urban_class <- NA
-  total_burden$svi_bin <- NA
+  #total_burden$rural_urban_class <- NA
+  #total_burden$svi_bin <- NA
 }
 
 
@@ -148,7 +148,8 @@ total_burden_absolute_number <- total_burden %>%
     measure2 == "absolute number")
 
 tic("age standardised attributable burden")
-pop_summary <- get_population_data(agr_by, year)
+pop_summary <- get_population_data(agr_by, year) %>%
+  select(-c(rural_urban_class))
 
 total_burden_age_adj <- add_age_adjusted_rate(total_burden_absolute_number, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
 toc()
@@ -158,16 +159,14 @@ total_burden <- rbind(
   total_burden_absolute_number
 )
 
-rm(total_burden_age_adj, total_burden_absolute_number)
+#rm(total_burden_age_adj, total_burden_absolute_number)
 ### ----sum out age ----
 
 group_variables <- setdiff(colnames(total_burden), c("value", "min_age", "max_age"))
 total_burden_over_25 <- total_burden %>%
   filter(min_age >= 25) %>%
   group_by_at(vars(all_of(group_variables))) %>%
-  summarise(
-    value = sum(value)
-  ) %>%
+  summarise(value = sum(value)) %>%
   ungroup() %>%
   mutate(
     min_age = 25,
@@ -177,9 +176,7 @@ total_burden_over_25 <- total_burden %>%
 total_burden_over_65 <- total_burden %>%
   filter(min_age >= 65) %>%
   group_by_at(vars(all_of(group_variables))) %>%
-  summarise(
-    value = sum(value)
-  ) %>%
+  summarise(value = sum(value)) %>%
   ungroup() %>%
   mutate(
     min_age = 65,

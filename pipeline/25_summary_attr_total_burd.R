@@ -13,12 +13,12 @@ options(scipen = 100000)
 args <- commandArgs(trailingOnly = T)
 # agr_by <- args[10]
 # tmpDir <- args[1]
-# totalBurdenParsed2Dir <- args[5]
+# summaryHigherTotalDir <- args[5]
 
 
 # if (rlang::is_empty(args)) {
 tmpDir <- "data/tmp"
-totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
 propOfAttrBurdDir <- "data/16_prop_of_attr_burd"
 summaryDir <- "data/17_summary"
 # }
@@ -58,13 +58,12 @@ attr_burden <- attr_burden %>%
 
 ## --- read and bind all burden----
 total_burden <- lapply(agr_bys, function(agr_by) {
-  sources <- list.files(file.path(totalBurdenParsed2Dir, agr_by))
-  total_burden <- lapply(sources, function(source) {
-    files <- list.files(file.path(totalBurdenParsed2Dir, agr_by, source))
-    total_burden <- lapply(files, function(file) fread(file.path(totalBurdenParsed2Dir, agr_by, source, file))) %>% rbindlist(use.names = TRUE)
+  files <- list.files(file.path(summaryHigherTotalDir, agr_by))
 
-    total_burden <- total_burden %>% filter(label_cause == "all-cause")
-  }) %>% rbindlist(use.names = TRUE)
+  total_burden <- lapply(files, function(file) fread(file.path(summaryHigherTotalDir, agr_by, file))) %>%
+    rbindlist(use.names = TRUE)
+
+  total_burden <- total_burden %>% filter(label_cause == "all-cause")
 
   # make compatible
   total_burden <- total_burden %>% rename("Region" := !!agr_by)

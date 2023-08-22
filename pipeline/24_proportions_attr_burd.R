@@ -14,9 +14,7 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   dataDir <- "data"
-  totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  summaryHigherDir <- "data/15_sum_higher_geog_level"
-  summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
+
   agr_by <- "nation"
   source <- "nvss"
   year <- 2002
@@ -29,28 +27,28 @@ if (rlang::is_empty(args)) {
   summaryHigherTotalDir <- args[20]
 }
 
-summaryHigherTotalDir <- file.path(summaryHigherTotalDir, agr_by)
-dir.create(summaryHigherTotalDir, recursive = T, showWarnings = F)
-summaryHigherTotalDir <- file.path(summaryHigherTotalDir, paste0("attr_burden_prop_", year, ".csv"))
 
-if (file.exists(summaryHigherTotalDir)) {
-  #quit()
+propDir <- file.path("data/16_prop_of_attr_burd", agr_by)
+dir.create(propDir, recursive = T, showWarnings = F)
+propDir <- file.path(propDir, paste0("attr_burden_prop_", year, ".csv"))
+
+if (file.exists(propDir)) {
+  quit()
 }
 
 ## ---- read total burden, attr burden, join----
 tic("calculated proportions of attributable burden and parsed")
-summaryHigherDir <- file.path(summaryHigherDir, agr_by, paste0("attr_burden_age_adjusted_", year, ".csv"))
+summaryHigherDir <- file.path("data/15_sum_higher_geog_level", agr_by, paste0("attr_burden_age_adjusted_", year, ".csv"))
 attributable_burden <- read_data(summaryHigherDir)
 #attributable_burden <- attributable_burden %>% mutate(Gender.Code = as.character(Gender.Code))
 
-total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
- read_data()
-
+total_burden <- paste0("data/16_sum_higher_geog_level_total/",agr_by,"/total_burden_age_adjusted_", year, ".csv") %>%
+                        read_data()
 #-----filter, summarise total burden-----
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
   measure1 == "Deaths") # &
 
-if (agr_by == "county") total_burden <- total_burden %>% filter(measure2 == "age-adjusted rate")
+#if (agr_by == "county") total_burden <- total_burden %>% filter(measure2 == "age-adjusted rate")
 
 total_burden <- total_burden %>%
   filter(min_age >= 25) # to be replaced for 65+
@@ -87,10 +85,10 @@ if (agr_by == "county") {
 }
 
 ## ---join---
-test <- anti_join(attributable_burden,
-  total_burden,
+test <- anti_join( total_burden,attributable_burden,
+
   by = c(
-    "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class",  "Education",
+    "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class","svi_bin",  "Education",
     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
   )
 )
@@ -99,7 +97,7 @@ attr_total_burden <- inner_join(
   attributable_burden,
   total_burden,
   by = c(
-    "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class", "Education",
+    "Year", "Gender.Code", "Race", "Hispanic.Origin", "svi_bin", "rural_urban_class", "Education",
     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
   )
 )
@@ -143,7 +141,7 @@ attr_total_burden_prop_of_difference <- attr_total_burden %>%
 
 attr_total_burden_combined <- rbind(attr_total_burden_value, attr_total_burden_prop_overall_burden, attr_total_burden_prop_of_difference)
 
-fwrite(attr_total_burden_combined, summaryHigherTotalDir)
+fwrite(attr_total_burden_combined, propDir)
 
 
 toc()

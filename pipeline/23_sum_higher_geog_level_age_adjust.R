@@ -14,10 +14,6 @@ pkgload::load_all()
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  dataDir <- "data"
-  pop.summary.dir <- "data/12_population_summary"
-  attr_burdenDir <- "data/14_attr_burd"
-  summaryHigherDir <- "data/15_sum_higher_geog_level"
   agr_by <- "nation"
   year <- 2002
 } else {
@@ -28,6 +24,12 @@ if (rlang::is_empty(args)) {
   attr_burdenDir <- args[18]
   summaryHigherDir <- args[19]
 }
+
+dataDir <- "data"
+pop.summary.dir <- "data/12_population_summary"
+attr_burdenDir <- "data/14_attr_burd"
+summaryHigherDir <- "data/15_sum_higher_geog_level"
+
 # should have #min_age = min_age.x, max_age = min_age.x, for age specific
 # in l184 in 21_calc_attr_burd_di.R
 
@@ -52,15 +54,16 @@ attr_burden <- lapply(files, function(file) {
 
 
 if(agr_by != "county"){
-  tic("added rural_urban class info to attr_burden")
-  attr_burden_with_svi_rural_urban_class <- attr_burden %>%
-    add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
-  toc()
+  #tic("added rural_urban class info to attr_burden")
+  #attr_burden_with_svi_rural_urban_class <- attr_burden %>%
+  #  add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
+  #toc()
 
-  tic("added svi info to attr_burden")
-  attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-    add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
-  toc()
+  #tic("added svi info to attr_burden")
+  #attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
+  #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
+  #toc()
+  attr_burden_with_svi_rural_urban_class <- attr_burden
 
   tic("marginalised svi and rural_urban class info to attr_burden")
   attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
@@ -96,8 +99,8 @@ if(agr_by != "county"){
      attr_burden_with_all)
   toc()
 }else{
-  attr_burden$rural_urban_class <- NA
-  attr_burden$svi_bin <- NA
+  #attr_burden$rural_urban_class <- NA
+  #attr_burden$svi_bin <- NA
 }
 
 
@@ -115,9 +118,7 @@ if (agr_by == "STATEFP") {
 
 } else if (agr_by == "nation") {
   attr_burden <- attr_burden %>%
-    mutate(
-      nation = "us"
-    )
+    mutate(nation = "us")
   group_variables <- setdiff(colnames(attr_burden), c("lower", "mean", "upper", "county"))
 
 } else if (agr_by == "county") {
@@ -143,10 +144,14 @@ attr_burden_absolute_number <- attr_burden %>%
            measure2 == "absolute number")
 
 tic("age standardised attributable burden")
-pop_summary <- get_population_data(agr_by, year)
-
-attributable_burden_age_adj <- add_age_adjusted_rate(attr_burden_absolute_number, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
+pop_summary <- get_population_data(agr_by, year) %>%
+  select(-c(rural_urban_class))
+attributable_burden_age_adj <- add_age_adjusted_rate(attr_burden_absolute_number,
+                                                     pop_summary ,
+                                                     path_to_standartpopulation = "data/standartpopulation.xlsx")
 toc()
+
+browser()
 
 attr_burden <- rbind(attributable_burden_age_adj,
                      attr_burden_absolute_number)

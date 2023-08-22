@@ -79,6 +79,21 @@ causes <- read_csv("data/09_total_burden_parsed/causes.csv", show_col_types = FA
 # foreach::foreach(year = years, .inorder = FALSE) %dopar% {
 
 totalBurdenDirX <- file.path(totalBurdenDir, file_list[grepl(year, file_list)])
+
+totalBurdenParsedDirX <- file.path(totalBurdenParsedDir, agr_by, "nvss")
+dir.create(totalBurdenParsedDirX, recursive = T, showWarnings = F)
+totalBurdenParsedDirX <- file.path(
+  totalBurdenParsedDirX,
+  paste0("total_burden_nvss_", year, ".csv")
+)
+
+if (file.exists(totalBurdenParsedDirX)) {
+  #next
+  quit()
+}
+if(agr_by != "county"){
+  quit()
+}
 ## ----- read total burden ---------
 total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year) # , fix_states = FALSE
 if(FALSE){
@@ -102,20 +117,7 @@ numberDeaths <- nrow(total_burden)
 
 total_burden_agr_by <- total_burden
 
-totalBurdenParsedDirX <- file.path(totalBurdenParsedDir, agr_by, "nvss")
-dir.create(totalBurdenParsedDirX, recursive = T, showWarnings = F)
-totalBurdenParsedDirX <- file.path(
-  totalBurdenParsedDirX,
-  paste0("total_burden_nvss_", year, ".csv")
-)
 
-if (file.exists(totalBurdenParsedDirX)) {
-  #next
-  quit()
-}
-if(agr_by != "county"){
-  quit()
-}
 # if (!file.exists(totalBurdenParsedDirX)) {
 tic(paste("read", year, "total burden data"), quiet = FALSE)
 print(paste("read", year, "total burden data"))

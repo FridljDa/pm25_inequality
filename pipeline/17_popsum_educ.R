@@ -12,7 +12,7 @@
 suppressMessages({
   library(magrittr)
   #library(data.table)
-  library(tidyverse)
+  #library(tidyverse)
   library(tictoc)
   library(readxl)
   library(dplyr)
@@ -57,7 +57,7 @@ dir.create(pop.summary.dir, recursive = T, showWarnings = F)
 pop.summary.dirX <- file.path(pop.summary.dir, paste0("pop_sum_", year, ".csv"))
 
 if (file.exists(pop.summary.dirX)) {
-  #quit()
+  quit()
 }
 
 census_meta <- file.path(censDir, "meta", paste0("cens_meta_", toString(year), ".csv")) %>% read_data()
