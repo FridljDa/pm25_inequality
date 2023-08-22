@@ -1,3 +1,4 @@
+library(tidyr)
 #population data used for age_standartisation
 
 get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_population_summary"){
@@ -34,13 +35,13 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
 
   if (agr_by == "nation") {
     pop_summary <- pop_summary %>%
-      complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
+      tidyr::complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
                fill = list(Population = 0)
       ) %>%
       mutate_at(c("nation"), as.factor)
   } else if (agr_by == "STATEFP") {
     pop_summary <- pop_summary %>%
-      complete(Year, STATEFP, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
+      tidyr::complete(Year, STATEFP, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
                fill = list(Population = 0)
       ) %>%
       mutate_at(c("STATEFP"), as.factor)
@@ -53,6 +54,8 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
 
     # pop_summary <- pop_summary %>% filter(Race != "All")
   }
+
+  if(agr_by == "county") pop_summary <- pop_summary %>% mutate(county = as.integer(county))
 
   return(pop_summary)
 }

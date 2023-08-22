@@ -102,9 +102,9 @@ total_burden$measure2 <- "absolute number"
 #---read population data----
 pop_summary <- get_population_data(agr_by, year)
 # age-standartised rates
-total_burden_age_adj <- add_age_adjusted_rate(total_burden, pop_summary)
+#total_burden_age_adj <- add_age_adjusted_rate(total_burden, pop_summary)
 
-total_burden <- rbind(total_burden, total_burden_age_adj)
+#total_burden <- rbind(total_burden, total_burden_age_adj)
 
 ## ----finish------
 if (agr_by != "nation") {

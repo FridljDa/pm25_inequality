@@ -1,7 +1,7 @@
 library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
 library(magrittr, warn.conflicts = FALSE, quietly = TRUE)
 library(data.table, warn.conflicts = FALSE, quietly = TRUE)
-library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
+#library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
 library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
 
 pkgload::load_all()
@@ -46,7 +46,8 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   attr_burden <- attr_burden %>% tibble::add_column(agr_by = agr_by)
   # attr_burden <- attr_burden %>% filter(scenario == "A") # TODO delete
   if (agr_by == "county") {
-    attr_burden <- attr_burden %>% filter(measure2 %in% c("absolute number", "age-adjusted rate") &
+    attr_burden <- attr_burden %>%
+      filter(measure2 %in% c("absolute number", "age-adjusted rate") &
       scenario == "real") # TODO delete
   }
   return(attr_burden)

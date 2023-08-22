@@ -6,9 +6,6 @@
 #***************************************************************************
 #*
 
-# clear memory
-# rm(list = ls(all = TRUE))
-
 # load packages, install if missing
 suppressMessages({
   library(dplyr)
@@ -36,6 +33,8 @@ if (rlang::is_empty(args)) {
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+  #totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+  #
   attr_burdenDir <- "data/14_attr_burd"
 } else {
   year <- args[1]
@@ -159,16 +158,35 @@ if (agr_by == "county") {
     mutate(county = as.numeric(county))
 }
 
+##---drop some stuff---
+#if ("rural_urban_class" %in% names(total_burden)) {
+#  total_burden <- total_burden %>% select(-rural_urban_class)
+#}
 
-attr_burden_di <- inner_join_age_right_outer(total_burden,
+#if ("svi_bin" %in% names(total_burden)) {
+#  total_burden <- total_burden %>% select(-svi_bin)
+#}
+
+if ("rural_urban_class" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-rural_urban_class)
+}
+
+if ("svi_bin" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin)
+}
+#paf_di
+##---join---
+paf_di <- paf_di %>%
+  select(-min_age) %>%
+  select(-max_age)
+
+attr_burden_di <- left_join(
+  total_burden,
   paf_di,
-  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "label_cause")#,
-  #group_column = "value"
+  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause"),
+  relationship = "many-to-many" #paf_di %>% filter(method == "di_gee" & scenario == "real")
 )
-attr_burden_di <- attr_burden_di %>%
-  dplyr::group_by_at(vars(one_of(setdiff(colnames(attr_burden_di), "value")))) %>%
-  summarise(value := sum(value)) %>%
-  ungroup()
+
 
 #browser()
 attr_burden_di <- attr_burden_di %>%
@@ -178,12 +196,19 @@ attr_burden_di <- attr_burden_di %>%
     upper = value * paf_upper,
     paf_mean = NULL, paf_lower = NULL, paf_upper = NULL,
     value = NULL, label_cause = NULL,
-    attr = "attributable",
+    attr = "attributable"#,
     # min_age = min(min_age.x, min_age.y),
     # max_age = max(max_age.x, max_age.y),
     # min_age.x = NULL, min_age.y = NULL, max_age.x = NULL, max_age.y = NULL
   )
 
+attr_burden_di <- attr_burden_di %>%
+  dplyr::group_by_at(vars(one_of(setdiff(colnames(attr_burden_di),
+                                         c("mean", "lower", "upper"))))) %>%
+  summarise(mean = sum(mean),
+            lower = sum(lower),
+            upper = sum(upper)) %>%
+  ungroup()
 
 attr_burden_di <- attr_burden_di %>% filter(method %in% c("di_gee", "di_gee_white"))
 fwrite(attr_burden_di, attr_burdenDir)

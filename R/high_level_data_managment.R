@@ -39,6 +39,7 @@ read_data <- function(path) {
     variable = col_character(),
     Year = col_integer(),
     fromYear = col_integer(),
+    value = col_double(),
     min_age = col_integer(), max_age = col_integer(),
     county = col_integer(),
     FIPS.code = col_integer(),
@@ -65,6 +66,9 @@ read_data <- function(path) {
       "Some college education but no 4-year college degree", "middle",
       "4-year college graduate or higher","higher"
     )),
+    nation = col_factor(levels = c(
+      "us"
+    )),
     Race = col_factor(levels = c(
       "All",
       "American Indian or Alaska Native",
@@ -73,7 +77,8 @@ read_data <- function(path) {
       "White"
     )),
     measure1 = col_factor(levels = c(
-      "Deaths"
+      "Deaths",
+      "YLL"
     )),
     method = col_factor(levels = c(
       "di_gee",

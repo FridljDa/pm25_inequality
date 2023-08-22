@@ -2,7 +2,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  library(tidyverse)
+  #library(tidyverse)
   library(tictoc)
 })
 
@@ -50,58 +50,19 @@ attr_burden <- lapply(files, function(file) {
 
 ## --sum up geographic levels from county----
 
-#if (agr_by == "county") {
-#  attr_burden <- attr_burden %>%
-#    filter(measure1 == "Deaths" &
-#      measure2 == "age-adjusted rate")
-
-#  group_variables <- setdiff(colnames(attr_burden), c("lower", "mean", "upper", "min_age", "max_age"))
-
-#  attributable_burden_age_adj_over_25 <- attr_burden %>%
-#    filter(min_age >= 25) %>%
-#    group_by_at(vars(all_of(group_variables))) %>%
-#    summarise(
-#      mean = sum(mean),
-#      lower = sum(lower),
-#      upper = sum(upper)
-#    ) %>%
-#    ungroup() %>%
-#    mutate(
-#      min_age = 25,
-#      max_age = 150
-#    )
-
-#  attributable_burden_age_adj_over_65 <- attr_burden %>%
-#    filter(min_age >= 65) %>%
-#    group_by_at(vars(all_of(group_variables))) %>%
-#    summarise(
-#      mean = sum(mean),
-#      lower = sum(lower),
-#      upper = sum(upper)
-#    ) %>%
-#    ungroup() %>%
-#    mutate(
-#      min_age = 65,
-#      max_age = 150
-#    )
-
-#  attributable_burden_age_adj <- rbind(attributable_burden_age_adj_over_25, attributable_burden_age_adj_over_65)
-
-#  fwrite(attributable_burden_age_adj, summaryHigherDir)
-#  quit()
-#}
-# continue if State or nation
-### ---- add rural urban class----
-# rural_urban_class_find_replace <- set_names(rural_urban_class$rural_urban_class,
-#                                            rural_urban_class$FIPS.code)
-# rural_urban_class_find_replace <- as.character(rural_urban_class_find_replace)
-# attr_burden$rural_urban_class <- recode(attr_burden$rural_urban_class, rural_urban_class_find_replace, .default = "Unknown")
 
 if(agr_by != "county"){
+  tic("added rural_urban class info to attr_burden")
   attr_burden_with_svi_rural_urban_class <- attr_burden %>%
-    add_rural_urban_class(FIPS.code.column = "county") %>%
-    add_social_vuln_index(FIPS.code.column = "county")
+    add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
+  toc()
 
+  tic("added svi info to attr_burden")
+  attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
+    add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
+  toc()
+
+  tic("marginalised svi and rural_urban class info to attr_burden")
   attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
     group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
                         c("rural_urban_class", "mean", "lower", "upper"))) %>%
@@ -133,8 +94,10 @@ if(agr_by != "county"){
   rm(attr_burden_with_rural_urban_class,
      attr_burden_with_svi_bin,
      attr_burden_with_all)
+  toc()
 }else{
-  #TODO
+  attr_burden$rural_urban_class <- NA
+  attr_burden$svi_bin <- NA
 }
 
 
@@ -161,8 +124,8 @@ if (agr_by == "STATEFP") {
   group_variables <- setdiff(colnames(attr_burden), c("lower", "mean", "upper"))
 
 }
-tic(paste("summed up county level estimates to ", agr_by, " and age adjusted in year ", year))
 
+tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
 attr_burden <- attr_burden %>%
   group_by_at(vars(all_of(c(group_variables)))) %>%
   summarise(
@@ -172,13 +135,18 @@ attr_burden <- attr_burden %>%
   ) %>%
   ungroup()
 
+toc()
+
 #------ age-standartised rates-------
 attr_burden_absolute_number <- attr_burden %>%
   filter(measure1 == "Deaths" &
            measure2 == "absolute number")
 
+tic("age standardised attributable burden")
 pop_summary <- get_population_data(agr_by, year)
+
 attributable_burden_age_adj <- add_age_adjusted_rate(attr_burden_absolute_number, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
+toc()
 
 attr_burden <- rbind(attributable_burden_age_adj,
                      attr_burden_absolute_number)
@@ -218,4 +186,4 @@ attr_burden_over_65 <- attr_burden %>%
 attr_burden <- rbind(attr_burden_over_25,  attr_burden_over_65)
 
 fwrite(attr_burden, summaryHigherDir)
-toc()
+

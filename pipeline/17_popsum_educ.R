@@ -19,7 +19,7 @@ suppressMessages({
   library(foreach)
 })
 
-devtools::load_all()
+pkgload::load_all()
 
 
 options(scipen = 10000)

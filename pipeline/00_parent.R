@@ -41,7 +41,7 @@ dir.create(dem.dir, recursive = T, showWarnings = F)
 # directory for demographic data grouped by PM exposure and aggregated by county/hhs region/census region
 dem.agr.dir <- file.path(data.dir, "06_dem.agr")
 dir.create(dem.agr.dir, recursive = T, showWarnings = F)
-agr_bys <- c("county") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
+agr_bys <- c("county", "nation") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
 #agr_bys <- c("county") #, "nation"
 
 paf.dir <- file.path(data.dir, "07_gbd_paf")
@@ -87,10 +87,10 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
 #no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
-no_figure_scripts_list <- no_figure_scripts_list_full[c(11, 14, 15, 19)] #3,14,
-#years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+no_figure_scripts_list <- no_figure_scripts_list_full[c(15, 20, 22, 24, 25, 26)] #3,14,
+years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- 1994
-years <- 2002
+#years <- 2002
 # years <- 1998 #,1990,1991
 source <- "nvss"
 for (agr_by in agr_bys) {

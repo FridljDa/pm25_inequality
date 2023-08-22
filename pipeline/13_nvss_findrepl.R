@@ -437,7 +437,7 @@ findreplaces_svi_bin_before_2000 <- findreplaces_county %>%
   select(Year, replacecolumns, from, to)
 
 findreplaces <- rbind(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016,
-                      findreplaces_county, findreplaces_rural_urban_class, findreplaces_svi_bin_after_2000, findreplaces_svi_bin_before_2000)
-
+                      findreplaces_county)
+#, findreplaces_rural_urban_class, findreplaces_svi_bin_after_2000, findreplaces_svi_bin_before_2000
 write.csv(findreplaces, findreplaceDir, row.names = FALSE)
 rm(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016, findreplaces_rural_urban_class)

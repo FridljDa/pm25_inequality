@@ -21,7 +21,7 @@ require(narcan)
 library(readr)
 require(tidyr)
 
-devtools::load_all()
+pkgload::load_all()
 #NCORES <- 3
 
 options(dplyr.summarise.inform = FALSE)
@@ -31,8 +31,14 @@ options(dplyr.join.inform = FALSE)
 
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
-  agr_by <- "nation"
+  agr_by <- "county"
   year <- 2002
+
+  totalBurdenDir <- "data/08_total_burden/nvss"
+  totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
+  totalBurdenParsedDir <- "data/09_total_burden_parsed"
+  #totalBurdenParsedDir <- "/share/pi/mkiang/dfridljand_air_pollution/PM2.5-attributable-mortality-analysis-private/data/09_total_burden_parsed"
+
 } else {
   year <- args[1]
   agr_by <- args[10]
@@ -45,11 +51,10 @@ agr_bys <- agr_by
 # totalBurdenDir <- "./raw_restricted_data"
 # totalBurdenDir <- "data/raw_restricted_fake"
 totalBurdenDir <- "data/08_total_burden/nvss"
-# totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
+totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
 # Where the parsed files should be stored
 # totalBurdenParsedDir <- "./Transfer_for_daniel"
-totalBurdenParsedDir <- "/share/pi/mkiang/dfridljand_air_pollution/PM2.5-attributable-mortality-analysis-private/data/09_total_burden_parsed"
-totalBurdenParsedDir <- "data/09_total_burden_parsed"
+totalBurdenParsedDir <- "data/09_total_burden_parsed2"
 
 # totalBurdenDir <- "/Volumes/fridljand/R/HIGH/raw_restricted_fake"
 # Where the parsed files should be stored
@@ -68,17 +73,6 @@ file_list <- list.files(totalBurdenDir)
 findreplace <- read_csv("data/09_total_burden_parsed/findreplace.csv", show_col_types = FALSE)
 causes <- read_csv("data/09_total_burden_parsed/causes.csv", show_col_types = FALSE)
 
-## ---check if everything already exists---
-paths <- c()
-
-for (agr_by in agr_bys) {
-  for (year in years) {
-    path <- paste0(totalBurdenParsedDir, "/", agr_by, "/nvss/", "total_burden_nvss_", year, ".csv")
-    paths <- c(paths, path)
-  }
-}
-
-if (all(sapply(paths, file.exists))) quit()
 
 #### ----- loop over everything ---
 # doParallel::registerDoParallel(cores = NCORES)

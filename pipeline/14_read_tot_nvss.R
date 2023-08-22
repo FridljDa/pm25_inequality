@@ -31,7 +31,7 @@ options(dplyr.join.inform = FALSE)
 
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
-  agr_by <- "county"
+  agr_by <- "nation"
   year <- 2002
 
   totalBurdenDir <- "data/08_total_burden/nvss"
@@ -272,11 +272,14 @@ total_burden_agr_by <- total_burden_agr_by %>%
 
 total_burden_agr_by_full <- total_burden_agr_by
 
-total_burden_agr_by <- total_burden_agr_by %>%
-          filter(county != "Unknown")
+if(agr_by == "county"){
+  total_burden_agr_by <- total_burden_agr_by %>%
+    filter(county != "Unknown")
 
-cat("dropped", sum(total_burden_agr_by_full$Deaths) - sum(total_burden_agr_by$Deaths),
-    "out of", sum(total_burden_agr_by_full$Deaths), "deaths because of unknown county")
+  cat("dropped", sum(total_burden_agr_by_full$Deaths) - sum(total_burden_agr_by$Deaths),
+      "out of", sum(total_burden_agr_by_full$Deaths), "deaths because of unknown county")
+}
+
 
 ## --- seperate stuff----
 # add all rural_urban_class
