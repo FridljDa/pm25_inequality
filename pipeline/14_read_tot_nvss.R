@@ -10,11 +10,18 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat",  "tictoc")
+library(magrittr)
+library(data.table)
+library(tictoc)
+#library(foreach)
+#library(doParallel)
+library(dplyr)
+library(stringr)
+require(narcan)
+library(readr)
+require(tidyr)
 
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
+pkgload::load_all()
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
@@ -35,10 +42,11 @@ if (rlang::is_empty(args)) {
   totalBurdenDir <- "data/08_total_burden"
   totalBurdenParsedDir <- "data/09_total_burden_parsed"
 }
+totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
 findreplace <- read.csv(file.path(totalBurdenParsedDir, "findreplace.csv")) %>% filter(Year == year)
 causes <- read.csv(file.path(totalBurdenParsedDir, "causes.csv")) %>% filter(Year == year)
 
-totalBurdenDir <- file.path(totalBurdenDir, "nvss")#TODO
+#totalBurdenDir <- file.path(totalBurdenDir, "nvss")#TODO
 file_list <- list.files(totalBurdenDir)
 totalBurdenDir <- file.path(
   totalBurdenDir,
@@ -57,7 +65,9 @@ totalBurdenParsedDir <- file.path(
 if (!file.exists(totalBurdenParsedDir)) {
   tic(paste("read", year, "total burden data"), quiet = FALSE)
 
-  total_burden <- fread(totalBurdenDir) #TODO , nrow=40000
+  #total_burden <- fread(totalBurdenDir) #TODO , nrow=40000
+  total_burden <- narcan:::.import_restricted_data(totalBurdenDir, year = year) # , fix_states = FALSE
+
   # print(paste("read", year, "total burden data"))
 
   findreplaceX <- findreplace %>% filter(Year == year)
