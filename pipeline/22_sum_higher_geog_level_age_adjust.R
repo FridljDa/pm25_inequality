@@ -3,6 +3,7 @@ suppressMessages(library(magrittr, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(data.table, warn.conflicts = FALSE, quietly = TRUE))
 
 suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
+library(readr)
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -59,7 +60,7 @@ if (agr_by == "county") {
       measure2 == "age-adjusted rate")
 
   group_variables <- setdiff(colnames(attr_burden), c("lower", "mean", "upper", "min_age", "max_age"))
-  
+
   attributable_burden_age_adj_over_25 <- attr_burden %>%
     filter(min_age >= 25) %>%
     group_by_at(vars(all_of(group_variables))) %>%
@@ -68,10 +69,10 @@ if (agr_by == "county") {
       lower = sum(lower),
       upper = sum(upper)
     ) %>%
-    ungroup() %>% 
+    ungroup() %>%
     mutate(min_age = 25,
            max_age = 150)
-  
+
   attributable_burden_age_adj_over_65 <- attr_burden %>%
     filter(min_age >= 65) %>%
     group_by_at(vars(all_of(group_variables))) %>%
@@ -80,19 +81,19 @@ if (agr_by == "county") {
       lower = sum(lower),
       upper = sum(upper)
     ) %>%
-    ungroup() %>% 
+    ungroup() %>%
     mutate(min_age = 65,
            max_age = 150)
-  
-  attributable_burden_age_adj <- rbind(attributable_burden_age_adj_over_25, attributable_burden_age_adj_over_65) 
-  
+
+  attributable_burden_age_adj <- rbind(attributable_burden_age_adj_over_25, attributable_burden_age_adj_over_65)
+
   fwrite(attributable_burden_age_adj, summaryHigherDir)
   quit()
-  
-} 
+
+}
 #continue if State or nation
 ###---- add rural urban class----
-#rural_urban_class_find_replace <- set_names(rural_urban_class$rural_urban_class, 
+#rural_urban_class_find_replace <- set_names(rural_urban_class$rural_urban_class,
 #                                            rural_urban_class$FIPS.code)
 #rural_urban_class_find_replace <- as.character(rural_urban_class_find_replace)
 #attr_burden$rural_urban_class <- recode(attr_burden$rural_urban_class, rural_urban_class_find_replace, .default = "Unknown")
@@ -118,11 +119,11 @@ attr_burden <- attr_burden %>%
 if (agr_by == "STATEFP") {
   attr_burden <- attr_burden %>%
     mutate(
-      STATEFP = str_sub(county, 1, -4) %>% 
+      STATEFP = str_sub(county, 1, -4) %>%
         as.integer() %>%
         as.factor()
     )
-  
+
 } else if (agr_by == "nation") {
   attr_burden <- attr_burden %>%
     mutate(
@@ -145,14 +146,14 @@ attr_burden_absolute_number <- attr_burden
 #---read population data----
 if(file.exists(file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv"))) & agr_by != "county"){
   pop_summary1 <- file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv")) %>%
-    read.csv() %>% 
+    read.csv() %>%
     filter(Year == year)
 }else{
   pop_summary1 <- NULL
 }
 
 pop_summary2 <- file.path(pop.summary.dir, agr_by, paste0("pop_sum_", year, ".csv")) %>%
-  read.csv() %>% 
+  read.csv() %>%
   filter(Year == year)
 
 if(agr_by != "county"){
@@ -161,7 +162,7 @@ if(agr_by != "county"){
 
 if(agr_by == "nation"){
   pop_summary3 <- file.path(pop.summary.dir, paste0("pop_race_educ_nation.csv")) %>%
-    read.csv() %>% 
+    read.csv() %>%
     filter(Year == year)
 }else{
   pop_summary3 <- NULL
@@ -177,7 +178,7 @@ rm(pop_summary1, pop_summary2)
 
 if (agr_by == "nation") {
   pop_summary <- pop_summary %>%
-    complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class, 
+    complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
              fill = list(Population = 0)
     )%>%
     mutate_at(c("nation"), as.factor)
@@ -193,7 +194,7 @@ if (agr_by == "nation") {
     #         fill = list(Population = 0)
     #)%>%
     mutate_at(c("county"), as.factor)
-  
+
   #pop_summary <- pop_summary %>% filter(Race != "All")
 }
 
@@ -278,7 +279,7 @@ attributable_burden_age_adj_over_25 <- attributable_burden_age_adj %>%
     lower = sum(lower),
     upper = sum(upper)
   ) %>%
-  ungroup() %>% 
+  ungroup() %>%
   mutate(min_age = 25,
          max_age = 150)
 
@@ -290,7 +291,7 @@ attributable_burden_age_adj_over_65 <- attributable_burden_age_adj %>%
     lower = sum(lower),
     upper = sum(upper)
   ) %>%
-  ungroup() %>% 
+  ungroup() %>%
   mutate(min_age = 65,
          max_age = 150)
 
@@ -302,7 +303,7 @@ attr_burden_absolute_number_over_25 <- attr_burden_absolute_number %>%
     lower = sum(lower),
     upper = sum(upper)
   ) %>%
-  ungroup() %>% 
+  ungroup() %>%
   mutate(min_age = 25,
          max_age = 150)
 
@@ -314,11 +315,11 @@ attr_burden_absolute_number_over_65 <- attr_burden_absolute_number %>%
     lower = sum(lower),
     upper = sum(upper)
   ) %>%
-  ungroup() %>% 
+  ungroup() %>%
   mutate(min_age = 65,
          max_age = 150)
 
-attributable_burden_age_adj <- rbind(attributable_burden_age_adj_over_25, attributable_burden_age_adj_over_65, attr_burden_absolute_number_over_25, attr_burden_absolute_number_over_65) 
+attributable_burden_age_adj <- rbind(attributable_burden_age_adj_over_25, attributable_burden_age_adj_over_65, attr_burden_absolute_number_over_25, attr_burden_absolute_number_over_65)
 
 fwrite(attributable_burden_age_adj, summaryHigherDir)
 toc()

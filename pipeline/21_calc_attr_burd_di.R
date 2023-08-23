@@ -7,11 +7,11 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+# rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat",  "tictoc"
+  "dplyr", "magrittr", "data.table", "testthat", "tictoc"
 )
 
 for (p in packages) {
@@ -34,16 +34,16 @@ attr_burdenDir <- args[18]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2016
+  year <- 2007
   agr_by <- "county"
   source <- "nvss"
-
-  tmpDir <- "data/tmp"
-  censDir <- "data/05_demog"
-  dem_agrDir <- "data/06_dem.agr"
-  totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  attr_burdenDir <- "data/14_attr_burd"
 }
+tmpDir <- "data/tmp"
+censDir <- "data/05_demog"
+dem_agrDir <- "data/06_dem.agr"
+totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+attr_burdenDir <- "data/14_attr_burd"
+
 
 if (agr_by != "county") {
   quit()
@@ -64,27 +64,27 @@ if (!file.exists(attr_burdenDir)) {
   pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
   pm_summ <- pm_summ %>% left_join(meta, by = "variable")
   pm_summ <- pm_summ %>% filter(min_age >= 25)
-  #if(agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
+  # if(agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
   # pm_summ <- pm_summ %>% mutate(min_age = min(min_age), max_age = max(max_age))
 
   pm_summ <- pm_summ %>% mutate_at(c("rural_urban_class", "Education"), as.factor)
   total_burden <- total_burden %>% mutate_at(c("rural_urban_class", "Education"), as.factor)
   total_burden <- total_burden %>% filter(label_cause == "all-cause")
 
-  #restrict everything to age_group 25+
+  # restrict everything to age_group 25+
   total_burden <- total_burden %>%
     filter(min_age >= 25)
-  
+
   pm_summ <- pm_summ %>%
     dplyr::group_by_at(vars(one_of("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "scenario", "pm", "min_age", "max_age"))) %>%
     dplyr::summarize(pop_size = sum(pop_size))
 
-  #rm(meta, files)
-  #test_that("basic check pm summ", {
+  # rm(meta, files)
+  # test_that("basic check pm summ", {
   #  pm_summ_dupl <- pm_summ %>% select(setdiff(colnames(pm_summ), c("pop_weight_pm_exp")))
   #  pm_summ_dupl <- pm_summ_dupl[duplicated(pm_summ_dupl), ]
   #  expect_equal(nrow(pm_summ_dupl), 0)
-  #})
+  # })
   ## ---paf calculations----
 
   # DI 2017, SI, Table S3
@@ -93,16 +93,15 @@ if (!file.exists(attr_burdenDir)) {
 
   # Increases of 10 μg per cubic meter in PM2.5 were associated with increases in all-cause mortality
 
-  hr_race_specific <- tibble::tribble( 
-    ~method, ~Race, ~Hispanic.Origin, ~label_cause,~hr_mean, ~hr_lower, ~hr_upper, ~min_age,
-    "di_gee", "White", "All Origins", "all-cause",1.063,1.06, 1.065, 25,
-    "di_gee", "White", "Not Hispanic or Latino", "all-cause",1.063, 1.06, 1.065, 25,
-    "di_gee", "White", "Hispanic or Latino", "all-cause",1.116, 1.1, 1.133, 25,
-    
-    "di_gee", "Black or African American", "All Origins", "all-cause",1.208, 1.199, 1.217, 25,
-    "di_gee", "Asian or Pacific Islander", "All Origins", "all-cause",1.096, 1.075,  1.117, 25,
-    "di_gee", "American Indian or Alaska Native", "All Origins", "all-cause",1.1, 1.06, 1.14, 25,
-    "di_gee", "All", "All Origins", "all-cause",1.073, 1.071, 1.075, 25
+  hr_race_specific <- tibble::tribble(
+    ~method, ~Race, ~Hispanic.Origin, ~label_cause, ~hr_mean, ~hr_lower, ~hr_upper, ~min_age,
+    "di_gee", "White", "All Origins", "all-cause", 1.063, 1.06, 1.065, 25,
+    "di_gee", "White", "Not Hispanic or Latino", "all-cause", 1.063, 1.06, 1.065, 25,
+    "di_gee", "White", "Hispanic or Latino", "all-cause", 1.116, 1.1, 1.133, 25,
+    "di_gee", "Black or African American", "All Origins", "all-cause", 1.208, 1.199, 1.217, 25,
+    "di_gee", "Asian or Pacific Islander", "All Origins", "all-cause", 1.096, 1.075, 1.117, 25,
+    "di_gee", "American Indian or Alaska Native", "All Origins", "all-cause", 1.1, 1.06, 1.14, 25,
+    "di_gee", "All", "All Origins", "all-cause", 1.073, 1.071, 1.075, 25
   )
   hr_race_specific <- as.data.frame(hr_race_specific)
 
@@ -156,26 +155,26 @@ if (!file.exists(attr_burdenDir)) {
 
   if (agr_by == "county") paf_di$rural_urban_class <- as.factor(666) # TODO change total burden
 
-  if (agr_by == "county"){
+  if (agr_by == "county") {
     total_burden <- total_burden %>%
       filter(county != "Unknown") %>%
       mutate(county = as.numeric(county))
   }
-  
+
   attr_burden_di <- inner_join(
     total_burden,
-    paf_di,
-    by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "label_cause")
+    paf_di, # "rural_urban_class",
+    by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause")
   )
 
   attr_burden_di <- attr_burden_di %>%
     filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
     mutate(
-      #min_age = min_age.y, max_age = max_age.y, #for without age
-      min_age = min_age.x, max_age = min_age.x, #for age specific
+      # min_age = min_age.y, max_age = max_age.y, #for without age
+      min_age = min_age.x, max_age = min_age.x, # for age specific
       min_age.y = NULL, min_age.x = NULL, max_age.x = NULL, max_age.y = NULL
     )
-  
+
   attr_burden_di <- attr_burden_di %>%
     dplyr::group_by_at(vars(one_of(setdiff(colnames(attr_burden_di), "value")))) %>%
     summarise(value = sum(value)) %>%
@@ -195,8 +194,8 @@ if (!file.exists(attr_burdenDir)) {
       # min_age.x = NULL, min_age.y = NULL, max_age.x = NULL, max_age.y = NULL
     )
 
-  
-  attr_burden_di <- attr_burden_di %>% filter(method %in% c("di_gee",  "di_gee_white"))
+
+  attr_burden_di <- attr_burden_di %>% filter(method %in% c("di_gee", "di_gee_white"))
   fwrite(attr_burden_di, attr_burdenDir)
   toc()
 }

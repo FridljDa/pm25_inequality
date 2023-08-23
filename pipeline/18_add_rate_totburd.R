@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c("dplyr", "magrittr", "data.table", "testthat",  "tictoc", "readxl")
-
+library(tidyr)
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }
@@ -33,7 +33,7 @@ totalBurdenParsed2Dir <- args[17]
 
 if (rlang::is_empty(args)) {
   year <- 2005
-  
+
   dataDir <-"data"
   tmpDir <- "data/tmp"
   agr_by <- "county"
@@ -69,52 +69,52 @@ if (!file.exists(totalBurdenParsed2Dir)) {
       #complete(Year, STATEFP, source, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class, nesting(label_cause, attr),
       #  fill = list(Deaths = 0)
       #) %>%
-      filter(STATEFP != "oth") %>% 
+      filter(STATEFP != "oth") %>%
       mutate_at(c("STATEFP"), as.factor)
   }else if(agr_by == "county"){
     total_burden <- total_burden %>%
-      filter(county != "oth") %>% 
+      filter(county != "oth") %>%
       mutate_at(c("county"), as.factor)
-    
+
     #total_burden <- total_burden %>% filter(label_cause == "all-cause" & rural_urban_class == "666")
   }
-  
+
   #---read population data----
   if(file.exists(file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv"))) & agr_by != "county"){
     pop_summary1 <- file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv")) %>%
-      read.csv() %>% 
+      read.csv() %>%
       filter(Year == year)
   }else{
     pop_summary1 <- NULL
   }
-  
+
   pop_summary2 <- file.path(pop.summary.dir, agr_by, paste0("pop_sum_", year, ".csv")) %>%
-    read.csv() %>% 
+    read.csv() %>%
     filter(Year == year)
-  
+
   if(agr_by != "county"){
     pop_summary2 <- pop_summary2 %>% filter(!(rural_urban_class == 666 & Education == 666))
   }
-  
+
   if(agr_by == "nation"){
     pop_summary3 <- file.path(pop.summary.dir, paste0("pop_race_educ_nation.csv")) %>%
-      read.csv() %>% 
+      read.csv() %>%
       filter(Year == year)
   }else{
     pop_summary3 <- NULL
   }
-  
+
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
-  
+
   pop_summary <- pop_summary %>%
     mutate_at(c("rural_urban_class", "Education"), as.factor) %>%
     mutate(source2 = NULL)
-  
+
   rm(pop_summary1, pop_summary2)
-  
+
   if (agr_by == "nation") {
     pop_summary <- pop_summary %>%
-      complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class, 
+      complete(Year, nation, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
                fill = list(Population = 0)
       )%>%
       mutate_at(c("nation"), as.factor)
@@ -130,7 +130,7 @@ if (!file.exists(totalBurdenParsed2Dir)) {
       #         fill = list(Population = 0)
       #)%>%
       mutate_at(c("county"), as.factor)
-    
+
     #pop_summary <- pop_summary %>% filter(Race != "All")
   }
   ## --- measure 1: Deaths and YLL-----
@@ -151,8 +151,8 @@ if (!file.exists(totalBurdenParsed2Dir)) {
 
   total_burden <- rbind(total_burden, total_burden_yll)
   rm(lifeExpectancy, total_burden_yll)
-  
-  #------measure 2: absolute number, crude rate and age-standartised rates----- 
+
+  #------measure 2: absolute number, crude rate and age-standartised rates-----
   # absolute number
   total_burden$measure2 <- "absolute number"
 
@@ -218,18 +218,18 @@ if (!file.exists(totalBurdenParsed2Dir)) {
     group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
     summarise(value = sum(value)) %>%
     ungroup()
-  
+
 
   total_burden_age_adj <- total_burden_age_adj %>%
     filter(Population >=1 & full_stand_popsize >=1) %>%
     dplyr::mutate(
-      value = (value * standard_popsize / Population) * (100000 / full_stand_popsize), 
+      value = (value * standard_popsize / Population) * (100000 / full_stand_popsize),
       value = ifelse(is.nan(value), 0, value),
       measure2 = "age-adjusted rate",
       Population = NULL, standard_popsize = NULL
     )
 
-  
+
   total_burden <- rbind(total_burden, total_burden_crude, total_burden_age_adj)
   rm(total_burden_crude, total_burden_age_adj, standartpopulation, full_stand_popsize, pop_summary)
 
@@ -242,7 +242,7 @@ if (!file.exists(totalBurdenParsed2Dir)) {
   #restrict everything to age_group 25+
   total_burden <- total_burden %>%
     filter(min_age >= 25)
-  
+
   total_burden <- total_burden %>% distinct()
 
   fwrite(total_burden, totalBurdenParsed2Dir)
