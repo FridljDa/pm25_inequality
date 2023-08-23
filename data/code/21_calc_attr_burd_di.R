@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc"
+  "dplyr", "magrittr", "data.table", "testthat",  "tictoc"
 )
 
 for (p in packages) {
@@ -41,19 +41,19 @@ if (rlang::is_empty(args)) {
   tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
   censDir <- "/Users/default/Desktop/paper2021/data/05_demog"
   dem_agrDir <- "/Users/default/Desktop/paper2021/data/06_dem.agr"
-  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/13_total_burden_rate"
   attr_burdenDir <- "/Users/default/Desktop/paper2021/data/13_attr_burd"
 
   tmpDir <- "C:/Users/Daniel/Desktop/paper2021/data/tmp"
   censDir <- "C:/Users/Daniel/Desktop/paper2021/data/05_demog"
   dem_agrDir <- "C:/Users/Daniel/Desktop/paper2021/data/06_dem.agr"
-  totalBurdenParsed2Dir <- "C:/Users/Daniel/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "C:/Users/Daniel/Desktop/paper2021/data/13_total_burden_rate"
   attr_burdenDir <- "C:/Users/Daniel/Desktop/paper2021/data/13_attr_burd"
 
   tmpDir <- "/Volumes/fridljand/R/HIGH/data/tmp"
   censDir <- "/Volumes/fridljand/R/HIGH/data/05_demog"
   dem_agrDir <- "/Volumes/fridljand/R/HIGH/data/06_dem.agr"
-  totalBurdenParsed2Dir <- "/Volumes/fridljand/R/HIGH/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "/Volumes/fridljand/R/HIGH/data/13_total_burden_rate"
   attr_burdenDir <- "/Volumes/fridljand/R/HIGH/data/13_attr_burd"
 
   tmpDir <- "data/tmp"

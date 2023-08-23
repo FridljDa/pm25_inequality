@@ -10,7 +10,7 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc")
+packages <- c("dplyr", "magrittr", "data.table", "testthat",  "tictoc")
 
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -30,8 +30,8 @@ totalBurdenParsedDir <- args[13]
 # TODO delete
 if (rlang::is_empty(args)) {
   agr_by <- "county"
-  year <- 1998
-  
+  year <- 2006
+
   totalBurdenDir <- "data/08_total_burden"
   totalBurdenParsedDir <- "data/09_total_burden_parsed"
 }
@@ -132,11 +132,11 @@ if (!file.exists(totalBurdenParsedDir)) {
 
   if ("fipsctyr" %in% colnames(total_burden)) {
     selectcolumns <- c(selectcolumns, "rural_urban_class" = "fipsctyr")
-    
+
     test <- total_burden %>% filter(fipsctyr == 0 & fipsctyo != 0)
     prop <- nrow(test) /nrow(total_burden)*100
     print(paste("missing counties of residence substitute by occurrence:", prop,"%"))
-    
+
     # replace missing information from other columns as good as possible
     total_burden <- total_burden %>%
       mutate(
@@ -155,11 +155,11 @@ if (!file.exists(totalBurdenParsedDir)) {
     rm(test, prop)
   } else if (!("fipsctyr" %in% colnames(total_burden)) & "countyrs" %in% colnames(total_burden)) {
     selectcolumns <- c(selectcolumns, "rural_urban_class" = "countyrs")
-    
+
     test <- total_burden %>% filter(countyrs == 0 & countyoc != 0)
     prop <- nrow(test) /nrow(total_burden)
     print(paste("missing counties of residence substitute by occurrence:", prop))
-    
+
     # replace missing information from other columns as good as possible
     total_burden <- total_burden %>%
       mutate(
@@ -171,7 +171,7 @@ if (!file.exists(totalBurdenParsedDir)) {
           str_sub(countyrs, 1, -4)
         )
       )
-    
+
     prop <- sum(is.na(total_burden$countyrs)) /nrow(total_burden) *100
     print(paste("counties missing even after substitution", prop,"%"))
     rm(test, prop)
@@ -332,7 +332,7 @@ if (!file.exists(totalBurdenParsedDir)) {
         Race = "All",
         Education = Education %>% as.factor()
       )
-    
+
     total_burden_race <- total_burden_race %>% mutate(Education = as.factor(Education))
     total_burden_educ <- total_burden_educ %>% mutate(Education = as.factor(Education))
     total_burden_all <- total_burden_all %>% mutate(Education = as.factor(Education))
@@ -361,20 +361,20 @@ if (!file.exists(totalBurdenParsedDir)) {
 
 
   total_burden <- total_burden %>% unite("Ethnicity", c("Race", "Hispanic.Origin"), sep = ", ", remove = F)
-  
+
   if(agr_by == "nation"){
-    ethnicities_with_education <- c("White, All Origins", 
-                                    "White, Not Hispanic or Latino", 
-                                    "White, Hispanic or Latino", 
-                                    "Black or African American, All Origins", 
+    ethnicities_with_education <- c("White, All Origins",
+                                    "White, Not Hispanic or Latino",
+                                    "White, Hispanic or Latino",
+                                    "Black or African American, All Origins",
                                     "Asian or Pacific Islander, All Origins",
                                     "All, All Origins")
   }else{
     ethnicities_with_education <- c("All, All Origins")
-  } 
+  }
   total_burden <- total_burden %>%
     filter(Education == 666 | Ethnicity %in% ethnicities_with_education)
-  
+
   interested_ethnicities <- c(
     "Black or African American, All Origins",
     "Asian or Pacific Islander, All Origins",
@@ -384,7 +384,7 @@ if (!file.exists(totalBurdenParsedDir)) {
   if (year %in% 1990:1999) interested_ethnicities <- c(interested_ethnicities, "White, All Origins")
   if (year == 2000) interested_ethnicities <- c(interested_ethnicities, "White, All Origins", "White, Not Hispanic or Latino", "White, Hispanic or Latino")
   if (year %in% 2001:2016) interested_ethnicities <- c(interested_ethnicities, "White, Not Hispanic or Latino", "White, Hispanic or Latino")
-  
+
   total_burden <- total_burden %>%
     filter(Ethnicity %in% interested_ethnicities) %>%
     mutate(Ethnicity = NULL)
@@ -411,7 +411,7 @@ if (!file.exists(totalBurdenParsedDir)) {
     group_by_at(setdiff(colnames(total_burden), c("min_age", "max_age", "Deaths"))) %>%
     summarize(Deaths = sum(Deaths)) %>%
     ungroup() # %>%
- 
+
   suppressed_deaths <- suppressed_deaths %>%
     mutate(grouped1 = case_when(
       Race == "All" & Hispanic.Origin == "All Origins" & Education == 666 & rural_urban_class == 666 ~ "All",
@@ -429,7 +429,7 @@ if (!file.exists(totalBurdenParsedDir)) {
   suppressed_deaths <- suppressed_deaths %>%
     group_by(Year, grouped1, grouped2) %>%
     summarise(Deaths = sum(Deaths))
-  
+
   suppressed_deaths <- suppressed_deaths %>%
     mutate(percent_deleted_deaths = 100 * Deaths / numberDeaths_afterfiltering) %>%
     #select(Year, Race, Hispanic.Origin, rural_urban_class, Education, Deaths, prop) %>%

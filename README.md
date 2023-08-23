@@ -122,7 +122,7 @@ R packages required for replications are:
 
 Users can run the following one-off command to install the most recent versions of these packages:
 ```
-install.packages(c("vctrs", "bit64", "cdcfluview", "censusapi", "data.table", "dplyr", "ggplot2", "magrittr", "matrixStats", "MALDIquant", "RCurl", "readxl", "triangle", "sf", "sp", "stringr", "testthat", "tictoc", "truncnorm", "tidyverse", "viridis", "hrbrthemes", "rlang", "stats", "xlsx", "ggpubr", "ggExtra", "tigris", "tmap", "BiocManager"), dependencies = T)
+install.packages(c("vctrs", "bit64", "cdcfluview", "censusapi", "data.table", "dplyr", "ggplot2", "magrittr", "matrixStats", "MALDIquant", "RCurl", "readxl", "triangle", "sf", "sp", "stringr", "testthat", "tictoc", "truncnorm",  "viridis", "hrbrthemes", "rlang", "stats", "xlsx", "ggpubr", "ggExtra", "tigris", "tmap", "BiocManager"), dependencies = T)
 BiocManager::install("rhdf5")
 ```
 

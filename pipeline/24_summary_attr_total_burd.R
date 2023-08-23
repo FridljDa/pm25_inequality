@@ -1,7 +1,6 @@
 library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
 library(magrittr, warn.conflicts = FALSE, quietly = TRUE)
 library(data.table, warn.conflicts = FALSE, quietly = TRUE)
-library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
 library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
 
 options(dplyr.summarise.inform = FALSE)
@@ -81,7 +80,7 @@ group_variables <- setdiff(colnames(total_burden), c("value", "min_age", "max_ag
 total_burden <- total_burden %>%
   dplyr::group_by_at(vars(all_of(group_variables))) %>%
   dplyr::summarise(
-    overall_value = sum(value), 
+    overall_value = sum(value),
     min_age = min(min_age),
     max_age = max(max_age)
   ) %>%
@@ -112,14 +111,14 @@ attr_burden <- attr_burden %>%
   )
 
 attr_burden <- attr_burden %>%
-  mutate(Education = forcats::fct_recode(Education, 
+  mutate(Education = forcats::fct_recode(Education,
                                            "High school graduate or lower" = "lower",
                                            "Some college education but no 4-year college degree" = "middle",
                                            "4-year college graduate or higher" = "higher",
                                            "666" = "666"))
 
 total_burden <- total_burden %>%
-  mutate(Education = forcats::fct_recode(Education, 
+  mutate(Education = forcats::fct_recode(Education,
                                          "High school graduate or lower" = "lower",
                                          "Some college education but no 4-year college degree" = "middle",
                                          "4-year college graduate or higher" = "higher",
@@ -131,10 +130,10 @@ total_burden <- total_burden %>%
   mutate(Gender.Code = forcats::fct_recode(Gender.Code, "All genders" ="A"))
 
 total_burden <- total_burden %>%
-  mutate(source = forcats::fct_recode(source, 
+  mutate(source = forcats::fct_recode(source,
                                          "National Vital Statistics System" = "nvss"))
 attr_burden <- attr_burden %>%
-  mutate(source = forcats::fct_recode(source, 
+  mutate(source = forcats::fct_recode(source,
                                       "National Vital Statistics System" = "nvss"))
 
 # rindreplace5 <- setNames(c("Years of Life Lost (YLL)", "Deaths"), c("YLL","Deaths"))
@@ -142,14 +141,14 @@ attr_burden <- attr_burden %>%
 # attr_burden$measure1 <- sapply(attr_burden$measure1 , function(x) rindreplace5[[x]])
 
 attr_burden <- attr_burden %>%
-  mutate(measure2 = forcats::fct_recode(measure2, 
-                                      #"crude rate per 100,000" = "crude rate", 
+  mutate(measure2 = forcats::fct_recode(measure2,
+                                      #"crude rate per 100,000" = "crude rate",
                                       "age-adjusted rate per 100,000" = "age-adjusted rate",
                                       #"absolute number" = "absolute number"
                                       ))
 total_burden <- total_burden %>%
-  mutate(measure2 = forcats::fct_recode(measure2, 
-                                        #"crude rate per 100,000" = "crude rate", 
+  mutate(measure2 = forcats::fct_recode(measure2,
+                                        #"crude rate per 100,000" = "crude rate",
                                         "age-adjusted rate per 100,000" = "age-adjusted rate",
                                         #"absolute number" = "absolute number"
                                         ))
@@ -175,16 +174,16 @@ levels(attr_burden$Ethnicity) <- rindreplace7
 
 total_burden <- total_burden %>%
   mutate(rural_urban_class = as.factor(rural_urban_class),
-         rural_urban_class = forcats::fct_recode(rural_urban_class, 
-                                                 "Large metro" = "1", 
-                                                 "Small-medium metro" = "2", 
+         rural_urban_class = forcats::fct_recode(rural_urban_class,
+                                                 "Large metro" = "1",
+                                                 "Small-medium metro" = "2",
                                                  "Non metro" = "3",
                                                  "All" = "666"))
 attr_burden <- attr_burden %>%
   mutate(rural_urban_class = as.factor(rural_urban_class),
-         rural_urban_class = forcats::fct_recode(rural_urban_class, 
-                                                 "Large metro" = "1", 
-                                                 "Small-medium metro" = "2", 
+         rural_urban_class = forcats::fct_recode(rural_urban_class,
+                                                 "Large metro" = "1",
+                                                 "Small-medium metro" = "2",
                                                  "Non metro" = "3",
                                                  "All" = "666"
                                                  ))

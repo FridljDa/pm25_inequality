@@ -37,19 +37,19 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
   figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-  totalBurdenDir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenDir <- "/Users/default/Desktop/paper2021/data/13_total_burden_rate"
   exp_rrDir <- "/Users/default/Desktop/paper2021/data/04_exp_rr"
   tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
   
   summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
-  totalBurdenDir <- "/g/huber/users/fridljand/R/HIGH/data/12_total_burden_parsed2"
+  totalBurdenDir <- "/g/huber/users/fridljand/R/HIGH/data/13_total_burden_rate"
   exp_rrDir <- "/g/huber/users/fridljand/R/HIGH/data/04_exp_rr"
   tmpDir <- "/g/huber/users/fridljand/R/HIGH/data/tmp"
   
   summaryDir <-"/Volumes/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
-  totalBurdenDir <- "/Volumes/fridljand/R/HIGH/data/12_total_burden_parsed2"
+  totalBurdenDir <- "/Volumes/fridljand/R/HIGH/data/13_total_burden_rate"
   exp_rrDir <- "/Volumes/fridljand/R/HIGH/data/04_exp_rr"
   tmpDir <-  "/Volumes/fridljand/R/HIGH/data/tmp"
   

@@ -10,7 +10,7 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "tidyr","tidyverse", "tictoc", "testthat", "MALDIquant", "ggplot2")
+packages <- c("dplyr", "magrittr", "data.table", "tidyr", "tictoc", "testthat", "MALDIquant", "ggplot2")
 
 for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) {
@@ -43,7 +43,7 @@ if (rlang::is_empty(args)) {
   cens_agrDir <- "/Users/default/Desktop/paper2021/data/06_dem.agr"
   exp_rrDir <- "/Users/default/Desktop/paper2021/data/04_exp_rr"
   pafDir <- "/Users/default/Desktop/paper2021/data/07_gbd_paf"
-  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/13_total_burden_rate"
   
   
   tmpDir <- "C:/Users/Daniel/Desktop/paper2021/data/tmp"
@@ -51,7 +51,7 @@ if (rlang::is_empty(args)) {
   cens_agrDir <-"C:/Users/Daniel/Desktop/paper2021/data/06_dem.agr"
   exp_rrDir <-"C:/Users/Daniel/Desktop/paper2021/data/04_exp_rr"
   pafDir <- "C:/Users/Daniel/Desktop/paper2021/data/07_gbd_paf"
-  totalBurdenParsed2Dir <- "C:/Users/Daniel/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "C:/Users/Daniel/Desktop/paper2021/data/13_total_burden_rate"
 }
 
 #if (year > 2004 & agr_by != "nation") {

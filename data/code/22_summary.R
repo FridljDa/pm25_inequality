@@ -10,7 +10,7 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr",  "magrittr", "data.table", "testthat", "tidyverse", "tictoc", "viridis")
+packages <- c("dplyr",  "magrittr", "data.table", "testthat",  "tictoc", "viridis")
 
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -29,12 +29,12 @@ summaryDir <- args[7]
 
 if (rlang::is_empty(args)) {
   tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
-  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
+  totalBurdenParsed2Dir <- "/Users/default/Desktop/paper2021/data/13_total_burden_rate"
   attr_burdenDir <- "/Users/default/Desktop/paper2021/data/13_attr_burd"
   summaryDir <- "/Users/default/Desktop/paper2021/data/15_summary"
 
    #tmpDir <- "C:/Users/Daniel/Desktop/paper2021/data/tmp"
-   #totalBurdenParsed2Dir <-"C:/Users/Daniel/Desktop/paper2021/data/12_total_burden_parsed2"
+   #totalBurdenParsed2Dir <-"C:/Users/Daniel/Desktop/paper2021/data/13_total_burden_rate"
     #attr_burdenDir <- "C:/Users/Daniel/Desktop/paper2021/data/13_attr_burd"
   # summaryDir <- "C:/Users/Daniel/Desktop/paper2021/data/15_summary"
   

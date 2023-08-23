@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc", "truncnorm", "triangle",
+  "dplyr", "magrittr", "data.table", "testthat",  "tictoc", "truncnorm", "triangle",
   "matrixStats"
 )
 

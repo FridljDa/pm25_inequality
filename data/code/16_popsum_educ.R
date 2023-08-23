@@ -10,7 +10,7 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("magrittr", "data.table", "testthat", "tidyverse", "tictoc", "readxl","dplyr")
+packages <- c("magrittr", "data.table", "testthat",  "tictoc", "readxl","dplyr")
 
 #detach("package:plyr", unload=TRUE)
 

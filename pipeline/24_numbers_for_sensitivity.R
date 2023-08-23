@@ -62,7 +62,7 @@ plot_attr_burd_scenario <- ggplot(attr_burd_scenario, aes(x = Year, y = CoV, col
 
 ##same exposure
 year <- 2016
-total_burden <- file.path("data/12_total_burden_parsed2/nation/nvss", paste0("total_burden_", year, ".csv")) %>%
+total_burden <- file.path("data/13_total_burden_rate/nation/nvss", paste0("total_burden_", year, ".csv")) %>%
   fread()
 
 total_burden <- total_burden %>% mutate_at(c("rural_urban_class", "Education"), as.factor)

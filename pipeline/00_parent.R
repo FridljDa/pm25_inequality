@@ -96,10 +96,10 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 no_figure_scripts_list <- no_figure_scripts_list_full[c(24, 25, 26, 27)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 
-years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+#years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- c(2004, 2007:2009)
 #years <- 1994
-#years <- 2006
+years <- 2005
 # years <- 1998 #,1990,1991
 source <- "nvss"
 for (agr_by in agr_bys) {

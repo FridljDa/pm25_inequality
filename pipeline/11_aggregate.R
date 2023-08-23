@@ -14,7 +14,7 @@ library(dplyr)
 library(magrittr)
 library(data.table)
 library(testthat)
-library(tidyverse)
+
 library(readxl)
 library(stringr)
 library(tictoc)

@@ -10,7 +10,7 @@
 rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "RCurl", "magrittr", "stringr", "data.table", "tidyverse", "tictoc", "rhdf5", "tigris", "tidycensus") #
+packages <- c("dplyr", "RCurl", "magrittr", "stringr", "data.table",  "tictoc", "rhdf5", "tigris", "tidycensus") #
 
 options(tigris_use_cache = FALSE)
 for (p in packages) {
