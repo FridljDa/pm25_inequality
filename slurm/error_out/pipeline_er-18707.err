@@ -1,0 +1,649 @@
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+In loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]) :
+  there is no package called 'readxl'
+Warning message:
+The total burden data from CDC wonder need to be downloaded 
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Warning message:
+renv took longer than expected (11 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (11 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (12 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (12 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (14 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (13 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error in library(tictoc, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tictoc'
+Execution halted
+Error: unexpected input in "_"
+Execution halted

@@ -1,0 +1,7 @@
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+i Loading pmInequalityAnalysis
+Error in load_imports(path) : The package "narcan" is required.
+Calls: <Anonymous> ... load_imports -> deps_check_installed -> check_installed
+Execution halted

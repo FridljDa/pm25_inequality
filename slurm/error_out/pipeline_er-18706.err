@@ -1,0 +1,507 @@
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+In loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]) :
+  there is no package called 'readxl'
+Warning message:
+The total burden data from CDC wonder need to be downloaded 
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table) : there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(data.table, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'data.table'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(tictoc) : there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+slurmstepd-secure-15: error: *** JOB 18706 ON secure-15 CANCELLED AT 2023-08-23T01:07:46 ***

@@ -1,0 +1,2335 @@
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+The total burden data from CDC wonder need to be downloaded 
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: tidyr
+Loading required package: tidyr
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+Loading required package: narcan
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+Loading required package: narcan
+Loading required package: tidyr
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+Loading required package: narcan
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: narcan
+Loading required package: tidyr
+Loading required package: narcan
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: narcan
+Loading required package: tidyr
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+Loading required package: tidyr
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Multiple files in zip: reading 'MULT1998.AllCnty.txt'
+Multiple files in zip: reading 'MULT2004.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2011.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2008.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2007.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2012.USAllCnty.txt'
+Multiple files in zip: reading 'MULT1990.AllCnty.txt'
+Multiple files in zip: reading 'MULT2009.USAllCnty.txt'
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+i Loading pmInequalityAnalysis
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/15_sum_higher_geog_level/county/attr_burden_age_adjusted_1992.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Error in `summarise()`:
+i In argument: `mean = sum(mean)`.
+Caused by error in `sum()`:
+! invalid 'type' (closure) of argument
+Backtrace:
+     x
+  1. +-... %>% ungroup()
+  2. +-dplyr::ungroup(.)
+  3. +-dplyr::summarise(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  4. +-dplyr:::summarise.data.frame(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  5. | \-dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  6. |   +-base::withCallingHandlers(...)
+  7. |   \-dplyr:::map(quosures, summarise_eval_one, mask = mask)
+  8. |     \-base::lapply(.x, .f, ...)
+  9. |       \-dplyr (local) FUN(X[[i]], ...)
+ 10. |         \-mask$eval_all_summarise(quo)
+ 11. |           \-dplyr (local) eval()
+ 12. \-base::.handleSimpleError(...)
+ 13.   \-dplyr (local) h(simpleError(msg, call))
+ 14.     \-dplyr (local) handler(cnd)
+ 15.       \-rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Error in `summarise()`:
+i In argument: `mean = sum(mean)`.
+Caused by error in `sum()`:
+! invalid 'type' (closure) of argument
+Backtrace:
+     x
+  1. +-... %>% ungroup()
+  2. +-dplyr::ungroup(.)
+  3. +-dplyr::summarise(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  4. +-dplyr:::summarise.data.frame(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  5. | \-dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  6. |   +-base::withCallingHandlers(...)
+  7. |   \-dplyr:::map(quosures, summarise_eval_one, mask = mask)
+  8. |     \-base::lapply(.x, .f, ...)
+  9. |       \-dplyr (local) FUN(X[[i]], ...)
+ 10. |         \-mask$eval_all_summarise(quo)
+ 11. |           \-dplyr (local) eval()
+ 12. \-base::.handleSimpleError(...)
+ 13.   \-dplyr (local) h(simpleError(msg, call))
+ 14.     \-dplyr (local) handler(cnd)
+ 15.       \-rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/15_sum_higher_geog_level/county/attr_burden_age_adjusted_1991.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+Killed
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/15_sum_higher_geog_level/county/attr_burden_age_adjusted_1994.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/09_total_burden_parsed/county/nvss/total_burden_nvss_1990.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+Killed
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/13_total_burden_rate/county/nvss/total_burden_1990.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Error in `summarise()`:
+i In argument: `mean = sum(mean)`.
+Caused by error in `sum()`:
+! invalid 'type' (closure) of argument
+Backtrace:
+     x
+  1. +-... %>% ungroup()
+  2. +-dplyr::ungroup(.)
+  3. +-dplyr::summarise(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  4. +-dplyr:::summarise.data.frame(., mean = sum(mean), lower = sum(lower), upper = sum(upper))
+  5. | \-dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  6. |   +-base::withCallingHandlers(...)
+  7. |   \-dplyr:::map(quosures, summarise_eval_one, mask = mask)
+  8. |     \-base::lapply(.x, .f, ...)
+  9. |       \-dplyr (local) FUN(X[[i]], ...)
+ 10. |         \-mask$eval_all_summarise(quo)
+ 11. |           \-dplyr (local) eval()
+ 12. \-base::.handleSimpleError(...)
+ 13.   \-dplyr (local) h(simpleError(msg, call))
+ 14.     \-dplyr (local) handler(cnd)
+ 15.       \-rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted
+i Loading pmInequalityAnalysis
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error: 'data/15_sum_higher_geog_level/county/attr_burden_age_adjusted_1990.csv' does not exist in current working directory ('/share/pi/mkiang/dfridljand_air_pollution/pm25_inequality').
+Execution halted
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Error in `filter()`:
+i In argument: `attr == "overall"`.
+Caused by error in `attr == "overall"`:
+! comparison (1) is possible only for atomic and list types
+Backtrace:
+     x
+  1. +-total_burden %>% filter(attr == "overall")
+  2. +-dplyr::filter(., attr == "overall")
+  3. +-dplyr:::filter.data.frame(., attr == "overall")
+  4. | \-dplyr:::filter_rows(.data, dots, by)
+  5. |   \-dplyr:::filter_eval(dots, mask = mask, error_call = error_call)
+  6. |     +-base::withCallingHandlers(...)
+  7. |     \-mask$eval_all_filter(dots, env_filter)
+  8. |       \-dplyr (local) eval()
+  9. \-base::.handleSimpleError(...)
+ 10.   \-dplyr (local) h(simpleError(msg, call))
+ 11.     \-rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Warning message:
+renv took longer than expected (45 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Killed
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Error: unexpected ')' in ")"
+Execution halted
+slurmstepd-secure-15: error: Detected 83 oom-kill event(s) in step 18710.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

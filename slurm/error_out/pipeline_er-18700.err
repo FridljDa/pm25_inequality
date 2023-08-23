@@ -1,0 +1,2 @@
+Error in library(doParallel) : there is no package called 'doParallel'
+Execution halted

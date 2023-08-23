@@ -1,0 +1,4230 @@
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+The total burden data from CDC wonder need to be downloaded 
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(MALDIquant) : there is no package called 'MALDIquant'
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Warning message:
+renv took longer than expected (14 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Warning message:
+renv took longer than expected (13 seconds) to activate the sandbox.
+
+The sandbox can be disabled by setting:
+
+    RENV_CONFIG_SANDBOX_ENABLED = FALSE
+
+within an appropriate start-up .Renviron file.
+
+See `?renv::config` for more details. 
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'censusapi'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tictoc'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'RCurl'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'sf'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'plyr'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = T, warn.conflicts = FALSE) : 
+  there is no package called 'tigris'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'data.table'
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+
+Attaching package: 'tidyr'
+
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+The following object is masked from 'package:testthat':
+
+    matches
+
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+
+Attaching package: 'testthat'
+
+The following objects are masked from 'package:magrittr':
+
+    equals, is_less_than, not
+
+The following object is masked from 'package:dplyr':
+
+    matches
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+Rows: 51 Columns: 7
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+Attaching package: 'tidyr'
+
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Rows: 51 Columns: 7
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (4): NAME, STATEFP, STUSPS, nation
+dbl (3): Census_Region, Census_division, hhs_region_number
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+Error in library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE) : 
+  there is no package called 'tidyverse'
+Calls: suppressMessages -> withCallingHandlers -> library
+Execution halted
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+i Loading pmInequalityAnalysis
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tidyr'
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tictoc'
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+The following object is masked from 'package:data.table':
+
+    shift
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Loading required package: narcan
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Execution halted
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: tidyr
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: tidyr
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Loading required package: narcan
+Loading required package: narcan
+
+Attaching package: 'tictoc'
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+
+Attaching package: 'tictoc'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+Loading required package: narcan
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: narcan
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+i Loading pmInequalityAnalysis
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+i Loading pmInequalityAnalysis
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Loading required package: narcan
+i Loading pmInequalityAnalysis
+Loading required package: narcan
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+i Loading pmInequalityAnalysis
+Loading required package: narcan
+i Loading pmInequalityAnalysis
+Loading required package: narcan
+i Loading pmInequalityAnalysis
+Loading required package: narcan
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+Loading required package: tidyr
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+
+Attaching package: 'tidyr'
+
+The following object is masked from 'package:magrittr':
+
+    extract
+
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+i Loading pmInequalityAnalysis
+Multiple files in zip: reading 'MULT2012.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2007.USAllCnty.txt'
+Multiple files in zip: reading 'MULT1998.AllCnty.txt'
+Multiple files in zip: reading 'MULT2004.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2011.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2009.USAllCnty.txt'
+Multiple files in zip: reading 'MULT2008.USAllCnty.txt'
+slurmstepd-secure-15: error: *** JOB 18709 ON secure-15 CANCELLED AT 2023-08-23T01:27:40 ***
