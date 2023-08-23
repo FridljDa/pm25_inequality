@@ -104,7 +104,7 @@ years <- 2006
 source <- "nvss"
 for (agr_by in agr_bys) {
   #use foreach instead of a for loop
-  foreach(year=years) %dor% { #dopar
+  foreach(year=years) %do% { #dopar
     args <- paste(
       year, # 1
       data.dir = "data", # 2
