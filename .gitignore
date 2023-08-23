@@ -15,3 +15,4 @@ data/08_total_burden/nvss
 data/09_total_burden_parsed
 all_burd.Rmd
 .Rprofile
+all_burd.nb.html
