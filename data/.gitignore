@@ -13,3 +13,9 @@
 tmp
 raw_restricted_fake
 17_summary/county
+01_exposure
+02_tracts
+04_exp_rr
+10_svi
+16_sum_higher_geog_level_total
+output.zip

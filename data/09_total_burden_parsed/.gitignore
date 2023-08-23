@@ -1,2 +1,6 @@
 nation
 county
+STATEFP
+findreplace_20230726.csv
+logs
+.DS_Store
