@@ -18,7 +18,10 @@ packages <- c(
 
 library(dplyr)
 library(ggplot2)
-library
+library(ggpubr)
+library(grid)
+library(gridExtra)
+
 pkgload::load_all()
 for (p in packages) {
   #if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
@@ -66,10 +69,10 @@ dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI)), recursive = T
 ### ----- read stuff----
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders")
-
+attr_burd <- attr_burd %>% filter(svi_bin == "666")
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000"&
-           source == "National Vital Statistics System"& scenario == scenarioI& method == methodI)
+           source == "National Vital Statistics System"& scenario == scenarioI & method == methodI)
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
