@@ -77,7 +77,6 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
     warning(paste("in add_age_adjusted_rate() population data and total_burden data not joinable in", nrow(anti_joined)," rows:"))
     warning(head(anti_joined))
   }
-  browser()
 
   # calculate age-adjusted rate
   #total_burden_age_adj <- inner_join_age_right_outer(total_burden,
