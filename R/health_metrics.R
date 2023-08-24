@@ -94,6 +94,10 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
   #  rename(min_age = min_age.y, max_age = max_age.y)
 
   if(all(c("lower","mean","upper") %in% names(total_burden))){
+    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]])) {
+      stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
+    }
+
     total_burden_age_adj <- total_burden_age_adj %>%
       group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("lower","mean","upper"))))) %>%
       summarise(mean = sum(mean),
@@ -114,7 +118,15 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
         Population = NULL, standard_popsize = NULL
       )
 
+    if (any(total_burden_age_adj[["mean"]] >= 100000)) {
+      stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
+    }
+
   }else{
+    if (any(total_burden_age_adj[["value"]] >= total_burden_age_adj[["Population"]])) {
+      stop(paste0("In age-adjustment, value is not less than Population in one or more rows."))
+    }
+
     total_burden_age_adj <- total_burden_age_adj %>%
       group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
       summarise(value = sum(value)) %>%
@@ -128,6 +140,10 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
         measure2 = "age-adjusted rate",
         Population = NULL, standard_popsize = NULL
       )
+
+    if (any(total_burden_age_adj[["value"]] >= 100000)) {
+      stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
+    }
   }
 
   total_burden_age_adj
