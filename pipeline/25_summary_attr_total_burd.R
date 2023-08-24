@@ -57,10 +57,11 @@ attr_burden <- attr_burden %>%
   as.data.frame()
 
 ## --- read and bind all burden----
+agr_bys <- list.files(summaryHigherTotalDir)
 total_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(summaryHigherTotalDir, agr_by))
 
-  total_burden <- lapply(files, function(file) fread(file.path(summaryHigherTotalDir, agr_by, file))) %>%
+  total_burden <- lapply(files, function(file) read_data(file.path(summaryHigherTotalDir, agr_by, file))) %>%
     rbindlist(use.names = TRUE)
 
   total_burden <- total_burden %>% filter(label_cause == "all-cause")
@@ -76,7 +77,7 @@ total_burden <- lapply(agr_bys, function(agr_by) {
 
 #-----filter, summarise total burden-----
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
-  measure1 == "Deaths" & measure2 == "age-adjusted rate")
+  measure1 == "Deaths" ) #& measure2 == "age-adjusted rate"
 
 group_variables <- setdiff(colnames(total_burden), c("value", "min_age", "max_age"))
 total_burden <- total_burden %>%

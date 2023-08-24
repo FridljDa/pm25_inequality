@@ -23,7 +23,7 @@ theme_set(theme_classic(base_family = "Helvetica"))
 ```{r}
 scenarioI <- "real"
 methodI <- "di_gee"
-summaryDir <- here::here("data/15_summary") 
+summaryDir <- here::here("data/17_summary") 
 figuresDir <- here::here("data/16_figures") 
 ```
 
@@ -61,7 +61,7 @@ all_burden <- fread(file.path(summaryDir, "all_burd.csv"))
 ```{r}
 all_burden <- all_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    source == "National Vital Statistics System" & Region == "United States")
+    source == "National Vital Statistics System" & Region == "United States" & svi_bin == "666")
 
 all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
 
