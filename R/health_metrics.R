@@ -39,6 +39,7 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
   }
 
   standartpopulation <- read_excel(path_to_standartpopulation)
+  #274633642
   full_stand_popsize <- sum(standartpopulation$standard_popsize)
 
   total_burden_age_adj <- crossing(pop_summary, standartpopulation)
@@ -76,30 +77,37 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
     warning(paste("in add_age_adjusted_rate() population data and total_burden data not joinable in", nrow(anti_joined)," rows:"))
     warning(head(anti_joined))
   }
+  browser()
 
   # calculate age-adjusted rate
-  total_burden_age_adj <- inner_join_age_right_outer(total_burden,
-                                                     total_burden_age_adj,
-                                                     by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
-                                                     group_column = NULL
-  )
+  #total_burden_age_adj <- inner_join_age_right_outer(total_burden,
+  #                                                   total_burden_age_adj,
+  #                                                   by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+  #                                                   group_column = NULL
+  #)
 
-  # total_burden_age_adj <- total_burden %>%
-  #  left_join(total_burden_age_adj,
-  #    by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
-  #    multiple = "all"
-  #  ) %>%
-  #  filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
-  #  mutate(min_age.x = NULL, max_age.x = NULL) %>%
-  #  rename(min_age = min_age.y, max_age = max_age.y)
+   total_burden_age_adj <- total_burden %>%
+    left_join(total_burden_age_adj,
+      by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+      multiple = "all"
+    ) %>%
+    filter(min_age.y <= min_age.x & max_age.x <= max_age.y) %>%
+   mutate(min_age.x = NULL, max_age.x = NULL) %>%
+    rename(min_age = min_age.y, max_age = max_age.y)
 
   if(all(c("lower","mean","upper") %in% names(total_burden))){
     total_burden_age_adj <- total_burden_age_adj %>%
-      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("lower","mean","upper"))))) %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("lower","mean","upper", "Population"))))) %>%
       summarise(mean = sum(mean),
                 lower = sum(lower),
-                upper = sum(upper)) %>%
+                upper = sum(upper),
+                Population = sum(Population)) %>%
       ungroup()
+
+    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]])) {
+      browser()
+      stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
+    }
 
     total_burden_age_adj <- total_burden_age_adj %>%
       filter(Population >= 1 & full_stand_popsize >= 1) %>%
@@ -114,11 +122,20 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
         Population = NULL, standard_popsize = NULL
       )
 
+    if (any(total_burden_age_adj[["mean"]] >= 100000)) {
+      stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
+    }
+
   }else{
     total_burden_age_adj <- total_burden_age_adj %>%
-      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
-      summarise(value = sum(value)) %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("value","Population"))))) %>%
+      summarise(value = sum(value),
+                Population = sum(Population)) %>%
       ungroup()
+
+    if (any(total_burden_age_adj[["value"]] >= total_burden_age_adj[["Population"]])) {
+      stop(paste0("In age-adjustment, value is not less than Population in one or more rows."))
+    }
 
     total_burden_age_adj <- total_burden_age_adj %>%
       filter(Population >= 1 & full_stand_popsize >= 1) %>%
@@ -128,6 +145,10 @@ add_age_adjusted_rate <- function(total_burden, pop_summary, path_to_standartpop
         measure2 = "age-adjusted rate",
         Population = NULL, standard_popsize = NULL
       )
+
+    if (any(total_burden_age_adj[["value"]] >= 100000)) {
+      stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
+    }
   }
 
   total_burden_age_adj
