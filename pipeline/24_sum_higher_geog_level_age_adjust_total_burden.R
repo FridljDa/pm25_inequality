@@ -16,7 +16,7 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   dataDir <- "data"
   agr_by <- "nation"
-  year <- 2002
+  year <- 2005
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -148,16 +148,18 @@ total_burden_absolute_number <- total_burden %>%
     measure2 == "absolute number")
 
 tic("age standardised attributable burden")
-pop_summary <- get_population_data(agr_by, year) %>%
-  select(-c(rural_urban_class))
+total_burden <- add_age_adjusted_rate(total_burden_absolute_number,
+                                               year,
+                                               agr_by,
+                                               pop.summary.dir = "data/12_population_summary")
 
-total_burden_age_adj <- add_age_adjusted_rate(total_burden_absolute_number, pop_summary, path_to_standartpopulation = "data/standartpopulation.xlsx")
+
 toc()
 
-total_burden <- rbind(
-  total_burden_age_adj,
-  total_burden_absolute_number
-)
+#total_burden <- rbind(
+#  total_burden_age_adj,
+#  total_burden_absolute_number
+#)
 
 #rm(total_burden_age_adj, total_burden_absolute_number)
 ### ----sum out age ----
