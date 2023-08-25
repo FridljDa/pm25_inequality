@@ -6,19 +6,22 @@
 \usage{
 add_age_adjusted_rate(
   total_burden,
-  pop_summary,
-  path_to_standartpopulation = "data/standartpopulation.xlsx"
+  year,
+  agr_by,
+  pop.summary.dir = "../data/12_population_summary"
 )
 }
 \arguments{
-\item{total_burden}{A data frame containing the total burden. Must contain columns "value", "min_age", and "max_age".}
+\item{total_burden}{A data frame containing the total burden information.}
 
-\item{pop_summary}{A data frame containing the population summary. Must contain columns "min_age", "max_age", and "Population".}
+\item{year}{A numeric value representing the year for which the calculation is to be done.}
 
-\item{path_to_standartpopulation}{A string representing the path to the standard population Excel file.}
+\item{agr_by}{A character string specifying the aggregation level (e.g., "nation", "STATEFP", "county").}
+
+\item{pop.summary.dir}{A character string specifying the directory path to the population summary data (default is "../data/12_population_summary").}
 }
 \value{
-A data frame containing the age-adjusted rate.
+A data frame containing the calculated age-adjusted rate.
 }
 \description{
 This function calculates the age-adjusted rate for a given total burden and population summary, using a standard population file.
