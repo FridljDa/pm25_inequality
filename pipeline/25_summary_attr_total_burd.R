@@ -79,15 +79,15 @@ total_burden <- lapply(agr_bys, function(agr_by) {
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
   measure1 == "Deaths" ) #& measure2 == "age-adjusted rate"
 
-group_variables <- setdiff(colnames(total_burden), c("value", "min_age", "max_age"))
-total_burden <- total_burden %>%
-  dplyr::group_by_at(vars(all_of(group_variables))) %>%
-  dplyr::summarise(
-    overall_value = sum(value),
-    min_age = min(min_age),
-    max_age = max(max_age)
-  ) %>%
-  dplyr::ungroup()
+#group_variables <- setdiff(colnames(total_burden), c("value", "min_age", "max_age"))
+#total_burden <- total_burden %>%
+#  dplyr::group_by_at(vars(all_of(group_variables))) %>%
+#  dplyr::summarise(
+#    overall_value = sum(value),
+#    min_age = min(min_age),
+#    max_age = max(max_age)
+#  ) %>%
+#  dplyr::ungroup()
 
 total_burden <- total_burden %>%
   select(-c(label_cause, attr)) #, attr

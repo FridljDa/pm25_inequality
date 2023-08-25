@@ -1,0 +1,108 @@
+---
+title: "absolute_number_deaths"
+format: html
+editor: visual
+---
+
+## Quarto
+
+```{r}
+suppressMessages({
+  library(dplyr)
+  library(magrittr)
+  library(data.table)
+  # library(tidyverse)
+  library(tictoc)
+})
+
+library(dplyr)
+library(readr)
+devtools::load_all("..")
+```
+
+```{r}
+totalBurdenRateDir <- "data/13_total_burden_rate"
+```
+
+```{r}
+ dataDir <- "data"
+  agr_by <- "nation"
+  year <- 2005
+```
+
+```{r}
+
+pop.summary.dir <- "data/12_population_summary"
+
+summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
+# should have #min_age = min_age.x, max_age = min_age.x, for age specific
+# in l184 in 21_calc_attr_burd_di.R
+
+# TODO
+summaryHigherTotalDir <- file.path(summaryHigherTotalDir, agr_by)
+dir.create(summaryHigherTotalDir, recursive = T, showWarnings = F)
+summaryHigherTotalDir <- file.path(summaryHigherTotalDir, paste0("total_burden_age_adjusted_", year, ".csv"))
+
+if (file.exists(summaryHigherTotalDir)) {
+  quit()
+}
+## --- read attr burden----
+totalBurdenRateDir <- "../data/13_total_burden_rate"
+totalBurdenRateDir <- file.path(totalBurdenRateDir, "county")
+files <- list.files(file.path(totalBurdenRateDir, "nvss"))
+year <- "2005"
+files <- files[grepl(year, files)]
+
+total_burden <- lapply(files, function(file) {
+  total_burden_i <- read_data(file.path(totalBurdenRateDir, "nvss", file))
+}) %>% rbindlist(use.names = TRUE, fill = TRUE)
+
+total_burden <- total_burden %>%
+  filter(attr == "overall")
+
+
+## ----group out counties---
+  total_burden <- total_burden %>%
+    mutate(
+      nation = "us"
+    )
+  group_variables <- setdiff(colnames(total_burden), c("value", "county"))
+  
+
+tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
+total_burden <- total_burden %>%
+  group_by_at(vars(all_of(c(group_variables)))) %>%
+  summarise(
+    value = sum(value)
+  ) %>%
+  ungroup()
+
+toc()
+
+#------ age-standartised rates-------
+total_burden_absolute_number <- total_burden %>%
+  filter(measure1 == "Deaths" &
+    measure2 == "absolute number")
+```
+
+```{r}
+total_burden_absolute_number <- total_burden_absolute_number %>%
+  filter(Gender.Code == "A"  ) %>% filter(Education == 666 & Race == "All" & label_cause == "all-cause" ) #& rural_urban_class == "666" & svi_bin == "666" 
+
+sum(total_burden_absolute_number$value)
+```
+
+```{r}
+pop_summary <- get_population_data(agr_by, year, pop.summary.dir = "../data/12_population_summary") %>%
+  select(-c(rural_urban_class))
+
+total_burden_absolute_number <- total_burden_absolute_number %>% 
+   select(-c(rural_urban_class, svi_bin))
+total_burden_age_adj <- add_age_adjusted_rate(total_burden_absolute_number, pop_summary, path_to_standartpopulation = "../data/standartpopulation.xlsx")
+total_burden_age_adj
+```
+
+```{r}
+sum(total_burden_age_adj$value)
+```
+

@@ -53,9 +53,34 @@ g1
 ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS1_overall_population.png"), dpi = 300, g1, height = 4, width = 8)
 ```
 
+## population
+
+```{r}
+pop <- foreach::foreach(year = 1990:2016, .combine = rbind) %do% {
+  get_population_data(agr_by = "nation", year = year, pop.summary.dir = here::here("data/12_population_summary"))
+}#pop.summary.dir
+
+pop <- pop %>% filter(rural_urban_class == "666" & Education == "666" & Gender.Code == "A" & Race == "All")
+```
+
+```{r}
+age_groups <- pop %>%
+  group_by(Year) %>%
+  summarise(min_year = list(min_age))
+```
+
+```{r}
+pop %>%
+  group_by(Year) %>%
+  summarise(Population = sum(Population)) %>%
+  ggplot(aes(x = Year, y = Population)) +
+  geom_line()
+```
+
 ## all-cause burden
 ```{r}
 all_burden <- fread(file.path(summaryDir, "all_burd.csv"))
+unique(all_burden$measure2)
 ```
 
 ```{r}
@@ -72,7 +97,8 @@ g2 <- ggplot(all_burden, aes(x = Year, y = overall_value)) +
     geom_line(size = 1.5) +
     xlab("Year") +
     ylab("Age-adjusted mortality\n per 100,000 from all causes")+
-  theme(text = element_text(size=16))
+  theme(text = element_text(size=16)) +
+  ylim(0,NA)
 g2
 ```
 
