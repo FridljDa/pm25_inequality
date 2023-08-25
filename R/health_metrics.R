@@ -90,21 +90,21 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   total_burden$measure2 <- "absolute number"
 
   # crude rate
-  pop_summary_agr <- pop_summary %>%
-    group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
-    summarise(Population = sum(Population))
+#  pop_summary_agr <- pop_summary %>%
+#    group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
+ #   summarise(Population = sum(Population))
 
-  total_burden_crude <- total_burden %>%
-    inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
-    filter(Population > 0) %>% # TODO
-    mutate(
-      value =  100000* (value / Population), #0/0 = NaN
-      value = ifelse(is.nan(value), 0, value), #
-      measure2 = "crude rate",
-      Population = NULL
-    )
-  total_burden_crude <- total_burden_crude %>% filter(!is.na(value)) # TODO
-  rm(pop_summary_agr)
+  #total_burden_crude <- total_burden %>%
+  #  inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
+  #  filter(Population > 0) %>% # TODO
+  #  mutate(
+  #    value =  100000* (value / Population), #0/0 = NaN
+  #    value = ifelse(is.nan(value), 0, value), #
+  #    measure2 = "crude rate",
+  #    Population = NULL
+  #  )
+  #total_burden_crude <- total_burden_crude %>% filter(!is.na(value)) # TODO
+  #rm(pop_summary_agr)
 
   # age-standartised rates
   # see https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf, page 125 for more information, Table VIII
@@ -147,24 +147,53 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     mutate(min_age.x = NULL, max_age.x = NULL) %>%
     rename(min_age = min_age.y, max_age = max_age.y)
 
-  total_burden_age_adj <- total_burden_age_adj %>%
-    group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
-    summarise(value = sum(value)) %>%
-    ungroup()
+  if("value" %in% colnames(total_burden_age_adj)){
+    total_burden_age_adj <- total_burden_age_adj %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), "value")))) %>%
+      summarise(value = sum(value)) %>%
+      ungroup()
 
+    total_burden_age_adj <- total_burden_age_adj %>%
+      filter(Population >=1 & full_stand_popsize >=1) %>%
+      dplyr::mutate(
+        value = (value * standard_popsize / Population) * (100000 / full_stand_popsize),
+        value = ifelse(is.nan(value), 0, value),
+        measure2 = "age-adjusted rate",
+        Population = NULL, standard_popsize = NULL
+      )
+  }else if(all(c("lower","mean","upper") %in% names(total_burden))){
+    total_burden_age_adj <- total_burden_age_adj %>%
+      group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("mean","lower","upper"))))) %>%
+      summarise(mean = sum(mean),
+                lower = sum(lower),
+                upper = sum(upper)) %>%
+      ungroup()
 
-  total_burden_age_adj <- total_burden_age_adj %>%
-    filter(Population >=1 & full_stand_popsize >=1) %>%
-    dplyr::mutate(
-      value = (value * standard_popsize / Population) * (100000 / full_stand_popsize),
-      value = ifelse(is.nan(value), 0, value),
-      measure2 = "age-adjusted rate",
-      Population = NULL, standard_popsize = NULL
-    )
+    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]])) {
+      browser()
+      stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
+    }
 
+    total_burden_age_adj <- total_burden_age_adj %>%
+      filter(Population >= 1 & full_stand_popsize >= 1) %>%
+      dplyr::mutate(
+        mean = (mean * standard_popsize / Population) * (100000 / full_stand_popsize),
+        mean = ifelse(is.nan(mean), 0, mean),
+        lower = (lower * standard_popsize / Population) * (100000 / full_stand_popsize),
+        lower = ifelse(is.nan(lower), 0, lower),
+        upper = (upper * standard_popsize / Population) * (100000 / full_stand_popsize),
+        upper = ifelse(is.nan(upper), 0, upper),
+        measure2 = "age-adjusted rate",
+        Population = NULL, standard_popsize = NULL
+      )
 
-  total_burden <- rbind(total_burden, total_burden_crude, total_burden_age_adj)
-  rm(total_burden_crude, total_burden_age_adj, standartpopulation, full_stand_popsize, pop_summary)
+    if (any(total_burden_age_adj[["mean"]] >= 100000)) {
+      stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
+    }
+  }
+
+  total_burden <- rbind(total_burden,  total_burden_age_adj) #total_burden_crude,
+  rm( total_burden_age_adj, standartpopulation, full_stand_popsize, pop_summary)
 
   ## ----finish------
   #if(agr_by != "nation"){
