@@ -97,6 +97,7 @@ no_figure_scripts_list <- no_figure_scripts_list_full[c(24, 26, 25, 27)] #3,14,#
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 
 years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+years <- 2009:2016
 #years <- c(2004, 2007:2009)
 #years <- 1997:2000
 #years <- 2005
