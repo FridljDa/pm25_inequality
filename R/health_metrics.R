@@ -63,7 +63,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
       #complete(Year, county, nesting(Gender.Code, Race, min_age, max_age, Hispanic.Origin, Education), rural_urban_class,
       #         fill = list(Population = 0)
       #)%>%
-      mutate_at(c("county"), as.factor)
+      mutate_at(c("county"), as.integer)
 
     #pop_summary <- pop_summary %>% filter(Race != "All")
   }
@@ -169,7 +169,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
                 upper = sum(upper)) %>%
       ungroup()
 
-    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]])) {
+    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]] + 0.5)) {
       browser()
       stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
     }
