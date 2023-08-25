@@ -232,9 +232,9 @@ run_script <- function(script, args = "") {
 
   # Record the start time
   start_time <- proc.time()
+  print(paste("Running script", script, "on", sysname))
 
   if (sysname == "Darwin") {
-    print(paste("Running script", script, "on Darwin"))
     system(paste("Rscript", script, args))
   } else if (sysname == "Windows") {
     memory.limit(size = 500000)
@@ -242,10 +242,8 @@ run_script <- function(script, args = "") {
     exec <- paste0("C:/Program Files/R/R-", R.Version()$major, ".", R.Version()$minor, "/bin/Rscript.exe")
     exec <- shQuote(exec)
 
-    print(paste("Running script", script, "on Windows"))
     system(paste(exec, "--vanilla", script, args))
   } else {
-    print(paste("Running script", script, "on", sysname))
     system(paste("Rscript", script, args))
   }
 

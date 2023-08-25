@@ -11,7 +11,7 @@
 #SBATCH -o /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/slurm/out/pipeline_out-%j.out
 #SBATCH -e /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/slurm/error_out/pipeline_er-%j.err          # STDERR
 #SBATCH --mail-type=END,FAIL        # notifications for job done & fail
-#SBATCH --mail-user=fridljan@stanford.edu # send-to address
+#SBATCH --mail-user=daniel.fridljand@gmail.com # send-to address
 
 # Load software
 #module load R #
