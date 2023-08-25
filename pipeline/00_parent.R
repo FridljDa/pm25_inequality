@@ -47,7 +47,7 @@ dir.create(dem.dir, recursive = T, showWarnings = F)
 dem.agr.dir <- file.path(data.dir, "06_dem.agr")
 dir.create(dem.agr.dir, recursive = T, showWarnings = F)
 agr_bys <- c("county", "nation","STATEFP") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
-agr_bys <- c("nation") #, "nation"
+agr_bys <- c("county", "nation") #, "nation"
 
 paf.dir <- file.path(data.dir, "07_gbd_paf")
 dir.create(paf.dir, recursive = T, showWarnings = F)
