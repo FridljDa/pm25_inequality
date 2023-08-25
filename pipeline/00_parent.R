@@ -8,7 +8,8 @@
 library(doParallel)
 library(foreach)
 
-registerDoParallel()
+parallel <- FALSE
+if(parallel) registerDoParallel()
 
 pkgload::load_all()
 # create data directory, setwd
@@ -105,7 +106,7 @@ years <- 2009:2016
 source <- "nvss"
 for (agr_by in agr_bys) {
   #use foreach instead of a for loop
-  foreach(year=years) %dopar% { #dopar
+  foreach(year=years) %do% { #dopar #par
     args <- paste(
       year, # 1
       data.dir = "data", # 2
@@ -135,7 +136,7 @@ for (agr_by in agr_bys) {
   }
 }
 
-stopImplicitCluster()
+if(parallel) stopImplicitCluster()
 #------ running scripts of figures--------
 scenario <- "real"
 method <- "di_gee"
