@@ -12,7 +12,7 @@
 #' @references \url{https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf}, page 125, Table VIII
 #' @return A data frame containing the calculated age-adjusted rate.
 #' @export
-add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = "../data/12_population_summary"){
+add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = "data/12_population_summary"){
   #---read population data----
   if(file.exists(file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv"))) & agr_by != "county"){
     pop_summary1 <- file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv")) %>%
@@ -108,7 +108,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
 
   # age-standartised rates
   # see https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf, page 125 for more information, Table VIII
-  standartpopulation <- read_excel(file.path("../data", "standartpopulation.xlsx"))
+  standartpopulation <- read_excel(file.path("data", "standartpopulation.xlsx"))
   full_stand_popsize <- sum(standartpopulation$standard_popsize)
 
   total_burden_age_adj <- crossing(pop_summary, standartpopulation)
