@@ -90,7 +90,8 @@ pop.summary = foreach(i = seq_len(nrow(states)), .combine = rbind) %do% {
 }
 
 #pop.summary <- pop.summary %>% sample_n(20)
-#cat("column names in pop.summary:", colnames(pop.summary))
+
+
 # Add additional columns for rural/urban classification and social vulnerability index
 tic("added svi bin and rural urban class to pop.summary")
 pop.summary <- pop.summary %>%
@@ -99,25 +100,25 @@ pop.summary <- pop.summary %>%
   add_social_vuln_index(FIPS.code.column = "FIPS.code") %>%
   mutate(Year = NULL)
 toc()
-
+print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
 pop.summary.all <- pop.summary %>%
-  group_by(across(-c("Population", "rural_urban_class", "svi_bin"))) %>%
-  summarize(Population = sum(Population), .groups = "drop") %>%
+  group_by(across(-c("pop_size", "rural_urban_class", "svi_bin"))) %>%
+  summarize(Population = sum(pop_size), .groups = "drop") %>%
   mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
 
 # For the 'rural_urban_class' summary
 pop.summary.rural_urban_class <- pop.summary %>%
-  group_by(across(-c("Population", "svi_bin"))) %>%
-  summarize(Population = sum(Population), .groups = "drop") %>%
+  group_by(across(-c("pop_size", "svi_bin"))) %>%
+  summarize(Population = sum(pop_size), .groups = "drop") %>%
   mutate(svi_bin = as.factor(666))
 
 # For the 'svi_bin' summary
 pop.summary.svi_bin <- pop.summary %>%
-  group_by(across(-c("Population", "rural_urban_class"))) %>%
-  summarize(Population = sum(Population), .groups = "drop") %>%
+  group_by(across(-c("pop_size", "rural_urban_class"))) %>%
+  summarize(Population = sum(pop_size), .groups = "drop") %>%
   mutate(rural_urban_class = as.factor(666))
 toc()
 
@@ -146,5 +147,6 @@ pop.summary <- pop.summary %>%
 pop.summary <- pop.summary %>% tibble::add_column(source2 = "Census")
 # only consider 25+ population
 pop.summary <- pop.summary %>% filter(min_age >= 25)
+print(paste("written file to", pop.summary.dirX))
 write.csv(pop.summary, pop.summary.dirX, row.names = FALSE)
 toc()
