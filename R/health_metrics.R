@@ -48,6 +48,8 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     mutate_at(c("rural_urban_class", "svi_bin", "Education"), as.factor) %>%
     mutate(source2 = NULL)
 
+  if(agr_by == "county") pop_summary <- pop_summary %>% select(-rural_urban_class, -svi_bin)
+
   rm(pop_summary1, pop_summary2, pop_summary3)
 
   if (agr_by == "nation") {
