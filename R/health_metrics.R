@@ -38,13 +38,17 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     pop_summary3 <- NULL
   }
 
+  if (!"svi_bin" %in% names(pop_summary1)) pop_summary1 <- pop_summary1 %>% mutate(svi_bin = "666")
+  if (!"svi_bin" %in% names(pop_summary2)) pop_summary2 <- pop_summary2 %>% mutate(svi_bin = "666")
+  if (!"svi_bin" %in% names(pop_summary3)) pop_summary3 <- pop_summary3 %>% mutate(svi_bin = "666")
+
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
   pop_summary <- pop_summary %>%
-    mutate_at(c("rural_urban_class", "Education"), as.factor) %>%
+    mutate_at(c("rural_urban_class", "svi_bin", "Education"), as.factor) %>%
     mutate(source2 = NULL)
 
-  rm(pop_summary1, pop_summary2)
+  rm(pop_summary1, pop_summary2, pop_summary3)
 
   if (agr_by == "nation") {
     pop_summary <- pop_summary %>%
