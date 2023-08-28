@@ -150,7 +150,7 @@ paf_di <- paf_di %>%
     pop_weight_pm_exp = NULL, hr_upper = NULL, hr_mean = NULL, hr_lower = NULL
   )
 
-if (agr_by == "county") paf_di$rural_urban_class <- as.factor(666) # TODO change total burden
+#if (agr_by == "county") paf_di$rural_urban_class <- as.factor(666) # TODO change total burden
 
 if (agr_by == "county") {
   total_burden <- total_burden %>%
@@ -183,8 +183,8 @@ paf_di <- paf_di %>%
 attr_burden_di <- left_join(
   total_burden,
   paf_di,
-  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause"),
-  relationship = "many-to-many" #paf_di %>% filter(method == "di_gee" & scenario == "real")
+  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause")#,
+  #relationship = "many-to-many" #paf_di %>% filter(method == "di_gee" & scenario == "real")
 )
 
 
