@@ -1,12 +1,13 @@
 #!/bin/bash
 
 #SBATCH --job-name=00_parent
-#SBATCH --nodes=1
+
+#SBATCH --nodes=4
 #SBATCH --ntasks=1
-#SBATCH --mem 10G                    # memory pool for all cores
 #SBATCH --cpus-per-task=1
+#SBATCH --mem 10G                    # memory pool for all cores
 #SBATCH --partition=normal
-#SBATCH --time=2:01:00
+#SBATCH --time=2-00:00:00
 
 #SBATCH -o /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/slurm/out/pipeline_out-%j.out
 #SBATCH -e /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/slurm/error_out/pipeline_er-%j.err          # STDERR
