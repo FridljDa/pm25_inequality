@@ -17,7 +17,7 @@ if (rlang::is_empty(args)) {
 
   agr_by <- "nation"
   source <- "nvss"
-  year <- 2002
+  year <- 2005
 } else {
   year <- args[1]
   source <- "nvss"
@@ -85,13 +85,16 @@ if (agr_by == "county") {
 }
 
 ## ---join---
-test <- anti_join( total_burden,attributable_burden,
+test <- anti_join( total_burden, attributable_burden,
 
   by = c(
     "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class","svi_bin",  "Education",
     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
   )
 )
+if(nrow(test) > 0){
+  warning("in 24_proportions_attr_burd.R, the joining failed")
+}
 #"svi_bin",
 attr_total_burden <- inner_join(
   attributable_burden,

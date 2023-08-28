@@ -60,7 +60,7 @@ attr_burden <- lapply(files, function(file) {
 
 ## --sum up geographic levels from county----
 
-if(FALSE){
+
   if(agr_by != "county"){
     #tic("added rural_urban class info to attr_burden")
     #attr_burden_with_svi_rural_urban_class <- attr_burden %>%
@@ -110,7 +110,7 @@ if(FALSE){
     #attr_burden$rural_urban_class <- NA
     #attr_burden$svi_bin <- NA
   }
-}
+
 
 
 
