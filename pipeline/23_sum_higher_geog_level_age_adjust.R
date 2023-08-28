@@ -15,7 +15,7 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   agr_by <- "nation"
-  year <- 2003
+  year <- 2005
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -48,60 +48,70 @@ files <- files[grepl(year, files)]
 
 attr_burden <- lapply(files, function(file) {
   attr_burden_i <- read_data(file.path(attr_burdenDir, "nvss", file))
+
+  if("rural_urban_class.x" %in% colnames(attr_burden_i)){
+    attr_burden_i <- attr_burden_i %>%
+      mutate(rural_urban_class = as.factor(rural_urban_class.x),
+             rural_urban_class.x = NULL,
+             rural_urban_class.y = NULL)
+  }
+  attr_burden_i
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
 ## --sum up geographic levels from county----
 
+if(FALSE){
+  if(agr_by != "county"){
+    #tic("added rural_urban class info to attr_burden")
+    #attr_burden_with_svi_rural_urban_class <- attr_burden %>%
+    #  add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
+    #toc()
 
-if(agr_by != "county"){
-  #tic("added rural_urban class info to attr_burden")
-  #attr_burden_with_svi_rural_urban_class <- attr_burden %>%
-  #  add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
-  #toc()
+    #tic("added svi info to attr_burden")
+    #attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
+    #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
+    #toc()
+    attr_burden_with_svi_rural_urban_class <- attr_burden
 
-  #tic("added svi info to attr_burden")
-  #attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-  #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
-  #toc()
-  attr_burden_with_svi_rural_urban_class <- attr_burden
+    tic("marginalised svi and rural_urban class info to attr_burden")
+    attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
+      group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
+                          c("rural_urban_class", "mean", "lower", "upper"))) %>%
+      summarise(mean = sum(mean),
+                lower = sum(lower),
+                upper = sum(upper)) %>%
+      mutate(rural_urban_class = as.factor(666))
 
-  tic("marginalised svi and rural_urban class info to attr_burden")
-  attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
-                        c("rural_urban_class", "mean", "lower", "upper"))) %>%
-    summarise(mean = sum(mean),
-              lower = sum(lower),
-              upper = sum(upper)) %>%
-    mutate(rural_urban_class = as.factor(666))
+    attr_burden_with_svi_bin <- attr_burden_with_svi_rural_urban_class %>%
+      group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
+                          c("svi_bin", "mean", "lower", "upper"))) %>%
+      summarise(mean = sum(mean),
+                lower = sum(lower),
+                upper = sum(upper)) %>%
+      mutate(svi_bin = as.factor(666))
 
-  attr_burden_with_svi_bin <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
-                        c("svi_bin", "mean", "lower", "upper"))) %>%
-    summarise(mean = sum(mean),
-              lower = sum(lower),
-              upper = sum(upper)) %>%
-    mutate(svi_bin = as.factor(666))
+    attr_burden_with_all <- attr_burden_with_svi_rural_urban_class %>%
+      group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
+                          c("rural_urban_class", "svi_bin", "mean", "lower", "upper"))) %>%
+      summarise(mean = sum(mean),
+                lower = sum(lower),
+                upper = sum(upper)) %>%
+      mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
 
-  attr_burden_with_all <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(colnames(attr_burden_with_svi_rural_urban_class),
-                        c("rural_urban_class", "svi_bin", "mean", "lower", "upper"))) %>%
-    summarise(mean = sum(mean),
-              lower = sum(lower),
-              upper = sum(upper)) %>%
-    mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
+    attr_burden <- rbind(attr_burden_with_rural_urban_class,
+                         attr_burden_with_svi_bin,
+                         attr_burden_with_all)
 
-  attr_burden <- rbind(attr_burden_with_rural_urban_class,
-                       attr_burden_with_svi_bin,
-                       attr_burden_with_all)
-
-  rm(attr_burden_with_rural_urban_class,
-     attr_burden_with_svi_bin,
-     attr_burden_with_all)
-  toc()
-}else{
-  #attr_burden$rural_urban_class <- NA
-  #attr_burden$svi_bin <- NA
+    rm(attr_burden_with_rural_urban_class,
+       attr_burden_with_svi_bin,
+       attr_burden_with_all)
+    toc()
+  }else{
+    #attr_burden$rural_urban_class <- NA
+    #attr_burden$svi_bin <- NA
+  }
 }
+
 
 
 ## ----group out counties---

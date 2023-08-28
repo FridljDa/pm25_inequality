@@ -88,12 +88,12 @@ all_burden <- all_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & Region == "United States" & svi_bin == "666")
 
-all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
+all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & min_age == 25)
 
 ```
 
 ```{r}
-g2 <- ggplot(all_burden, aes(x = Year, y = overall_value)) +
+g2 <- ggplot(all_burden, aes(x = Year, y = value)) +
     geom_line(size = 1.5) +
     xlab("Year") +
     ylab("Age-adjusted mortality\n per 100,000 from all causes")+
