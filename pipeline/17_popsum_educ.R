@@ -30,7 +30,7 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   year <- 2001
-  agr_by <- "nation"
+  agr_by <- "county"
 
   dataDir <- "data"
   tmpDir <- "data/tmp"
@@ -104,22 +104,29 @@ print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
+# Determine the population column name
+# Determine the population column name
+pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
+
+# Create the 'all' summary
 pop.summary.all <- pop.summary %>%
-  group_by(across(-c("pop_size", "rural_urban_class", "svi_bin"))) %>%
-  summarize(Population = sum(pop_size), .groups = "drop") %>%
+  group_by(across(-all_of(c(pop_col, "rural_urban_class", "svi_bin")))) %>%
+  summarize(Population = sum(!!sym(pop_col)), .groups = "drop") %>%
   mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
 
-# For the 'rural_urban_class' summary
+# Create the 'rural_urban_class' summary
 pop.summary.rural_urban_class <- pop.summary %>%
-  group_by(across(-c("pop_size", "svi_bin"))) %>%
-  summarize(Population = sum(pop_size), .groups = "drop") %>%
+  group_by(across(-all_of(c(pop_col, "svi_bin")))) %>%
+  summarize(Population = sum(!!sym(pop_col)), .groups = "drop") %>%
   mutate(svi_bin = as.factor(666))
 
-# For the 'svi_bin' summary
+# Create the 'svi_bin' summary
 pop.summary.svi_bin <- pop.summary %>%
-  group_by(across(-c("pop_size", "rural_urban_class"))) %>%
-  summarize(Population = sum(pop_size), .groups = "drop") %>%
+  group_by(across(-all_of(c(pop_col, "rural_urban_class")))) %>%
+  summarize(Population = sum(!!sym(pop_col)), .groups = "drop") %>%
   mutate(rural_urban_class = as.factor(666))
+
+
 toc()
 
 # Combine all summary data into one object
@@ -127,7 +134,7 @@ pop.summary <- rbind(pop.summary.all, pop.summary.rural_urban_class, pop.summary
 
 if (agr_by == "county") {
   pop.summary <- pop.summary %>%
-    filter(rural_urban_class != 666, svi_bin != 666) #TODO
+    filter(rural_urban_class == 666, svi_bin == 666) #TODO
   #  dplyr::mutate(county = paste0(state, str_pad(county, 3, pad = "0")) %>% as.integer()) %>%
   #  dplyr::group_by(county, variable) %>% # state,
   #  dplyr::summarize(Population = sum(Population)) %>%
