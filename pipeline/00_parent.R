@@ -47,8 +47,8 @@ dir.create(dem.dir, recursive = T, showWarnings = F)
 # directory for demographic data grouped by PM exposure and aggregated by county/hhs region/census region
 dem.agr.dir <- file.path(data.dir, "06_dem.agr")
 dir.create(dem.agr.dir, recursive = T, showWarnings = F)
-agr_bys <- c("county", "nation","STATEFP") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
-agr_bys <- c("nation") #, "nation"
+agr_bys <- c("nation", "county", "STATEFP") # c("county","Census_Region","Census_division","hhs_region_number","STATEFP","nation") , "county", "nation"
+#agr_bys <- c("nation", "county") #, "nation"
 
 paf.dir <- file.path(data.dir, "07_gbd_paf")
 dir.create(paf.dir, recursive = T, showWarnings = F)
@@ -93,11 +93,12 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
 #no_figure_scripts_list <- c("pipeline/14_read_tot_nvss.R")
-#c(15, 20, 22, 24, 25, 26, 27) 26, #24, 26, 25, #, 24, 26, 25, 27
-no_figure_scripts_list <- no_figure_scripts_list_full[c(18, 26, 24)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+#c(15, 20, 22, 24, 25, 26, 27) 26, #24, 26, 25, #, 24, 26, 25, 27 #, 26, 24
+no_figure_scripts_list <- no_figure_scripts_list_full[c(18)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 
-years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+#years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+years <- c(2003:2001, 1999:1990)
 #years <- 2009:2016
 #years <- c(2004, 2007:2009)
 #years <- 1997:2000
