@@ -10,6 +10,7 @@ editor: visual
 library(dplyr)
 library(readr)
 devtools::load_all("..")
+
 total_burden_nvss_2002_nation <- read_data("../data/09_total_burden_parsed/nation/nvss/total_burden_nvss_2002.csv")
 ```
 
@@ -37,6 +38,7 @@ sum(total_burden_nvss_2002_county$Deaths)
 
 ```{r}
 total_burden_age_adjusted_2002 <- read_data("../data/16_sum_higher_geog_level_total/nation/total_burden_age_adjusted_2002.csv")
+total_burden_age_adjusted_2002 <- read_csv("~/Downloads/total_burden_age_adjusted_2003.csv")
 ```
 
 ```{r}
@@ -52,5 +54,16 @@ all_burd <- read_data("../data/17_summary/all_burd.csv")
 ```{r}
 all_burd <- all_burd %>%
  filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "666" & measure2 == "age-adjusted rate per 100,000") #
+all_burd
+```
+
+```{r}
+all_burd <- read_csv("~/Downloads/total_burden_age_adjusted_2003.csv")
+```
+
+```{r}
+all_burd <- read_csv("~/Downloads/total_burden_age_adjusted_2003.csv")
+all_burd <- all_burd %>% #& min_age == 25 #& Ethnicity == "All, All Origins" 
+ filter(Education == "666" & rural_urban_class == "666" & svi_bin == "666" & measure2 == "age-adjusted rate per 100,000" ) #
 all_burd
 ```

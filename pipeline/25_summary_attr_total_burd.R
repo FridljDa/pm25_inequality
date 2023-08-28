@@ -4,6 +4,10 @@ library(data.table, warn.conflicts = FALSE, quietly = TRUE)
 #library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
 library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
 
+library(purrr)
+library(tibble)
+
+
 pkgload::load_all()
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -58,22 +62,29 @@ attr_burden <- attr_burden %>%
 
 ## --- read and bind all burden----
 agr_bys <- list.files(summaryHigherTotalDir)
-total_burden <- lapply(agr_bys, function(agr_by) {
+# Main operation
+total_burden <- map_dfr(agr_bys, function(agr_by) {
   files <- list.files(file.path(summaryHigherTotalDir, agr_by))
 
-  total_burden <- lapply(files, function(file) read_data(file.path(summaryHigherTotalDir, agr_by, file))) %>%
-    rbindlist(use.names = TRUE)
+  total_burden <- map_dfr(files, ~ read_data(file.path(summaryHigherTotalDir, agr_by, .x)))
 
-  total_burden <- total_burden %>% filter(label_cause == "all-cause")
+  if (nrow(total_burden) == 0) {
+    return(tibble())  # Return an empty tibble
+  }
 
-  # make compatible
-  total_burden <- total_burden %>% rename("Region" := !!agr_by)
-  total_burden <- total_burden %>% tibble::add_column(agr_by = agr_by)
-  # if (agr_by == "county") total_burden <- total_burden %>% filter(measure2 == "age-adjusted rate") # TODO delete
+  total_burden <- total_burden %>%
+    filter(label_cause == "all-cause") %>%
+    rename("Region" = !! agr_by) %>%
+    mutate(Region = as.factor(Region)) %>%
+    add_column(agr_by = agr_by)
+
   return(total_burden)
 }) %>%
-  rbindlist(use.names = TRUE) %>%
   as.data.frame()
+
+# Optionally, remove rows where all columns have NAs or are empty
+#total_burden <- total_burden %>% filter(!complete.cases(sapply(., is.na)))
+
 
 #-----filter, summarise total burden-----
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
