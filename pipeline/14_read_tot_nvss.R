@@ -494,6 +494,20 @@ total_burden_agr_by <- total_burden_agr_by %>%
 table(total_burden_agr_by$rural_urban_class, total_burden_agr_by$svi_bin)
 
 total_burden_agr_by <- total_burden_agr_by %>% tibble::add_column(source = "nvss")
+
+#--rename stuff---
+total_burden_agr_by$measure1 <- "Deaths"
+total_burden_agr_by <- total_burden_agr_by %>% dplyr::rename(value = Deaths)
+total_burden_agr_by$measure2 <- "absolute number"
+
+total_burden_agr_by <- total_burden_agr_by %>%
+  filter(min_age >= 25)
+
+total_burden_agr_by <- total_burden_agr_by %>%
+  filter(rural_urban_class != "Unknown" & svi_bin != "Unknown") %>%
+  mutate_at(c("rural_urban_class", "Education"), as.factor)
+
+
 fwrite(total_burden_agr_by, totalBurdenParsedDirX)
 # fwrite(suppressed_deaths, totalBurdenParsedDirX)
 toc()

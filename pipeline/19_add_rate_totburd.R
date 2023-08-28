@@ -60,9 +60,9 @@ total_burden <- file.path(totalBurdenParsedDir, agr_by, "nvss", paste0("total_bu
   read_data()
 
 # }
-total_burden <- total_burden %>%
-  filter(rural_urban_class != "Unknown" & svi_bin != "Unknown") %>%
-  mutate_at(c("rural_urban_class", "Education"), as.factor)
+#total_burden <- total_burden %>%
+#  filter(rural_urban_class != "Unknown" & svi_bin != "Unknown") %>%
+#  mutate_at(c("rural_urban_class", "Education"), as.factor)
 
 if (agr_by == "nation") {
   total_burden <- total_burden %>%
@@ -92,15 +92,15 @@ if (agr_by == "nation") {
 ## --- measure 1: Deaths and YLL-----
 tic(paste("added YLL and age-adjusted rate to total burden in", year, agr_by))
 # Deaths
-total_burden$measure1 <- "Deaths"
-total_burden <- total_burden %>% dplyr::rename(value = Deaths)
+#total_burden$measure1 <- "Deaths"
+#total_burden <- total_burden %>% dplyr::rename(value = Deaths)
 
 #------measure 2: absolute number, crude rate and age-standartised rates-----
 # absolute number
-total_burden$measure2 <- "absolute number"
+#total_burden$measure2 <- "absolute number"
 
 #---read population data----
-pop_summary <- get_population_data(agr_by, year)
+#pop_summary <- get_population_data(agr_by, year)
 # age-standartised rates
 #total_burden_age_adj <- add_age_adjusted_rate(total_burden, pop_summary)
 
