@@ -75,6 +75,7 @@ if (agr_by != "county") {
   attr_burden_with_svi_rural_urban_class <- attr_burden
 
   tic("marginalised svi and rural_urban class info to attr_burden")
+  cat("marginalised svi and rural_urban class info to attr_burden 1-starting")
   tic("marginalised svi and rural_urban class info to attr_burden 1")
   attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
     group_by(across(-all_of(c("rural_urban_class", "mean", "lower", "upper")))) %>%
@@ -87,6 +88,7 @@ if (agr_by != "county") {
     mutate(rural_urban_class = as.factor(666))
   toc()
 
+  cat("marginalised svi and rural_urban class info to attr_burden 2-starting")
   tic("marginalised svi and rural_urban class info to attr_burden 2")
   attr_burden_with_svi_bin <- attr_burden_with_svi_rural_urban_class %>%
     group_by(across(-all_of(c("svi_bin", "mean", "lower", "upper")))) %>%
@@ -99,6 +101,7 @@ if (agr_by != "county") {
     mutate(svi_bin = as.factor(666))
   toc()
 
+  cat("marginalised svi and rural_urban class info to attr_burden 3-starting")
   tic("marginalised svi and rural_urban class info to attr_burden 3")
   attr_burden_with_all <- attr_burden_with_svi_rural_urban_class %>%
     group_by(across(-all_of(c("rural_urban_class", "svi_bin", "mean", "lower", "upper")))) %>%
