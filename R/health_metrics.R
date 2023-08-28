@@ -13,6 +13,24 @@
 #' @return A data frame containing the calculated age-adjusted rate.
 #' @export
 add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = "data/12_population_summary"){
+  if (!all(c("min_age", "max_age") %in% names(total_burden))) {
+    stop("total_burden must contain columns 'min_age', and 'max_age'")
+  }
+
+  if (!all(c("value") %in% names(total_burden)) & !all(c("lower","mean","upper") %in% names(total_burden))) {
+    stop("total_burden must contain columns 'value' or 'mean', 'lower', and 'upper'")
+  }
+
+  # Validate pop_summary
+  if (!all(c("min_age", "max_age", "Population") %in% names(pop_summary))) {
+    stop("pop_summary must contain columns 'min_age', 'max_age', and 'Population'")
+  }
+
+  if(any(total_burden$max_age - total_burden$min_age >= 30)){
+    stop("age adjustment is supposed to be used for granular age bins")
+    #TODO
+  }
+
   #---read population data----
   if(file.exists(file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv"))) & agr_by != "county"){
     pop_summary1 <- file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv")) %>%
@@ -76,45 +94,15 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   ## --- measure 1: Deaths and YLL-----
   # Deaths
   total_burden$measure1 <- "Deaths"
-  #total_burden <- total_burden %>% dplyr::rename(value = Deaths)
-
-  # YLL
-  #lifeExpectancy <- read.csv(file.path("../data", "IHME_GBD_2019_TMRLT_Y2021M01D05.csv"))
-  #total_burden_yll <- total_burden %>%
-  #  dplyr::mutate(
-  #    Life.Expectancy = lifeExpectancy$Life.Expectancy[findInterval(max_age, lifeExpectancy$Age)], # TODO max_age?
-  #    value = value * Life.Expectancy,
-  #    measure1 = "YLL",
-  #    Life.Expectancy = NULL
-  #  )
-
-  #total_burden <- rbind(total_burden, total_burden_yll)
-  #rm(lifeExpectancy, total_burden_yll)
 
   #------measure 2: absolute number, crude rate and age-standartised rates-----
   # absolute number
   total_burden$measure2 <- "absolute number"
 
-  # crude rate
-#  pop_summary_agr <- pop_summary %>%
-#    group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
- #   summarise(Population = sum(Population))
-
-  #total_burden_crude <- total_burden %>%
-  #  inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
-  #  filter(Population > 0) %>% # TODO
-  #  mutate(
-  #    value =  100000* (value / Population), #0/0 = NaN
-  #    value = ifelse(is.nan(value), 0, value), #
-  #    measure2 = "crude rate",
-  #    Population = NULL
-  #  )
-  #total_burden_crude <- total_burden_crude %>% filter(!is.na(value)) # TODO
-  #rm(pop_summary_agr)
-
   # age-standartised rates
   # see https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf, page 125 for more information, Table VIII
   standartpopulation <- read_excel(file.path("data", "standartpopulation.xlsx"))
+  #274633642
   full_stand_popsize <- sum(standartpopulation$standard_popsize)
 
   total_burden_age_adj <- crossing(pop_summary, standartpopulation)
@@ -143,6 +131,16 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     ungroup()
   total_burden_age_adj$largerInterval <- NULL
   rm(total_burden_age_adj1, total_burden_age_adj2)
+
+  #test anti join
+  anti_joined <- anti_join(total_burden,
+                           total_burden_age_adj,
+                           by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
+  )
+  if(nrow(anti_joined) > 0){
+    warning(paste("in add_age_adjusted_rate() population data and total_burden data not joinable in", nrow(anti_joined)," rows:"))
+    warning(head(anti_joined))
+  }
 
   # calculate age-adjusted rate
   total_burden_age_adj <- total_burden %>%
@@ -369,56 +367,4 @@ add_age_adjusted_rate_old <- function(total_burden, pop_summary, path_to_standar
 
   total_burden_age_adj
 }
-
-
-#health_metrics
-add_years_of_life_lost <- function(df, path_life_expectancy = "data/IHME_GBD_2019_TMRLT_Y2021M01D05.csv"){
-  #TODO check df
-}
-#if(FALSE){
-  #' Calculate Crude Rate
-  #'
-  #' This function calculates the crude rate for a given total burden and population summary.
-  #'
-  #' @param total_burden A data frame containing the total burden. Must contain columns "value".
-  #' @param pop_summary A data frame containing the population summary. Must contain columns "Population".
-  #' @return A data frame containing the crude rate.
-  #' @importFrom dplyr inner_join filter mutate group_by_at summarise
-  #' @export
-#  add_crude_rate <- function(total_burden, pop_summary) {
-    # Validate total_burden
-#    if (!"value" %in% names(total_burden)) {
-#      stop("total_burden must contain the 'value' column")
-#    }
-
-    # Validate pop_summary
-#    if (!"Population" %in% names(pop_summary)) {
-#      stop("pop_summary must contain the 'Population' column")
-#    }
-#
-    # Aggregate population summary by grouping variables, excluding "min_age", "max_age", "source2", and "Population"
-#    pop_summary_agr <- pop_summary %>%
-#      group_by_at(vars(all_of(setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population"))))) %>%
-#      summarise(Population = sum(Population))
-    #TODO how is age relevant?
-
-    # Join total burden with aggregated population summary, filter out zero populations, and calculate crude rate
-#    total_burden_crude <- total_burden %>%
-#      inner_join(pop_summary_agr, by = setdiff(colnames(pop_summary_agr), "Population")) %>%
-#      filter(Population > 0) %>%
-#      mutate(
-#        value = 100000 * (value / Population), # Calculate crude rate per 100,000 population
-#        value = ifelse(is.nan(value), 0, value), # Replace NaN with 0
-#        measure2 = "crude rate",
-#        Population = NULL
-#      )
-
-    # Filter out NA values (if any)
-#    total_burden_crude <- total_burden_crude %>% filter(!is.na(value))
-
-#    total_burden_crude
-#  }
-#}
-
-
 
