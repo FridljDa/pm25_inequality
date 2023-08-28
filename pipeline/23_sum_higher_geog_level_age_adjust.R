@@ -61,7 +61,7 @@ attr_burden <- lapply(files, function(file) {
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
 ## --sum up geographic levels from county----
-
+#attr_burden <- attr_burden %>% sample_n(20)
 if (agr_by != "county") {
   # tic("added rural_urban class info to attr_burden")
   # attr_burden_with_svi_rural_urban_class <- attr_burden %>%
