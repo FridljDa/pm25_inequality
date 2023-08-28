@@ -3,7 +3,7 @@
 #SBATCH --job-name=00_parent
 
 #SBATCH --nodes=4
-#SBATCH --ntasks=1
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=1
 #SBATCH --mem 10G                    # memory pool for all cores
 #SBATCH --partition=normal
