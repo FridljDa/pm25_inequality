@@ -75,41 +75,41 @@ if (agr_by != "county") {
   attr_burden_with_svi_rural_urban_class <- attr_burden
 
   tic("marginalised svi and rural_urban class info to attr_burden")
+  tic("marginalised svi and rural_urban class info to attr_burden 1")
   attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(
-      colnames(attr_burden_with_svi_rural_urban_class),
-      c("rural_urban_class", "mean", "lower", "upper")
-    )) %>%
+    group_by(across(-all_of(c("rural_urban_class", "mean", "lower", "upper")))) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
-      upper = sum(upper)
+      upper = sum(upper),
+      .groups = 'drop'
     ) %>%
     mutate(rural_urban_class = as.factor(666))
+  toc()
 
+  tic("marginalised svi and rural_urban class info to attr_burden 2")
   attr_burden_with_svi_bin <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(
-      colnames(attr_burden_with_svi_rural_urban_class),
-      c("svi_bin", "mean", "lower", "upper")
-    )) %>%
+    group_by(across(-all_of(c("svi_bin", "mean", "lower", "upper")))) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
-      upper = sum(upper)
+      upper = sum(upper),
+      .groups = 'drop'
     ) %>%
     mutate(svi_bin = as.factor(666))
+  toc()
 
+  tic("marginalised svi and rural_urban class info to attr_burden 3")
   attr_burden_with_all <- attr_burden_with_svi_rural_urban_class %>%
-    group_by_at(setdiff(
-      colnames(attr_burden_with_svi_rural_urban_class),
-      c("rural_urban_class", "svi_bin", "mean", "lower", "upper")
-    )) %>%
+    group_by(across(-all_of(c("rural_urban_class", "svi_bin", "mean", "lower", "upper")))) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
-      upper = sum(upper)
+      upper = sum(upper),
+      .groups = 'drop'
     ) %>%
     mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
+  toc()
 
   attr_burden <- rbind(
     attr_burden_with_rural_urban_class,
