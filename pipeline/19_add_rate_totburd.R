@@ -107,10 +107,10 @@ tic(paste("added YLL and age-adjusted rate to total burden in", year, agr_by))
 #total_burden <- rbind(total_burden, total_burden_age_adj)
 
 ## ----finish------
-if (agr_by != "nation") {
-  total_burden <- total_burden %>%
-    filter(measure1 == "Deaths" & measure2 %in% c("absolute number", "age-adjusted rate"))
-}
+#if (agr_by != "nation") {
+#  total_burden <- total_burden %>%
+#    filter(measure1 == "Deaths" & measure2 %in% c("absolute number", "age-adjusted rate"))
+#}
 
 # restrict everything to age_group 25+
 total_burden <- total_burden %>%

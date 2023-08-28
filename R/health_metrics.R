@@ -40,7 +40,13 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     filter(Year == year)
 
   if(agr_by != "county"){
-    pop_summary2 <- pop_summary2 %>% filter(!(rural_urban_class == 666 & Education == 666))
+    pop_summary2 <- pop_summary2 %>%
+      filter(!(rural_urban_class == 666 & Education == 666))
+  }else{
+    pop_summary2 <- pop_summary2 %>%
+      mutate(county = FIPS.code,
+             state = NULL,
+             FIPS.code = NULL)
   }
 
   if(agr_by == "nation"){
@@ -54,14 +60,14 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   if (!is.null(pop_summary1) & !"svi_bin" %in% names(pop_summary1)) pop_summary1 <- pop_summary1 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary2) &!"svi_bin" %in% names(pop_summary2)) pop_summary2 <- pop_summary2 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary3) &!"svi_bin" %in% names(pop_summary3)) pop_summary3 <- pop_summary3 %>% mutate(svi_bin = "666")
-
+  browser()
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
   pop_summary <- pop_summary %>%
     mutate_at(c("rural_urban_class", "svi_bin", "Education"), as.factor) %>%
     mutate(source2 = NULL)
 
-  if(agr_by == "county") pop_summary <- pop_summary %>% select(-rural_urban_class, -svi_bin, -state, -FIPS.code)
+  if(agr_by == "county") pop_summary <- pop_summary %>% select(-rural_urban_class, -svi_bin)
 
   rm(pop_summary1, pop_summary2, pop_summary3)
 
@@ -127,7 +133,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   total_burden_age_adj$largerInterval <- NULL
   rm(total_burden_age_adj1, total_burden_age_adj2)
 
-  browser()
+  #browser()
   #test anti join
   anti_joined <- anti_join(total_burden,
                            total_burden_age_adj,
