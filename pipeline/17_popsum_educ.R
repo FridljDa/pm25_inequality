@@ -29,7 +29,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2001
+  year <- 2006
   agr_by <- "nation"
 
   dataDir <- "data"
@@ -152,13 +152,17 @@ pop.summary <- pop.summary %>%
   left_join(census_meta, by = "variable") %>%
   select(-c(variable))
 
+#browser()
 # Create the 'all' summary
 pop.summary.education <- pop.summary %>%
+  filter(Education != "666")
+
+pop.summary.all.education <- pop.summary %>%
   group_by(across(-all_of(c("Population", "Education")))) %>%
   summarize(Population = sum(Population), .groups = "drop") %>%
   mutate(Education = as.factor(666))
 
-pop.summary <- rbind(pop.summary.education, pop.summary)
+pop.summary <- rbind(pop.summary.education, pop.summary.all.education)
 rm(pop.summary.education)
 
 pop.summary <- pop.summary %>% tibble::add_column(source2 = "Census")
