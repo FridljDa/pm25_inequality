@@ -306,6 +306,6 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
 
   # Your main logic here
 
-  return(df1)
+  return(anti_joined)
 }
 
