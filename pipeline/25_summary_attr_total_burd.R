@@ -44,6 +44,9 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   attr_burden <- lapply(files, function(file) read_data(file.path(propOfAttrBurdDir, agr_by, file)))
 
   attr_burden <- attr_burden %>% rbindlist(use.names = TRUE)
+  if (nrow(attr_burden) == 0) {
+    return(tibble())  # Return an empty tibble
+  }
 
   # make compatible
   attr_burden <- attr_burden %>% rename("Region" := !!agr_by)
