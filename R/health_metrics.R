@@ -134,14 +134,9 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   rm(total_burden_age_adj1, total_burden_age_adj2)
 
   #test anti join
-  anti_joined <- anti_join(total_burden,
-                           total_burden_age_adj,
-                           by = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")),
-  )
-  if(nrow(anti_joined) > 0){
-    warning(paste("in add_age_adjusted_rate() population data and total_burden data not joinable in", nrow(anti_joined),"rows:"))
-    warning(head(anti_joined))
-  }
+  diagnose_join_issues(df1 = total_burden,
+                       df2 = total_burden_age_adj,
+                       join_cols = setdiff(colnames(pop_summary), c("min_age", "max_age", "source2", "Population")))
 
   # calculate age-adjusted rate
   total_burden_age_adj <- total_burden %>%
