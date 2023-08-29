@@ -154,7 +154,7 @@ pop.summary <- pop.summary %>%
 
 # Create the 'all' summary
 pop.summary.education <- pop.summary %>%
-  group_by(across(-all_of(c(pop_col, "Education")))) %>%
+  group_by(across(-all_of(c("Population", "Education")))) %>%
   summarize(Population = sum(Population), .groups = "drop") %>%
   mutate(Education = as.factor(666))
 

@@ -118,6 +118,9 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     warning("Duplicates found in the data frame pop_summary in add_age_adjusted_rate():")
     print(dublicates)
   }
+  #pop_summary <- get_population_data(agr_by = agr_by,
+  #                                year = year)
+
   ## --- measure 1: Deaths and YLL-----
   # Deaths
   total_burden$measure1 <- "Deaths"
