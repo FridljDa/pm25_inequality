@@ -60,7 +60,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   if (!is.null(pop_summary1) & !"svi_bin" %in% names(pop_summary1)) pop_summary1 <- pop_summary1 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary2) &!"svi_bin" %in% names(pop_summary2)) pop_summary2 <- pop_summary2 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary3) &!"svi_bin" %in% names(pop_summary3)) pop_summary3 <- pop_summary3 %>% mutate(svi_bin = "666")
-  browser()
+
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
   pop_summary <- pop_summary %>%
@@ -133,7 +133,6 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   total_burden_age_adj$largerInterval <- NULL
   rm(total_burden_age_adj1, total_burden_age_adj2)
 
-  #browser()
   #test anti join
   anti_joined <- anti_join(total_burden,
                            total_burden_age_adj,
@@ -176,7 +175,6 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
       ungroup()
 
     if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]] + 0.5)) {
-      browser()
       stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
     }
 
