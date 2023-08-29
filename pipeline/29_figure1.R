@@ -52,7 +52,7 @@ if (rlang::is_empty(args)) {
 options(bitmapType = "cairo")
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill=TRUE)
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
@@ -70,7 +70,7 @@ dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI)), recursive = T
 ### ----- read stuff----
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders")
-attr_burd <- attr_burd %>% filter(svi_bin == "666")
+attr_burd <- attr_burd %>% filter()
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000"&
            source == "National Vital Statistics System"& scenario == scenarioI & method == methodI)
@@ -82,10 +82,10 @@ attr_burd <- attr_burd %>%
 
 ## -- figure 3, attributable burden---
 # TODO method di_gee/burnett
-attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
+attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd2 <- attr_burd %>% filter(agr_by == "nation" & Education != 666 & Ethnicity == "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
+attr_burd2 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666" & Education != 666 & Ethnicity == "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
 attr_burd2$Education <- factor(attr_burd2$Education,                 # Relevel group factor
                                levels = c("High school graduate or lower",
                                           "Some college education but no 4-year college degree",
@@ -94,7 +94,7 @@ attr_burd2$Education <- factor(attr_burd2$Education,                 # Relevel g
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Education))
 
 
-attr_burd3 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
+attr_burd3 <- attr_burd %>% filter(agr_by == "nation"& svi_bin == "666" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
   rural_urban_class != "All" & Year >= 2000)
 attr_burd3$rural_urban_class <- factor(attr_burd3$rural_urban_class,                 # Relevel group factor
                                        levels = c("Large metro",
@@ -102,13 +102,16 @@ attr_burd3$rural_urban_class <- factor(attr_burd3$rural_urban_class,            
                                                   "Non metro"))
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = rural_urban_class))
 
-attr_burd4 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All")
+attr_burd7 <- attr_burd %>% filter(agr_by == "nation"& svi_bin != "666" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
+                                     rural_urban_class == "All" & Year >= 2000)
+
+attr_burd4 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666"& Education == 666 & Ethnicity != "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All")
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd5 <- attr_burd %>% filter(agr_by == "nation" & Education != 666 & Ethnicity == "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All")
+attr_burd5 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666"& Education != 666 & Ethnicity == "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All")
 g5 <- ggplot(attr_burd5, aes(x = Year, y = mean, color = Education))
 
-attr_burd6 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "prop. of overall burden" &
+attr_burd6 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666"& Education == 666 & Ethnicity == "All, All Origins" & measure3 == "prop. of overall burden" &
   rural_urban_class != "All" & Year >= 2000)
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = rural_urban_class))
 

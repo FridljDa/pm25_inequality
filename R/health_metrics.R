@@ -27,6 +27,19 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   }
 
   #---read population data----
+  # Mapping Summary:
+  # ------------------------------------------------------------------
+  # | education | race  | county | rural_urban_class | svi_bin | resulting_df |
+  # ------------------------------------------------------------------
+  # |     *     |   *   |  Yes   |        Yes        |   Yes   | pop_summary2 |
+  # |     *     |   *   |  Yes   |        Yes        |   Yes   | pop_summary2 |
+  # |     *     |   *   |  Yes   |        No         |   No    | pop_summary2 |
+  # |    No     |  Yes  |   No   |        No         |   No    | pop_summary1 |
+  # |    Yes    |  No   |   No   |        No         |   No    | pop_summary1 |
+  # |    Yes    |  Yes  |   No   |        No         |   No    | pop_summary3 |
+  # ------------------------------------------------------------------
+  # * = Yes/No
+
   if(file.exists(file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv"))) & agr_by != "county"){
     pop_summary1 <- file.path(pop.summary.dir, paste0("pop_", agr_by, ".csv")) %>%
       read.csv() %>%
@@ -41,7 +54,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
 
   if(agr_by != "county"){
     pop_summary2 <- pop_summary2 %>%
-      filter(!(rural_urban_class == 666 & Education == 666))
+      filter(!Education == 666) #rural_urban_class == 666 &
   }else{
     pop_summary2 <- pop_summary2 %>%
       mutate(county = FIPS.code,
@@ -50,6 +63,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
   }
 
   if(agr_by == "nation"){
+    #for race-education interaction
     pop_summary3 <- file.path(pop.summary.dir, paste0("pop_race_educ_nation.csv")) %>%
       read.csv() %>%
       filter(Year == year)
@@ -57,10 +71,12 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     pop_summary3 <- NULL
   }
 
+  #add svi_bin
   if (!is.null(pop_summary1) & !"svi_bin" %in% names(pop_summary1)) pop_summary1 <- pop_summary1 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary2) &!"svi_bin" %in% names(pop_summary2)) pop_summary2 <- pop_summary2 %>% mutate(svi_bin = "666")
   if (!is.null(pop_summary3) &!"svi_bin" %in% names(pop_summary3)) pop_summary3 <- pop_summary3 %>% mutate(svi_bin = "666")
 
+  browser()
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
   pop_summary <- pop_summary %>%
@@ -69,7 +85,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
 
   if(agr_by == "county") pop_summary <- pop_summary %>% select(-rural_urban_class, -svi_bin)
 
-  rm(pop_summary1, pop_summary2, pop_summary3)
+  #rm(pop_summary1, pop_summary2, pop_summary3)
 
   if (agr_by == "nation") {
     pop_summary <- pop_summary %>%
@@ -91,6 +107,16 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
       mutate_at(c("county"), as.integer)
 
     #pop_summary <- pop_summary %>% filter(Race != "All")
+  }
+
+  # Subset to exclude the 'Population' column
+  pop_summary_sub <- pop_summary[, !(names(pop_summary) %in% "Population")]
+
+  # Check for duplicates in the subset data frame
+  if (any(duplicated(pop_summary_sub))) {
+    dublicates <- pop_summary[duplicated(pop_summary_sub), ]
+    warning("Duplicates found in the data frame pop_summary in add_age_adjusted_rate():")
+    print(dublicates)
   }
   ## --- measure 1: Deaths and YLL-----
   # Deaths

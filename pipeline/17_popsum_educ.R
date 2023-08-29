@@ -30,7 +30,7 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   year <- 2001
-  agr_by <- "county"
+  agr_by <- "nation"
 
   dataDir <- "data"
   tmpDir <- "data/tmp"
@@ -126,12 +126,13 @@ pop.summary.svi_bin <- pop.summary %>%
   summarize(Population = sum(!!sym(pop_col)), .groups = "drop") %>%
   mutate(rural_urban_class = as.factor(666))
 
-
 toc()
 
 # Combine all summary data into one object
 pop.summary <- rbind(pop.summary.all, pop.summary.rural_urban_class, pop.summary.svi_bin)
+rm(pop.summary.all, pop.summary.rural_urban_class, pop.summary.svi_bin)
 
+#sum up
 if (agr_by == "county") {
   pop.summary <- pop.summary %>%
     filter(rural_urban_class == 666, svi_bin == 666) #TODO
@@ -150,6 +151,15 @@ if (agr_by == "county") {
 pop.summary <- pop.summary %>%
   left_join(census_meta, by = "variable") %>%
   select(-c(variable))
+
+# Create the 'all' summary
+pop.summary.education <- pop.summary %>%
+  group_by(across(-all_of(c(pop_col, "Education")))) %>%
+  summarize(Population = sum(Population), .groups = "drop") %>%
+  mutate(Education = as.factor(666))
+
+pop.summary <- rbind(pop.summary.education, pop.summary)
+rm(pop.summary.education)
 
 pop.summary <- pop.summary %>% tibble::add_column(source2 = "Census")
 # only consider 25+ population
