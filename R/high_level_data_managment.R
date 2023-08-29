@@ -142,10 +142,13 @@ read_data <- function(path) {
   if (nrow(parsing_problems) > 0) {
     df2 <- readr::read_csv(path)
     unique_levels <- lapply(df2, unique)
-    #print(parsing_problems)
-    first_problem <- df2[,parsing_problems$col[1]]
-    browser()
-    stop("Parsing issues detected. Please check the CSV file.")
+    problem_column <- parsing_problems$col[1]
+    first_problem <- df2[1, problem_column]
+    #browser()
+
+    warning(paste("Parsing issues detected in" , path, "in column",
+                  problem_column, "(", first_problem, "). Please check the CSV file."))
+    return(df2)
   }
 
   return(df)
