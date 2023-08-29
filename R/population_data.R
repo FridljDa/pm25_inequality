@@ -98,9 +98,6 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   #
   return(pop_summary)
 }
-test <- get_population_data(agr_by = "nation",
-                                year = 2006,
-                                pop.summary.dir = "data/12_population_summary")
 
 #population data used for age_standartisation
 get_population_data_old <- function(agr_by, year, pop.summary.dir = "data/12_population_summary"){
