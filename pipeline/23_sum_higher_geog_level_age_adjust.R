@@ -60,6 +60,11 @@ attr_burden <- lapply(files, function(file) {
   attr_burden_i
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
+if(year <= 2008){
+  attr_burden <- attr_burden %>%
+    filter(Education == "666")
+}
+
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)
 if (agr_by != "county") {

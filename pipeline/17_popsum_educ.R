@@ -100,7 +100,7 @@ pop.summary <- pop.summary %>%
   add_social_vuln_index(FIPS.code.column = "FIPS.code") %>%
   mutate(Year = NULL)
 toc()
-print(paste("column names in pop.summary:", colnames(pop.summary)))
+#print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
@@ -163,7 +163,7 @@ pop.summary.all.education <- pop.summary %>%
   mutate(Education = as.factor(666))
 
 pop.summary <- rbind(pop.summary.education, pop.summary.all.education)
-rm(pop.summary.education)
+rm(pop.summary.education, pop.summary.all.education)
 
 pop.summary <- pop.summary %>% tibble::add_column(source2 = "Census")
 # only consider 25+ population

@@ -51,6 +51,11 @@ total_burden <- lapply(files, function(file) {
 total_burden <- total_burden %>%
   filter(attr == "overall")
 
+if(year <= 2008){
+  total_burden <- total_burden %>%
+    filter(Education == "666")
+}
+
 ## --sum up geographic levels from county----
 
 
