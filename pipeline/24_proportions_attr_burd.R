@@ -87,7 +87,7 @@ if (agr_by == "county") {
 ## ---join---
 anti_join <- diagnose_join_issues(df1 = total_burden,
                                   df2 = attributable_burden,
-                                  join_cols = by = c(
+                                  join_cols = c(
                                     "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class","svi_bin",  "Education",
                                     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
                                   ))
