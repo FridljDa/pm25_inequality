@@ -64,6 +64,8 @@ tic(paste("calculated attr burden with di et al", year, agr_by, source))
 total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
   read_data()
 
+if("Deaths" %in% colnames(total_burden)) total_burden <- total_burden %>% rename(value = Deaths)
+
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
 files <- list.files(file.path(dem_agrDir, agr_by, year))
 pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
