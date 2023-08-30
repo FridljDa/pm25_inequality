@@ -1,4 +1,5 @@
-library(tidyr)
+
+suppressMessages({library(tidyr)})
 get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_population_summary"){
   #---read population data----
   # Mapping Summary:

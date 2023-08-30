@@ -104,6 +104,7 @@ g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = rural_urban_class))
 
 attr_burd7 <- attr_burd %>% filter(agr_by == "nation"& svi_bin != "666" & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
                                      rural_urban_class == "All" & Year >= 2000)
+g7 <- ggplot(attr_burd7, aes(x = Year, y = mean, color = svi_bin))
 
 attr_burd4 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666"& Education == 666 & Ethnicity != "All, All Origins" & measure3 == "prop. of overall burden" & rural_urban_class == "All")
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Ethnicity))
@@ -115,27 +116,34 @@ attr_burd6 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "666"& Educat
   rural_urban_class != "All" & Year >= 2000)
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = rural_urban_class))
 
-## --set range---
-min1 <- min(c(attr_burd1$lower, attr_burd2$lower, attr_burd3$lower))
-min2 <- min(c(attr_burd4$lower, attr_burd5$lower, attr_burd6$lower))
+attr_burd8 <- attr_burd %>% filter(agr_by == "nation" & svi_bin != "666"& Education == 666 & Ethnicity == "All, All Origins" & measure3 == "prop. of overall burden" &
+                                     rural_urban_class == "All" & Year >= 2000)
+g8 <- ggplot(attr_burd8, aes(x = Year, y = mean, color = rural_urban_class))
 
-max1 <- max(c(attr_burd1$upper, attr_burd2$upper, attr_burd3$upper))
-max2 <- max(c(attr_burd4$upper, attr_burd5$upper, attr_burd6$upper))
+## --set range---
+min1 <- min(c(attr_burd1$lower, attr_burd2$lower, attr_burd3$lower, attr_burd7$lower))
+min2 <- min(c(attr_burd4$lower, attr_burd5$lower, attr_burd6$lower, attr_burd8$lower))
+
+max1 <- max(c(attr_burd1$upper, attr_burd2$upper, attr_burd3$upper, attr_burd7$lower))
+max2 <- max(c(attr_burd4$upper, attr_burd5$upper, attr_burd6$upper, attr_burd8$lower))
 
 g1 <- g1 + ylim(min1, max1)
 g2 <- g2 + ylim(min1, max1)
 g3 <- g3 + ylim(min1, max1)
+g7 <- g7 + ylim(min1, max1)
+
 g4 <- g4 + ylim(min2, max2)
 g5 <- g5 + ylim(min2, max2)
 g6 <- g6 + ylim(min2, max2)
+g8 <- g8 + ylim(min2, max2)
 
 # g6 <- g6 + scale_y_continuous(breaks= pretty_breaks())
 
-plots <- list(g1, g2, g3, g4, g5, g6)
+plots <- list(g1, g2, g3, g4, g5, g6, g7, g8)
 rm(min1, min2, max1, max2)
 rm(
   attr_burd1, attr_burd2, attr_burd3, attr_burd4, attr_burd5, attr_burd6,
-  g1, g2, g3, g4, g5, g6
+  g1, g2, g3, g4, g5, g6, g7, g8
 )
 #----formatting------
 # group.colors <- c(hue_pal()(6), hue_pal()(3), hue_pal()(3))

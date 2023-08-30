@@ -1,11 +1,13 @@
-library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
-library(magrittr, warn.conflicts = FALSE, quietly = TRUE)
-library(data.table, warn.conflicts = FALSE, quietly = TRUE)
-#library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
-library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
+suppressMessages({
+  library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+  library(magrittr, warn.conflicts = FALSE, quietly = TRUE)
+  library(data.table, warn.conflicts = FALSE, quietly = TRUE)
+  #library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
+  library(tictoc, warn.conflicts = FALSE, quietly = TRUE)
 
-library(purrr)
-library(tibble)
+  library(purrr, warn.conflicts = FALSE, quietly = TRUE)
+  library(tibble, warn.conflicts = FALSE, quietly = TRUE)
+})
 
 
 pkgload::load_all()
@@ -43,7 +45,7 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
   attr_burden <- lapply(files, function(file) read_data(file.path(propOfAttrBurdDir, agr_by, file)))
 
-  attr_burden <- attr_burden %>% rbindlist(use.names = TRUE)
+  attr_burden <- attr_burden %>% rbindlist(use.names = TRUE, fill=TRUE)
   if (nrow(attr_burden) == 0) {
     return(tibble())  # Return an empty tibble
   }
@@ -60,7 +62,7 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   return(attr_burden)
 })
 attr_burden <- attr_burden %>%
-  rbindlist(use.names = TRUE) %>%
+  rbindlist(use.names = TRUE, fill=TRUE) %>%
   as.data.frame()
 
 ## --- read and bind all burden----
