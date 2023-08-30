@@ -65,6 +65,9 @@ attr_burden <- attr_burden %>%
   rbindlist(use.names = TRUE, fill=TRUE) %>%
   as.data.frame()
 
+if(nrow(attr_burden) == 0){
+  stop(paste("attr_burd still missing in year", year, "in 25_summary_attr_total_burd.R"))
+}
 ## --- read and bind all burden----
 agr_bys <- list.files(summaryHigherTotalDir)
 # Main operation
@@ -89,7 +92,9 @@ total_burden <- map_dfr(agr_bys, function(agr_by) {
 
 # Optionally, remove rows where all columns have NAs or are empty
 #total_burden <- total_burden %>% filter(!complete.cases(sapply(., is.na)))
-
+if(nrow(total_burden) == 0){
+  stop(paste("total_burden still missing in year", year, "in 25_summary_attr_total_burd.R"))
+}
 
 #-----filter, summarise total burden-----
 total_burden <- total_burden %>% filter(label_cause == "all-cause" & attr == "overall" &
