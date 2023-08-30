@@ -68,7 +68,7 @@ if(year <= 2008){
   attr_burden <- attr_burden %>%
     filter(Education == "666")
 }
-attr_burden <- attr_burden %>% sample_n(20)
+#attr_burden <- attr_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)
 if (agr_by != "county") {
