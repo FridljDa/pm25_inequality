@@ -77,13 +77,15 @@ if (agr_by != "county") {
   # attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
   #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
   # toc()
-  attr_burden_with_svi_rural_urban_class <- attr_burden
+  print("head of attr_burden in 23_sum_higher_geog_level_age_adj")
+  print(head(attr_burden))
 
   tic("marginalised svi and rural_urban class info to attr_burden")
-  cat("marginalised svi and rural_urban class info to attr_burden 1-starting")
+  cat("marginalised svi and rural_urban class info to attr_burden 1-starting\n")
   tic("marginalised svi and rural_urban class info to attr_burden 1")
-  attr_burden_with_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-    group_by(across(-all_of(c("rural_urban_class", "mean", "lower", "upper")))) %>%
+  cols_to_group_by <- setdiff(names(attr_burden), c("rural_urban_class", "mean", "lower", "upper"))
+  attr_burden_with_rural_urban_class <- attr_burden %>%
+    group_by_(.dots = cols_to_group_by) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
@@ -93,10 +95,11 @@ if (agr_by != "county") {
     mutate(rural_urban_class = as.factor(666))
   toc()
 
-  cat("marginalised svi and rural_urban class info to attr_burden 2-starting")
+  cat("marginalised svi and rural_urban class info to attr_burden 2-starting\n")
   tic("marginalised svi and rural_urban class info to attr_burden 2")
-  attr_burden_with_svi_bin <- attr_burden_with_svi_rural_urban_class %>%
-    group_by(across(-all_of(c("svi_bin", "mean", "lower", "upper")))) %>%
+  cols_to_group_by <- setdiff(names(attr_burden), c("svi_bin", "mean", "lower", "upper"))
+  attr_burden_with_svi_bin <- attr_burden %>%
+    group_by_(.dots = cols_to_group_by) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
@@ -106,10 +109,11 @@ if (agr_by != "county") {
     mutate(svi_bin = as.factor(666))
   toc()
 
-  cat("marginalised svi and rural_urban class info to attr_burden 3-starting")
+  cat("marginalised svi and rural_urban class info to attr_burden 3-starting\n")
   tic("marginalised svi and rural_urban class info to attr_burden 3")
-  attr_burden_with_all <- attr_burden_with_svi_rural_urban_class %>%
-    group_by(across(-all_of(c("rural_urban_class", "svi_bin", "mean", "lower", "upper")))) %>%
+  cols_to_group_by <- setdiff(names(attr_burden), c("rural_urban_class", "svi_bin", "mean", "lower", "upper"))
+  attr_burden_with_svi_bin <- attr_burden %>%
+    group_by_(.dots = cols_to_group_by) %>%
     summarise(
       mean = sum(mean),
       lower = sum(lower),
