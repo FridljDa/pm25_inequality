@@ -39,19 +39,6 @@ if (rlang::is_empty(args)) {
   methodI <- "di_gee"
   min_ageI <- 25
 
-  summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
-  #summaryDir <- "/Users/default/Desktop/data_summary_old"
-  figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-
-  #summaryDir <- "C:/Users/Daniel/Desktop/paper2021/data/17_summary"
-  #figuresDir <- "C:/Users/Daniel/Desktop/paper2021/data/18_figures"
-
-  summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
-
-  summaryDir <- "/Volumes/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
-
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 }
@@ -72,7 +59,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           attr == "attributable" &
+           attr == "attributable" & svi_bin == "All" &
            source == "National Vital Statistics System" & scenario == scenarioI &
            agr_by == "nation" & method == methodI & Year >= 2009 & measure3 == "value" & Ethnicity != "All, All Origins"
          & rural_urban_class == "All" & Education != 666
@@ -80,7 +67,7 @@ attr_burd <- attr_burd %>%
 
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           source == "National Vital Statistics System" & agr_by == "nation" &
+           source == "National Vital Statistics System" & agr_by == "nation" & svi_bin == "All" &
            Ethnicity != "All, All Origins"  & rural_urban_class == "All" & Education != 666)
 
 ## -- figure 3, attributable burden---

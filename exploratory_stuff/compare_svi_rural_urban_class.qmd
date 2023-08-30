@@ -1,0 +1,33 @@
+---
+title: "compare_svi_rural_urban_class"
+author: "Daniel Fridljand"
+format: html
+editor: visual
+---
+
+## Quarto
+
+```{r}
+library(dplyr)
+devtools::load_all()
+```
+
+```{r}
+
+rural_urban_class <- read_csv("../data/rural_urban_class.csv")
+```
+
+```{r}
+test <- rural_urban_class %>%
+  filter(fromYear == 2010) %>%
+  add_social_vuln_index(Year.colum = "fromYear",
+                        path_to_svi = "../data/08_svi/svi_lookup_table.csv")
+```
+
+```{r}
+with(test,
+     {
+      table(rural_urban_class, svi_bin) 
+     })
+
+```

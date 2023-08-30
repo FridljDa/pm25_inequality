@@ -61,6 +61,12 @@ attr_burden <- lapply(files, function(file) {
         rural_urban_class.y = NULL
       )
   }
+  if(!"measure1" %in% colnames(attr_burden_i)){
+    attr_burden_i <- attr_burden_i %>%
+      mutate(
+        measure1 = "Deaths"
+      )
+  }
   attr_burden_i
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
