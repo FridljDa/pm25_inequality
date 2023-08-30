@@ -8,14 +8,14 @@ suppressMessages({
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   agr_by <- "nation"
-  year <- 2009
+  year <- 2011
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -68,7 +68,7 @@ if(year <= 2008){
   attr_burden <- attr_burden %>%
     filter(Education == "666")
 }
-#attr_burden <- attr_burden %>% sample_n(20)
+attr_burden <- attr_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)
 if (agr_by != "county") {
@@ -168,7 +168,8 @@ if (agr_by == "STATEFP") {
   group_variables <- setdiff(colnames(attr_burden), c("lower", "mean", "upper"))
 }
 
-tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
+cat("start: summed up county level estimates to", agr_by, "in year", year,"\n")
+tic(paste("summed up county level estimates to", agr_by, "in year", year))
 attr_burden <- attr_burden %>%
   group_by_at(vars(all_of(c(group_variables)))) %>%
   summarise(
@@ -185,14 +186,13 @@ attr_burden_absolute_number <- attr_burden %>%
   filter(measure1 == "Deaths" &
     measure2 == "absolute number")
 
+cat("start: age standardised attributable burden\n")
 tic("age standardised attributable burden")
 attr_burden <- add_age_adjusted_rate(attr_burden_absolute_number,
   year,
   agr_by,
   pop.summary.dir = "data/12_population_summary"
 )
-
-
 
 toc()
 

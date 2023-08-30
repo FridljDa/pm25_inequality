@@ -17,7 +17,7 @@ get_group_colors <- function(){
     "4-year college graduate or higher",
     "Non metro",
     "Large metro",
-    "Small-medium metro"
+    "Small-medium metro" #TODO svi
   )
   return(group.colors)
 }

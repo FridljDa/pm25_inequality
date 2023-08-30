@@ -365,7 +365,7 @@ add_age_adjusted_rate_old <- function(total_burden, pop_summary, path_to_standar
       stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
     }
 
-  }else{
+  }else if("value" %in% names(total_burden)){
     total_burden_age_adj <- total_burden_age_adj %>%
       group_by_at(vars(all_of(setdiff(colnames(total_burden_age_adj), c("value","Population"))))) %>%
       summarise(value = sum(value),
@@ -388,6 +388,8 @@ add_age_adjusted_rate_old <- function(total_burden, pop_summary, path_to_standar
     if (any(total_burden_age_adj[["value"]] >= 100000)) {
       stop(paste0("In age-adjustment, after adjustment rows with >= 100000"))
     }
+  }else{
+    stop(paste0("something went wrong"))
   }
 
   total_burden_age_adj
