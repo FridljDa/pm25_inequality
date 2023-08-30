@@ -19,7 +19,7 @@ suppressMessages({
   library(tictoc)
   library(stringr)
 })
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)

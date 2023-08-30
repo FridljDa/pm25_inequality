@@ -21,7 +21,7 @@ require(narcan)
 library(readr)
 require(tidyr)
 
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 #NCORES <- 3
 
 options(dplyr.summarise.inform = FALSE)

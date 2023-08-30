@@ -23,7 +23,8 @@ library(grid)
 library(gridExtra)
 library(data.table)
 
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
+
 for (p in packages) {
   #if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   #suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))

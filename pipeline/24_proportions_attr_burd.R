@@ -7,7 +7,7 @@ suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 # agr_by <- args[10]

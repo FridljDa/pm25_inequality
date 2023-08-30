@@ -18,7 +18,7 @@ library(testthat)
 library(readxl)
 library(stringr)
 library(tictoc)
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)

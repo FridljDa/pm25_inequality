@@ -11,7 +11,7 @@ library(foreach)
 parallel <- FALSE
 if(parallel) registerDoParallel()
 
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 # create data directory, setwd
 
 ## ----------------directories of data--------------------------------------------------------------------------------

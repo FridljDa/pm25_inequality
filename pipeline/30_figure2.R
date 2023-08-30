@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(ggpubr)
-pkgload::load_all()
+suppressMessages({pkgload::load_all()})
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)

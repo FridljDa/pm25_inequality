@@ -37,6 +37,7 @@ read_data <- function(path) {
     pm = col_double(), prop = col_double(),
     state = col_integer(),
     variable = col_character(),
+    Region = col_character(),
     Year = col_integer(),
     fromYear = col_integer(),
     value = col_double(),
