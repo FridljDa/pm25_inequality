@@ -95,7 +95,7 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
     print(dublicates)
   }
 
-  pop_summary <- pop_summary %>% filter(svi_bin != "Unknown")
+  if("svi_bin" %in% colnames(pop_summary)) pop_summary <- pop_summary %>% filter(svi_bin != "Unknown")
   #
   return(pop_summary)
 }
