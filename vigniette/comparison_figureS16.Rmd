@@ -39,7 +39,7 @@ attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == "real") %>% 
-  filter(agr_by == "nation" & Education == 666 & Ethnicity == "NH White" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
+  filter(agr_by == "nation" & Education == 666 & Ethnicity == "NH White" & measure3 == "proportion of disparity to Black or African American attributable" & svi_bin == "All" & rural_urban_class == "All"
                                    & method %in% c("di_gee","di_gee_white") & Year %in% 2000:2015) %>%
   group_by(method) %>%
   summarise(min_proportion_of_disparity = min(mean),
@@ -51,7 +51,7 @@ attr_burd %>%
 #variability by Race-ethnicity for each method
 attr_burd_methods <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           Ethnicity != "All, All origins" & Education == 666 & rural_urban_class == "All" &
+           Ethnicity != "All, All origins" & Education == 666 & svi_bin == "All" & rural_urban_class == "All" &
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == "real" &
            agr_by == "nation" & 
@@ -77,7 +77,7 @@ plot_attr_burd_methods
 ##same exposure
 total_burden <- fread("../data/17_summary/all_burd.csv")
 total_burden <- total_burden %>% filter(Region == "United States" & 
-                                          Education == 666 & rural_urban_class == "All" & measure1 == "Deaths" &
+                                          Education == 666 & svi_bin == "All" & rural_urban_class == "All" & measure1 == "Deaths" &
                                           measure2 == "age-adjusted rate per 100,000" & Year == 2016)
 
 hr_race_specific <- data.frame(

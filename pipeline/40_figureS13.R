@@ -40,7 +40,7 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files("data/17_summary")
 file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
@@ -60,7 +60,9 @@ attr_burd <- attr_burd %>%
 ## -- figure 3, attributable burden---
 #TODO method di_gee/burnett
 
-attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
+attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
+                                     measure3 == "proportion of disparity to Black or African American attributable" &
+                                     rural_urban_class == "All" & svi_bin == "All"
                                    & method %in% c("di_gee","di_gee_white")) #"di_gee","di_gee_white"
 range(attr_burd1$mean) %>% round(1)
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity, linetype = method))

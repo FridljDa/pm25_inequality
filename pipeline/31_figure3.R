@@ -45,7 +45,7 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE)
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
 all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 all_burd <- all_burd %>% filter(min_age == min_ageI)
@@ -84,21 +84,21 @@ g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 g3 <- g3 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
 all_burd4 <- all_burd %>% filter(Education == "4-year college graduate or higher"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
-g4 <- ggplot(all_burd4, aes(x = Year, y = overall_value, color = Ethnicity))
+g4 <- ggplot(all_burd4, aes(x = Year, y = value, color = Ethnicity))
 
 all_burd5 <- all_burd %>% filter(Education == "Some college education but no 4-year college degree"  & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
-g5 <- ggplot(all_burd5, aes(x = Year, y = overall_value, color = Ethnicity))
+g5 <- ggplot(all_burd5, aes(x = Year, y = value, color = Ethnicity))
 
 all_burd6 <- all_burd %>% filter(Education == "High school graduate or lower" & Ethnicity != "All, All Origins"  & rural_urban_class == "All")
-g6 <- ggplot(all_burd6, aes(x = Year, y = overall_value, color = Ethnicity))
+g6 <- ggplot(all_burd6, aes(x = Year, y = value, color = Ethnicity))
 
 
 ## --set range---
 min1 <- min(c(attr_burd1$lower, attr_burd2$lower, attr_burd3$lower))
-min2 <- min(c(all_burd4$overall_value, all_burd5$overall_value, all_burd6$overall_value))
+min2 <- min(c(all_burd4$value, all_burd5$value, all_burd6$value))
 
 max1 <- max(c(attr_burd1$upper, attr_burd2$upper, attr_burd3$upper))
-max2 <- max(c(all_burd4$overall_value, all_burd5$overall_value, all_burd6$overall_value))
+max2 <- max(c(all_burd4$value, all_burd5$value, all_burd6$value))
 
 g1 <- g1 + ylim(0, max1)
 g2 <- g2 + ylim(0, max1)
@@ -136,19 +136,19 @@ rm(
 )
 #----formatting------
 #https://rdrr.io/cran/RColorBrewer/man/ColorBrewer.html
-group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
-                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
-group.colors[c(12,2)] <- group.colors[c(2,12)]
+group.colors <- get_group_colors()
+#group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
+#                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
+#group.colors[c(12,2)] <- group.colors[c(2,12)]
 
-names(group.colors) <- c("NH White",
-                         "Hispanic or Latino White",
-                         "Black American",
-                         "White",
-                         "Asian or Pacific Islander",
-                         "American Indian or Alaska Native"
-
-)
-group.colors <- group.colors[c(1:3,5)]
+#names(group.colors) <- c("NH White",
+#                         "Hispanic or Latino White",
+#                         "Black American",
+#                         "White",
+#                         "Asian or Pacific Islander",
+#                         "American Indian or Alaska Native"
+#)
+#group.colors <- group.colors[c(1:3,5)]
 
 plots <- lapply(plots, function(g) {
   g +

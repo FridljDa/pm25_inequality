@@ -54,7 +54,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 ### ----- read stuff----
 
 all_burden <- all_burden %>%
-  filter(Gender.Code == "All genders" &svi_bin == "All" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter(Gender.Code == "All genders" & svi_bin == "All" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & Region == "United States")
 
 ## -- figure 3, attributable burden---

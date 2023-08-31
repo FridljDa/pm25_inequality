@@ -34,19 +34,10 @@ min_ageI <- args[13]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
-  #summaryDir <- "/Users/default/Desktop/data_summary_old"
-  figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-  
-  summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
-  
-  summaryDir <- "/Volumes/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
-  
+
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
-  
+
   min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
@@ -54,7 +45,7 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files("data/17_summary")
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
@@ -66,19 +57,19 @@ attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == scenarioI &
-           agr_by == "nation" & method == methodI & 
+           agr_by == "nation" & method == methodI &
            measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" &
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All" &
                                      Year >= 2000 & Ethnicity != "White, All Origins")
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class != "All" &
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class != "All" &
                                      Year >= 2001 & Ethnicity != "White, All Origins")
-attr_burd3 <- attr_burd %>% filter(Education != 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" &
-                                     Year >= 2000 & Ethnicity != "White, All Origins") 
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year >= 2001)
-attr_burd6 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year >= 2001)
+attr_burd3 <- attr_burd %>% filter(Education != 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All" &
+                                     Year >= 2000 & Ethnicity != "White, All Origins")
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "All")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class != "All" & Year >= 2001)
+attr_burd6 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class != "All" & Year >= 2001)
 
 #cat
 attr_burd1$cat <- "race-ethnicity"
@@ -110,5 +101,5 @@ g <- g +
 g
 
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI), "figureS8.png"), 
+ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI), "figureS8.png"),
        dpi = 300, g, height = 4, width = 8)

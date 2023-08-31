@@ -37,7 +37,7 @@ rm(file_list)
 ```{r}
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == scenarioI)
-pm_summ1 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
+pm_summ1 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "All")
 
 ```
 
@@ -60,7 +60,7 @@ pop <- foreach::foreach(year = 1990:2016, .combine = rbind) %do% {
   get_population_data(agr_by = "nation", year = year, pop.summary.dir = here::here("data/12_population_summary"))
 }#pop.summary.dir
 
-pop <- pop %>% filter(rural_urban_class == "666" & Education == "666" & Gender.Code == "A" & Race == "All")
+pop <- pop %>% filter(rural_urban_class == "666" & svi_bin == "All" & Education == "666" & Gender.Code == "A" & Race == "All")
 ```
 
 ```{r}
@@ -88,7 +88,7 @@ all_burden <- all_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & Region == "United States" & svi_bin == "666")
 
-all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & min_age == 25)
+all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All"& svi_bin == "All" & min_age == 25)
 
 ```
 
@@ -118,7 +118,7 @@ attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000"&
            source == "National Vital Statistics System"& scenario == scenarioI& method == methodI )
-attr_burd <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity == "All, All Origins" & measure3 %in% c("value","prop. of overall burden") & rural_urban_class == "All")
+attr_burd <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity == "All, All Origins" & measure3 %in% c("value","prop. of overall burden") & svi_bin == "All" & rural_urban_class == "All")
 
 attr_burd <- attr_burd %>%
   filter(min_age == 25 & max_age == 150)

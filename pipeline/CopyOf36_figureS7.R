@@ -62,16 +62,16 @@ attr_burd <- attr_burd %>%
   filter(agr_by == "nation" & method == methodI & Year >= 2001 & measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" &svi_bin == "All" &  rural_urban_class == "Large metro")
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" &  svi_bin == "high svi")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "Small-medium metro")
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" & svi_bin == "middle svi")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "Non metro")
+attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" & svi_bin == "low svi")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Large metro")
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class  == "All" & svi_bin == "high svi")
 attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel group factor
                              levels = c("High school graduate or lower",
                                         "Some college education but no 4-year college degree",
@@ -79,10 +79,10 @@ attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel g
 
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Education))
 
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Small-medium metro")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "middle svi")
 g5 <- ggplot(attr_burd5, aes(x = Year, y = mean, color = Education))
 
-attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Non metro")
+attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "low svi")
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = Education))
 
 ## --set range---
@@ -121,9 +121,9 @@ names(group.colors) <- c(
   "High school graduate or lower",
   "Some college education but no 4-year college degree",
   "4-year college graduate or higher",
-  "Non metro",
-  "Large metro",
-  "Small-medium metro"
+  "low svi",
+  "high svi",
+  "middle svi"
 )
 group.colors <- group.colors[1:9]
 
@@ -181,15 +181,15 @@ t1 <- textGrob("Age-adjusted mortality rate per 100,000", rot = 90, gp = gpar(fo
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Large metro", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("high svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Small-medium metro", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("middle svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Non metro", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("low svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(
@@ -218,4 +218,4 @@ g_combined <- grid.arrange(
 g_combined
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS7.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS7_svi.png"), dpi = 300, g_combined, height = 9, width = 8)
