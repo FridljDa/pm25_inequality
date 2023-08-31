@@ -99,12 +99,15 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 #[25] "pipeline/24_proportions_attr_burd.R"
 #[26] "pipeline/24_sum_higher_geog_level_age_adjust_total_burden.R"
 #[27] "pipeline/25_summary_attr_total_burd.R"
-no_figure_scripts_list <- no_figure_scripts_list_full[c(18, 20, 22, 24, 25, 26, 27)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+no_figure_scripts_list <- no_figure_scripts_list_full[c(20, 22, 24, 25, 26, 27)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
+#24, 25, 27
 
 years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- c(2011, 2009:2007, 2005:2001)
+#years <- c(1999:1990)
 #years <- c(2014:2016)
+years <- 2009:2016
 #years <- c(2003:2001, 1999:1990)
 #years <- 2009
 #years <- c(2004, 2007:2009)

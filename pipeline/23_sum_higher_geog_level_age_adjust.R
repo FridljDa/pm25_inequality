@@ -67,6 +67,12 @@ attr_burden <- lapply(files, function(file) {
         measure1 = "Deaths"
       )
   }
+  if(!"measure2" %in% colnames(attr_burden_i)){
+    attr_burden_i <- attr_burden_i %>%
+      mutate(
+        measure2 = "absolute number"
+      )
+  }
   attr_burden_i
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 

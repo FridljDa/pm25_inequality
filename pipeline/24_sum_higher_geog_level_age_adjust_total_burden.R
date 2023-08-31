@@ -46,6 +46,7 @@ files <- files[grepl(year, files)]
 
 total_burden <- lapply(files, function(file) {
   total_burden_i <- read_data(file.path(totalBurdenRateDir, "nvss", file))
+  if("Deaths" %in% colnames(total_burden_i)) total_burden_i <- total_burden_i %>% rename(value = Deaths)
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
 total_burden <- total_burden %>%
