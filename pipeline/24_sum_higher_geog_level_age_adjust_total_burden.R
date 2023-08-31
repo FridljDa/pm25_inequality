@@ -16,7 +16,7 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   dataDir <- "data"
   agr_by <- "nation"
-  year <- 2005
+  year <- 2016
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -47,6 +47,20 @@ files <- files[grepl(year, files)]
 total_burden <- lapply(files, function(file) {
   total_burden_i <- read_data(file.path(totalBurdenRateDir, "nvss", file))
   if("Deaths" %in% colnames(total_burden_i)) total_burden_i <- total_burden_i %>% rename(value = Deaths)
+
+  if(!"measure1" %in% colnames(total_burden_i)){
+    total_burden_i <- total_burden_i %>%
+      mutate(
+        measure1 = "Deaths"
+      )
+  }
+  if(!"measure2" %in% colnames(total_burden_i)){
+    total_burden_i <- total_burden_i %>%
+      mutate(
+        measure2 = "absolute number"
+      )
+  }
+  return(total_burden_i)
 }) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
 total_burden <- total_burden %>%
