@@ -109,7 +109,7 @@ years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
 #years <- c(2014:2016)
 years <- 2009:2016
 #years <- c(2003:2001, 1999:1990)
-#years <- 2009
+years <- 2010
 #years <- c(2004, 2007:2009)
 #years <- 1997:2000
 agr_bys <- c("county", "nation") #, "county" "county",

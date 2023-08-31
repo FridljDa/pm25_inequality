@@ -14,8 +14,8 @@ suppressMessages({pkgload::load_all()})
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  agr_by <- "nation"
-  year <- 2011
+  agr_by <- "county"
+  year <- 2010
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -80,7 +80,7 @@ if(year <= 2008){
   attr_burden <- attr_burden %>%
     filter(Education == "666")
 }
-attr_burden <- attr_burden %>% sample_n(20)
+#attr_burden <- attr_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)
 if (agr_by != "county") {

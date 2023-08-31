@@ -36,7 +36,7 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files("data/17_summary")
 file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
 all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
@@ -52,17 +52,17 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & agr_by == "nation" &
-    Ethnicity != "All, All Origins" & rural_urban_class == "All" & Education == 666) # %>%
+    Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All" & Education == 666) # %>%
 # filter(Ethnicity != "White") #Year %in% c(2000, 2015) &
 
 all_burd <- all_burd %>%
-  select(Year, Ethnicity, overall_value)
+  select(Year, Ethnicity, value)
 
 ## -- attributable burden---
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    attr == "attributable" &
+    attr == "attributable" & svi_bin == "All" &
     source == "National Vital Statistics System" & scenario == scenarioI & agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
     rural_urban_class == "All" & method %in% c("GBD","burnett") & Ethnicity != "White")
 
@@ -77,7 +77,7 @@ attr_burd <- attr_burd %>%
 
 attr_burd <- attr_burd %>%
   filter(measure3 == "proportion of disparity to Black or African American attributable") %>%
-  select(Year, Ethnicity, method, measure3, mean, overall_value) %>%
+  select(Year, Ethnicity, method, measure3, mean, value) %>%
   mutate(xlab = "%")
 
 ### ---- combine -----
@@ -89,7 +89,7 @@ attr_burd_average <- attr_burd_combined %>%
   group_by(Ethnicity, measure3, method, xlab) %>%
   summarise(
     mean = mean(mean),
-    overall_value = mean(overall_value)
+    value = mean(value)
   )
 
 attr_burd_combined <-
@@ -109,7 +109,7 @@ plots <- lapply(attr_burdens, function(attr_burdens_i) {
   attr_burd_i_wide <- attr_burdens_i %>%
     pivot_wider(
       names_from = Year,
-      values_from = c(mean, overall_value),
+      values_from = c(mean, value),
       names_prefix = "year_",
       id_cols = c(Ethnicity, method)
     )
@@ -121,7 +121,7 @@ plots <- lapply(attr_burdens, function(attr_burdens_i) {
     ) +
     geom_point(
       data = attr_burdens_i,
-      aes(y = Ethnicity, x = mean, colour = Year, size = overall_value) # ,size = overall_value #TODO
+      aes(y = Ethnicity, x = mean, colour = Year, size = value) # ,size = value #TODO
     ) +
     scale_colour_manual(values = c("2000" = "#a3c4dc", "2015" = "#0e668b", "Mean between 2000 and 2015" = "#8b0000")) +
     #scale_shape_manual(values = c("2000" = 19, "2015" = 19, "Mean between 2000 and 2015" = 17)) + #shape = 17 "\u007C"
