@@ -29,7 +29,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2006
+  year <- 2010
   agr_by <- "nation"
 
   dataDir <- "data"
@@ -154,20 +154,29 @@ pop.summary <- pop.summary %>%
 
 #browser()
 # Create the 'all' summary
-pop.summary.education <- pop.summary %>%
-  filter(Education != "666")
+#pop.summary.education <- pop.summary %>%
+#  filter(Education != "666")
 
-pop.summary.all.education <- pop.summary %>%
-  group_by(across(-all_of(c("Population", "Education")))) %>%
-  summarize(Population = sum(Population), .groups = "drop") %>%
-  mutate(Education = as.factor(666))
+#pop.summary.all.education <- pop.summary %>%
+#  group_by(across(-all_of(c("Population", "Education")))) %>%
+#  summarize(Population = sum(Population), .groups = "drop") %>%
+#  mutate(Education = as.factor(666))
 
-pop.summary <- rbind(pop.summary.education, pop.summary.all.education)
-rm(pop.summary.education, pop.summary.all.education)
+#pop.summary <- rbind(pop.summary.education, pop.summary.all.education)
+#rm(pop.summary.education, pop.summary.all.education)
 
 pop.summary <- pop.summary %>% tibble::add_column(source2 = "Census")
 # only consider 25+ population
 pop.summary <- pop.summary %>% filter(min_age >= 25)
+
+pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
+#check if is partition
+result <- pop.summary %>%
+  group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
+  nest() %>%
+  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
+  unnest(cols = c(is_partition))
+
 print(paste("written file to", pop.summary.dirX))
 write.csv(pop.summary, pop.summary.dirX, row.names = FALSE)
 toc()

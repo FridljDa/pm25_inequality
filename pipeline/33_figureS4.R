@@ -52,6 +52,12 @@ rm(file_list)
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
+#test <- fread(file.path(summaryDir, "all_burd.csv")) %>% #& measure2 == "age-adjusted rate per 100,000"
+#  filter(Gender.Code == "All genders" & measure1 == "Deaths"  &
+#           source == "National Vital Statistics System" & Region == "United States") %>%
+#  filter(Education == 666 & rural_urban_class == "Large metro" &Ethnicity == "All, All Origins" & svi_bin == "All" &
+#           rural_urban_class != "All" & Year %in% c(2008, 2009)) %>%
+#  filter(min_age == 25)
 
 all_burden <- all_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
