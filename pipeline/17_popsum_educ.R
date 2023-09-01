@@ -17,6 +17,7 @@ suppressMessages({
   library(readxl)
   library(dplyr)
   library(foreach)
+  library(purrr)
 })
 
 suppressMessages({pkgload::load_all()})

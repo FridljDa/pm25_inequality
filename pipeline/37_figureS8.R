@@ -71,16 +71,19 @@ attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Ori
 attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class != "All" & Year >= 2001)
 attr_burd6 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class != "All" & Year >= 2001)
 
-#cat
+attr_burd7 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin != "All" & rural_urban_class == "All" & Year >= 2001)
+
+
 attr_burd1$cat <- "race-ethnicity"
 attr_burd2$cat <- "race-ethnicity*rurality"
 attr_burd3$cat <- "race-ethnicity*education"
 attr_burd4$cat <- "education"
 attr_burd5$cat <- "education*rurality"
 attr_burd6$cat <- "rurality"
+attr_burd7$cat <- "svi_bin"
 
 #make plots
-attr_burd_subsets <- list(attr_burd1, attr_burd2, attr_burd3, attr_burd4, attr_burd5, attr_burd6)
+attr_burd_subsets <- list(attr_burd1, attr_burd2, attr_burd3, attr_burd4, attr_burd5, attr_burd6, attr_burd7)
 attr_burd_subsets <- attr_burd_subsets %>% rbindlist()
 
 attr_burd_subsets <- attr_burd_subsets %>%
