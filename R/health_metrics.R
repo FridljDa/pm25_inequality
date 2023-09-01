@@ -199,8 +199,24 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
                 upper = sum(upper)) %>%
       ungroup()
 
-    if (any(total_burden_age_adj[["mean"]] >= total_burden_age_adj[["Population"]] + 0.5)) {
-      stop(paste0("In age-adjustment, Mean is not less than Population in one or more rows."))
+    # Identify problematic rows and calculate how much percent "mean" is higher than "Population"
+    problematic_data <- total_burden_age_adj %>%
+      filter(mean >= Population + 0.5) %>%
+      mutate(percent_higher = ((mean - Population) / Population) * 100)
+
+    # Calculate the mean of percent_higher
+    mean_percent_higher <- mean(problematic_data$percent_higher)
+
+    # Get the total number of rows
+    total_rows <- nrow(total_burden_age_adj)
+
+    # Stop execution if any problematic rows are found
+    if (nrow(problematic_data) > 0) {
+      num_problematic_rows <- nrow(problematic_data)
+      stop(paste0("In age-adjustment, Mean is not less than Population in ",
+                  num_problematic_rows, " out of ", total_rows, " rows. ",
+                  "Mean of percent_higher: ", round(mean_percent_higher, 2),
+                  "%."))
     }
 
     total_burden_age_adj <- total_burden_age_adj %>%
