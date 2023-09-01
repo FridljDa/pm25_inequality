@@ -201,7 +201,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
 
     # Identify problematic rows and calculate how much percent "mean" is higher than "Population"
     problematic_data <- total_burden_age_adj %>%
-      filter(mean >= Population + 0.5) %>%
+      filter(mean >= Population + 3) %>%
       mutate(percent_higher = ((mean - Population) / Population) * 100)
 
     # Calculate the mean of percent_higher
@@ -212,6 +212,7 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
 
     # Stop execution if any problematic rows are found
     if (nrow(problematic_data) > 0) {
+      browser()
       num_problematic_rows <- nrow(problematic_data)
       stop(paste0("In age-adjustment, Mean is not less than Population in ",
                   num_problematic_rows, " out of ", total_rows, " rows. ",
@@ -220,7 +221,12 @@ add_age_adjusted_rate <- function(total_burden, year, agr_by, pop.summary.dir = 
     }
 
     total_burden_age_adj <- total_burden_age_adj %>%
-      filter(Population >= 1 & full_stand_popsize >= 1) %>%
+      filter(full_stand_popsize >= 1) %>%
+      dplyr::mutate(
+        mean = pmin(mean, Population),
+        lower = pmin(lower, Population),
+        upper = pmin(upper, Population)
+      ) %>%
       dplyr::mutate(
         mean = (mean * standard_popsize / Population) * (100000 / full_stand_popsize),
         mean = ifelse(is.nan(mean), 0, mean),

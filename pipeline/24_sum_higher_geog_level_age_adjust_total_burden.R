@@ -66,7 +66,7 @@ if(year <= 2008){
   total_burden <- total_burden %>%
     filter(Education == "666")
 }
-browser()
+
 #total_burden <- total_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 
