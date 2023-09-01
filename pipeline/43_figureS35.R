@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -105,28 +105,7 @@ rm(
   g1, g2, g3, g4, g5, g6
 )
 #----formatting------
-
-group.colors <- c(
-  RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
-  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2]
-)
-group.colors[c(12, 2)] <- group.colors[c(2, 12)]
-names(group.colors) <- c(
-  "NH White",
-  "Hispanic or Latino White",
-  "Black American",
-  "White",
-  "Asian or Pacific Islander",
-  "American Indian or Alaska Native",
-  "High school graduate or lower",
-  "Some college education but no 4-year college degree",
-  "4-year college graduate or higher",
-  "low svi",
-  "high svi",
-  "middle svi"
-)
-group.colors <- group.colors[1:9]
-
+group.colors <- get_group_colors()
 
 plots <- lapply(plots, function(g) {
   g +
