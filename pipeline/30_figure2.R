@@ -130,9 +130,14 @@ attr_burd_combined_wide <- attr_burd_combined %>%
   )
 
 ## ---plotting---
+attr_burd_combined <- attr_burd_combined %>%
+  #dplyr::mutate(across(where(is.factor), droplevels))
+  dplyr::mutate(measure3 = droplevels(measure3))
+
 attr_burdens <- split(attr_burd_combined, attr_burd_combined$measure3)
 
 plots <- lapply(attr_burdens, function(attr_burdens_i) {
+
   attr_burd_i_wide <- attr_burdens_i %>%
     pivot_wider(
       names_from = Year,

@@ -14,19 +14,15 @@ suppressMessages({pkgload::load_all()})
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  dataDir <- "data"
   agr_by <- "nation"
-  year <- 2016
+  year <- 2010
 } else {
   year <- args[1]
-  dataDir <- args[2]
   agr_by <- args[10]
-  pop.summary.dir <- args[16]
-  total_burdenDir <- args[18]
-  summaryHigherTotalDir <- args[19]
 }
 pop.summary.dir <- "data/12_population_summary"
-totalBurdenRateDir <- "data/13_total_burden_rate"
+#totalBurdenRateDir <- "data/13_total_burden_rate"
+#totalBurdenRateDir <- "09_total_burden_parsed"
 summaryHigherTotalDir <- "data/16_sum_higher_geog_level_total"
 # should have #min_age = min_age.x, max_age = min_age.x, for age specific
 # in l184 in 21_calc_attr_burd_di.R
@@ -40,12 +36,12 @@ if (file.exists(summaryHigherTotalDir)) {
   quit()
 }
 ## --- read attr burden----
-totalBurdenRateDir <- file.path(totalBurdenRateDir, "county")
-files <- list.files(file.path(totalBurdenRateDir, "nvss"))
+#totalBurdenRateDir <- file.path(totalBurdenRateDir, "county")
+files <- list.files("data/09_total_burden_parsed/county/nvss")
 files <- files[grepl(year, files)]
 
 total_burden <- lapply(files, function(file) {
-  total_burden_i <- read_data(file.path(totalBurdenRateDir, "nvss", file))
+  total_burden_i <- read_data(file.path("data/09_total_burden_parsed/county/nvss", file))
   if("Deaths" %in% colnames(total_burden_i)) total_burden_i <- total_burden_i %>% rename(value = Deaths)
 
   if(!"measure1" %in% colnames(total_burden_i)){
@@ -70,42 +66,32 @@ if(year <= 2008){
   total_burden <- total_burden %>%
     filter(Education == "666")
 }
-
+browser()
+#total_burden <- total_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 
 
 if (agr_by != "county") {
-  # tic("added rural_urban class info to total_burden")
-  # total_burden_with_svi_rural_urban_class <- total_burden %>%
-  #  add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
-  # toc()
-
-  # tic("added svi info to total_burden")
-  # total_burden_with_svi_rural_urban_class <- total_burden_with_svi_rural_urban_class %>%
-  #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
-  # toc()
-  total_burden_with_svi_rural_urban_class <- total_burden
-
   tic("marginalised svi and rural_urban class info to total_burden")
-  total_burden_with_rural_urban_class <- total_burden_with_svi_rural_urban_class %>%
+  total_burden_with_rural_urban_class <- total_burden %>%
     group_by_at(setdiff(
-      colnames(total_burden_with_svi_rural_urban_class),
+      colnames(total_burden),
       c("rural_urban_class", "value")
     )) %>%
     summarise(value = sum(value)) %>%
     mutate(rural_urban_class = as.factor(666))
 
-  total_burden_with_svi_bin <- total_burden_with_svi_rural_urban_class %>%
+  total_burden_with_svi_bin <- total_burden %>%
     group_by_at(setdiff(
-      colnames(total_burden_with_svi_rural_urban_class),
+      colnames(total_burden),
       c("svi_bin", "value")
     )) %>%
     summarise(value = sum(value)) %>%
     mutate(svi_bin = as.factor(666))
 
-  total_burden_with_all <- total_burden_with_svi_rural_urban_class %>%
+  total_burden_with_all <- total_burden %>%
     group_by_at(setdiff(
-      colnames(total_burden_with_svi_rural_urban_class),
+      colnames(total_burden),
       c("rural_urban_class", "svi_bin", "value")
     )) %>%
     summarise(value = sum(value)) %>%

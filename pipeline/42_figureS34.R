@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -40,19 +40,19 @@ if (rlang::is_empty(args)) {
   totalBurdenDir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
   exp_rrDir <- "/Users/default/Desktop/paper2021/data/04_exp_rr"
   tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
-  
+
   summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
   totalBurdenDir <- "/g/huber/users/fridljand/R/HIGH/data/12_total_burden_parsed2"
   exp_rrDir <- "/g/huber/users/fridljand/R/HIGH/data/04_exp_rr"
   tmpDir <- "/g/huber/users/fridljand/R/HIGH/data/tmp"
-  
+
   summaryDir <-"/Volumes/fridljand/R/HIGH/data/17_summary"
   figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
   totalBurdenDir <- "/Volumes/fridljand/R/HIGH/data/12_total_burden_parsed2"
   exp_rrDir <- "/Volumes/fridljand/R/HIGH/data/04_exp_rr"
   tmpDir <-  "/Volumes/fridljand/R/HIGH/data/tmp"
-  
+
   min_ageI <- 25
   exp_rrDir <- "data/04_exp_rr"
   totalBurdenDir <- "data/13_total_burden_rate"
@@ -74,7 +74,7 @@ total_burden <- lapply(files, function(file) {
           max_age,
           c(0,seq(25, 95, 5)),
           left.open =  F
-        ) 
+        )
       ]
     ) %>%
     group_by(Year, label_cause, age_group_id) %>%
@@ -194,7 +194,7 @@ di <- function(pms) {
     dplyr::filter(label_cause == "all-cause") %>%
     group_by(Year) %>%
     dplyr::summarise(overall_value = sum(value))
-  
+
   rates <- c(0.0071, 0.0073, 0.0075)
   paf_di <- outer(
     pms,
@@ -209,7 +209,7 @@ di <- function(pms) {
     mean = paf_di[, 2],
     upper = paf_di[, 3]
   )
-  
+
   attr_burd <- merge(total_burden, paf_di) %>%
     mutate(
       mean = overall_value * mean,
@@ -275,7 +275,7 @@ data <- rbind(
 g1 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
   geom_line(size = 1.5) +
   geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)+
-  #geom_dl(aes(label = method), method = list(dl.combine("last.points")), cex = 0.8) 
+  #geom_dl(aes(label = method), method = list(dl.combine("last.points")), cex = 0.8)
   #geom_text(aes(label = method), position = "dodge")
   #geom_text("a")
   theme(
@@ -285,7 +285,7 @@ g1 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
     legend.background = element_rect(fill = "transparent")
   ) +
   xlab("Annual average PM2.5 in μg/m^3") +
-  ylab("Mortality from PM2.5 per 100,000 per year") 
+  ylab("Mortality from PM2.5 per 100,000 per year")
 g1
 #
 g2 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
@@ -296,7 +296,7 @@ g2 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
   #annotate("text", x = 22, y = 80, label = "DI", size = 8, colour = hue_pal()(3)[2])+
   annotate("text", x = 26, y = 55, label = "GBD", size = 8, colour = hue_pal()(3)[3])+
   xlab("Annual average PM2.5 in μg/m^3") +
-  ylab("Mortality from PM2.5 per 100,000 per year")+ 
+  ylab("Mortality from PM2.5 per 100,000 per year")+
   theme(legend.position = "none")+
   theme(text = element_text(size=20))
 g2
@@ -307,9 +307,9 @@ g3 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
   geom_line(size = 1.5) +
   geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)+
   xlab("Annual average PM2.5 in μg/m^3") +
-  ylab("Mortality from PM2.5 per 100,000 per year") + 
+  ylab("Mortality from PM2.5 per 100,000 per year") +
   geom_text(data = subset(data, pm == max(pms)), aes(label = method, colour = method, x = Inf, y = mean), hjust = -.1,  size=6) + #vjust=-.5,
-  scale_colour_discrete(guide = 'none')  +    
+  scale_colour_discrete(guide = 'none')  +
   theme(plot.margin = unit(c(1,5,1,1), "lines")) +
   theme(text = element_text(size=15))
 

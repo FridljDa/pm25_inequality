@@ -17,7 +17,7 @@ if (rlang::is_empty(args)) {
 
   agr_by <- "nation"
   source <- "nvss"
-  year <- 2005
+  year <- 2010
 } else {
   year <- args[1]
   source <- "nvss"
@@ -122,6 +122,7 @@ attr_total_burden_prop_overall_burden <- attr_total_burden %>%
   )
 
 ### ---disparity to race-ethnicity----
+browser()
 # Race == "Black or African American" & Hispanic.Origin == "All Origins"
 group_variables <- setdiff(colnames(attr_total_burden), c("mean", "lower", "upper", "overall_total_burden", "Race", "Hispanic.Origin"))
 attr_total_burden_prop_of_difference <- attr_total_burden %>%
@@ -141,6 +142,10 @@ attr_total_burden_prop_of_difference <- attr_total_burden %>%
     measure3 = "proportion of disparity to Black or African American attributable"
   ) %>%
   filter(!(Race == "Black or African American" & Hispanic.Origin == "All Origins"))
+
+if(nrow(attr_total_burden_prop_of_difference) == 0){
+  warning( paste("in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
+}
 
 attr_total_burden_combined <- rbind(attr_total_burden_value, attr_total_burden_prop_overall_burden, attr_total_burden_prop_of_difference)
 

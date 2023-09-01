@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-#rm(list = ls(all = TRUE))
+# rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -34,7 +34,6 @@ min_ageI <- args[13]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
@@ -45,11 +44,12 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill=TRUE)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
+theme_set(theme_classic(base_family = "Helvetica"))
+options(bitmapType = "cairo")
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
 
@@ -62,27 +62,30 @@ attr_burd <- attr_burd %>%
   filter(agr_by == "nation" & method == methodI & Year >= 2001 & measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" &  svi_bin == "high svi")
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "high svi")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" & svi_bin == "middle svi")
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "middle svi")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class  == "All" & svi_bin == "low svi")
+attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "low svi")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class  == "All" & svi_bin == "high svi")
-attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel group factor
-                             levels = c("High school graduate or lower",
-                                        "Some college education but no 4-year college degree",
-                                        "4-year college graduate or higher"))
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "high svi")
+attr_burd4$Education <- factor(attr_burd4$Education, # Relevel group factor
+  levels = c(
+    "High school graduate or lower",
+    "Some college education but no 4-year college degree",
+    "4-year college graduate or higher"
+  )
+)
 
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Education))
 
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "middle svi")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "middle svi")
 g5 <- ggplot(attr_burd5, aes(x = Year, y = mean, color = Education))
 
-attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "low svi")
+attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "low svi")
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = Education))
 
 ## --set range---
@@ -197,4 +200,4 @@ g_combined <- grid.arrange(
 g_combined
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS7_svi.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS7_svi.png"), dpi = 300, g_combined, height = 9, width = 8)

@@ -137,17 +137,17 @@ rm(
 #----formatting------
 #https://rdrr.io/cran/RColorBrewer/man/ColorBrewer.html
 group.colors <- get_group_colors()
+group.colors <- group.colors[c("NH White",
+                               "Hispanic or Latino White",
+                               "Black American",
+                               "White",
+                               "Asian or Pacific Islander",
+                               "American Indian or Alaska Native"
+)]
 #group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
 #                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
 #group.colors[c(12,2)] <- group.colors[c(2,12)]
 
-#names(group.colors) <- c("NH White",
-#                         "Hispanic or Latino White",
-#                         "Black American",
-#                         "White",
-#                         "Asian or Pacific Islander",
-#                         "American Indian or Alaska Native"
-#)
 #group.colors <- group.colors[c(1:3,5)]
 
 plots <- lapply(plots, function(g) {

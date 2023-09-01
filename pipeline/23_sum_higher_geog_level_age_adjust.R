@@ -15,7 +15,7 @@ args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
   agr_by <- "county"
-  year <- 2010
+  year <- 2011
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -39,7 +39,7 @@ dir.create(summaryHigherDir, recursive = T, showWarnings = F)
 summaryHigherDir <- file.path(summaryHigherDir, paste0("attr_burden_age_adjusted_", year, ".csv"))
 
 if (file.exists(summaryHigherDir)) {
-  quit()
+  #quit()
 }
 ## --- read attr burden----
 attr_burdenDir <- file.path(attr_burdenDir, "county", "nvss")

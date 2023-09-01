@@ -29,30 +29,29 @@ if (rlang::is_empty(args)) {
   min_ageI <- 25
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
-  
+
   methodI <- "di_gee"
   scenarioI <- "real"
 }
-
+pkgload::load_all()
 options(bitmapType = "cairo")
 
-#source(paste0("https://raw.githubusercontent.com/mkiang/", 
+#source(paste0("https://raw.githubusercontent.com/mkiang/",
 #              "opioid_hotspots/master/code/mk_nytimes.R"))
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 ## --- read files---
 file_list <- list.files(file.path(summaryDir, "county"))
 file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
-rm(file_list)
+#rm(file_list)
 
 ## --- filter---
 attr_burd <- attr_burd %>%
   filter(
     Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & method == methodI &
-      attr == "attributable" &
-      source == "National Vital Statistics System" & rural_urban_class == "All" & agr_by == "county" &
-      measure3 == "value" & scenario == scenarioI
+      attr == "attributable" & source == "National Vital Statistics System" & agr_by == "county" & measure3 == "value"
+    & scenario == scenarioI
   )
 
 ## --- filter -----

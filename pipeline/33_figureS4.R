@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -54,16 +54,16 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 ### ----- read stuff----
 
 all_burden <- all_burden %>%
-  filter(Gender.Code == "All genders" & svi_bin == "All" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & Region == "United States")
 
 ## -- figure 3, attributable burden---
 # TODO method di_gee/burnett
-all_burden1 <- all_burden %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All")
+all_burden1 <- all_burden %>% filter(Education == 666 & svi_bin == "All" & Ethnicity != "All, All Origins" & rural_urban_class == "All")
 g1 <- ggplot(all_burden1, aes(x = Year, y = value, color = Ethnicity))
 
 all_burden2 <- all_burden %>%
-  filter(Education != 666 & Ethnicity == "All, All Origins"
+  filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All"
          & rural_urban_class == "All")
 
 all_burden2$Education <- factor(all_burden2$Education,                 # Relevel group factor
@@ -73,50 +73,39 @@ all_burden2$Education <- factor(all_burden2$Education,                 # Relevel
 g2 <- ggplot(all_burden2, aes(x = Year, y = value, color = Education))
 
 all_burden3 <- all_burden %>%
-  filter(Education == 666 & Ethnicity == "All, All Origins" &
+  filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" &
            rural_urban_class != "All" & Year >= 2000)
 
 all_burden3$rural_urban_class <- factor(all_burden3$rural_urban_class,                 # Relevel group factor
                                 levels = c("Large metro",
                                            "Small-medium metro",
                                            "Non metro"))
-
 g3 <- ggplot(all_burden3, aes(x = Year, y = value, color = rural_urban_class))
 
+all_burden4 <- all_burden %>%
+  filter(Education == 666 & Ethnicity == "All, All Origins" &
+           rural_urban_class == "All"&
+           svi_bin != "All" & Year >= 2000)
+
+g4 <- ggplot(all_burden4, aes(x = Year, y = value, color = svi_bin))
+
 ## --set range---
-min1 <- min(c(all_burden1$value, all_burden2$value, all_burden3$value))
-max1 <- max(c(all_burden1$value, all_burden2$value, all_burden3$value))
+min1 <- min(c(all_burden1$value, all_burden2$value, all_burden3$value, all_burden4$value))
+max1 <- max(c(all_burden1$value, all_burden2$value, all_burden3$value, all_burden4$value))
 
 g1 <- g1 + ylim(min1, max1)
 g2 <- g2 + ylim(min1, max1)
 g3 <- g3 + ylim(min1, max1)
+g4 <- g4 + ylim(min1, max1)
 
 plots <- list(g1, g2, g3)
 rm(min1, max1)
 rm(
   all_burden1, all_burden2, all_burden3,
-  g1, g2, g3
+  g1, g2, g3, g4
 )
 #----formatting------
-group.colors <- c(
-  RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
-  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2]
-)
-group.colors[c(12, 2)] <- group.colors[c(2, 12)]
-names(group.colors) <- c(
-  "NH White",
-  "Hispanic or Latino White",
-  "Black American",
-  "White",
-  "Asian or Pacific Islander",
-  "American Indian or Alaska Native",
-  "High school graduate or lower",
-  "Some college education but no 4-year college degree",
-  "4-year college graduate or higher",
-  "Non metro",
-  "Large metro",
-  "Small-medium metro"
-)
+group.colors <- get_group_colors()
 
 plots <- lapply(plots, function(g) {
   g +
@@ -180,5 +169,6 @@ g_combined <- grid.arrange(
   layout_matrix = lay
 )
 
+as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
 ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS4.png"), dpi = 300, g_combined, height = 4, width = 8)
