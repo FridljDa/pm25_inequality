@@ -123,6 +123,14 @@ hr <- rbind(hr_race_specific, hr_race_uniform)
 rm(hr_race_specific, hr_race_uniform)
 
 hr$max_age <- 150
+
+anti_join <- diagnose_join_issues(df1 = pm_summ,
+                                  df2 = hr,
+                                  join_cols = c("Race", "Hispanic.Origin"))
+if(nrow(anti_join) > 0){
+  warning("diagnose_join_issues() in 21_calc_attr_burd_di.R: pm_summ, hr")
+}
+
 paf_di <- inner_join_age_right_outer(pm_summ,
   hr,
   by = c("Race", "Hispanic.Origin")

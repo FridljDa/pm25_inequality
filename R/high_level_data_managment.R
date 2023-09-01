@@ -153,6 +153,9 @@ read_data <- function(path) {
     return(df2)
   }
 
+  df <- df %>%
+    dplyr::mutate(across(where(is.factor), droplevels))
+
   return(df)
 }
 
@@ -259,54 +262,5 @@ run_script <- function(script, args = "") {
   print(paste("Time taken to run script", script, ":", as.numeric(end_time - start_time, "secs"), "seconds"))
 }
 
-#' Diagnose join issues between two data frames
-#'
-#' @param df1 A data frame to be joined
-#' @param df2 Another data frame to be joined
-#' @param join_cols A character vector specifying the columns to join on
-#' @return A data frame after performing the required joins
-#' @examples
-#' diagnose_join_issues(df1, df2, c("col1", "col2"))
-diagnose_join_issues <- function(df1, df2, join_cols) {
 
-  # Try to get the names of df1 and df2, fall back to default names if it fails
-  df1_name <- tryCatch(deparse(substitute(df1)), error = function(e) "df1")
-  df2_name <- tryCatch(deparse(substitute(df2)), error = function(e) "df2")
-
-  # Perform anti_join to identify unjoinable rows
-  anti_joined <- anti_join(df1, df2, by = join_cols)
-
-  # Check if there are unjoinable rows
-  if (nrow(anti_joined) > 0) {
-
-    # Generate informative warning messages
-    warning(paste("In diagnose_join_issues():", df1_name, "and", df2_name, "are not joinable in", nrow(anti_joined), "rows."))
-
-    # Identify which columns have problematic values
-    for (col in join_cols) {
-      unique_anti_joined_values <- unique(anti_joined[[col]])
-      unique_df1_values <- unique(df1[[col]])
-      unique_df2_values <- unique(df2[[col]])
-
-      not_in_df1 <- setdiff(unique_anti_joined_values, unique_df1_values)
-      not_in_df2 <- setdiff(unique_anti_joined_values, unique_df2_values)
-
-      if (length(not_in_df1) > 0) {
-        warning(paste("Column '", col, "' has values not found in", df1_name, ":", paste(head(not_in_df1, 10), collapse = ", ")))
-      }
-
-      if (length(not_in_df2) > 0) {
-        warning(paste("Column '", col, "' has values not found in", df2_name, ":", paste(head(not_in_df2, 10), collapse = ", ")))
-      }
-    }
-
-    # Show first few unjoinable rows for diagnostic purposes
-    warning("First few unjoinable rows:")
-    print(head(anti_joined))
-  }
-
-  # Your main logic here
-
-  return(anti_joined)
-}
 
