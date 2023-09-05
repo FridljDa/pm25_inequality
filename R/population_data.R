@@ -129,7 +129,7 @@ is_partition <- function(df) {
   max_val <- max(df$max_age)
 
   # Check for gaps and overlaps
-  for (i in 1:(nrow(df) - 1)) {
+  for (i in seq_len(nrow(df) - 1)) {
     if (df$max_age[i] + 1 != df$min_age[i + 1]) {
       return(FALSE)
     }
