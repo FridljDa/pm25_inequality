@@ -181,11 +181,20 @@ pop.summary <- pop.summary %>% filter(min_age >= 25)
 
 pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
 #check if is partition
-result <- pop.summary %>%
-  group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
-  nest() %>%
-  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
-  unnest(cols = c(is_partition))
+sanity_check <- pop.summary %>%
+    group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
+    nest() %>%
+    mutate(has_overlaps = map(data, ~ has_overlaps(.x))) %>%
+    unnest(cols = c(has_overlaps))
+
+if(any(sanity_check$has_overlaps)){
+  stop("in 17_popsum_educ.R, pop.summary has overlaps")
+}
+#result <- pop.summary %>%
+#  group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
+#  nest() %>%
+#  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
+#  unnest(cols = c(is_partition))
 
 print(paste("written file to", pop.summary.dirX))
 write.csv(pop.summary, pop.summary.dirX, row.names = FALSE)

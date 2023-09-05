@@ -143,3 +143,33 @@ is_partition <- function(df) {
   return(TRUE)
 }
 
+#' Check if the given data.frame has overlapping age intervals
+#'
+#' @param df A data.frame with columns "min_age" and "max_age"
+#' @return A boolean value indicating if the data.frame has overlapping age intervals.
+#' @export
+#' @examples
+#' df <- data.frame(min_age = c(25, 30, 35, 40), max_age = c(29, 34, 39, 44))
+#' has_overlaps(df)
+has_overlaps <- function(df) {
+  require(dplyr)
+
+  # Check if data.frame has the required columns
+  if (!all(c("min_age", "max_age") %in% names(df))) {
+    stop("The data.frame must have 'min_age' and 'max_age' columns.")
+  }
+
+  # Sort by min_age using dplyr
+  df <- df %>% arrange(min_age)
+
+  # Create a new column with the 'min_age' from the next row
+  df <- df %>% mutate(next_min = lead(min_age))
+
+  # Check for overlaps
+  overlaps <- any(df$max_age >= df$next_min, na.rm = TRUE)
+
+  return(overlaps)
+}
+
+
+
