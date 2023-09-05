@@ -73,6 +73,8 @@ if(year <= 2008){
 
 if (agr_by != "county") {
   tic("marginalised svi and rural_urban class info to total_burden")
+  cat("marginalised svi and rural_urban class info to attr_burden 1-starting\n")
+  tic("marginalised svi and rural_urban class info to attr_burden 1")
   total_burden_with_rural_urban_class <- total_burden %>%
     group_by_at(setdiff(
       colnames(total_burden),
@@ -80,7 +82,10 @@ if (agr_by != "county") {
     )) %>%
     summarise(value = sum(value)) %>%
     mutate(rural_urban_class = as.factor(666))
+  toc()
 
+  cat("marginalised svi and rural_urban class info to attr_burden 2-starting\n")
+  tic("marginalised svi and rural_urban class info to attr_burden 2")
   total_burden_with_svi_bin <- total_burden %>%
     group_by_at(setdiff(
       colnames(total_burden),
@@ -88,7 +93,10 @@ if (agr_by != "county") {
     )) %>%
     summarise(value = sum(value)) %>%
     mutate(svi_bin = as.factor(666))
+  toc()
 
+  cat("marginalised svi and rural_urban class info to attr_burden 3-starting\n")
+  tic("marginalised svi and rural_urban class info to attr_burden 3")
   total_burden_with_all <- total_burden %>%
     group_by_at(setdiff(
       colnames(total_burden),
@@ -96,6 +104,7 @@ if (agr_by != "county") {
     )) %>%
     summarise(value = sum(value)) %>%
     mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
+  toc()
 
   total_burden <- rbind(
     total_burden_with_rural_urban_class,

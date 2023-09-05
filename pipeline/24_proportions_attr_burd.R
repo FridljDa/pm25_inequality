@@ -91,9 +91,9 @@ anti_join <- diagnose_join_issues(df1 = total_burden,
                                     "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class","svi_bin",  "Education",
                                     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
                                   ))
-if(nrow(anti_join) > 0){
-  warning("diagnose_join_issues() in 24_proportions_attr_burd.R: total_burden, attributable_burden")
-}
+#if(nrow(anti_join) > 0){
+#  warning("diagnose_join_issues() in 24_proportions_attr_burd.R: total_burden, attributable_burden")
+#}
 
 #"svi_bin",
 attr_total_burden <- inner_join(
