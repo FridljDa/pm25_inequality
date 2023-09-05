@@ -34,7 +34,8 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   if(agr_by != "county"){
     pop_summary2 <- pop_summary2 %>%
       filter(!(Education == 666 & rural_urban_class == 666) |
-               !(Education == 666 & svi_bin == 666)) #rural_urban_class == 666 &
+               !(Education == 666 & svi_bin == 666)) %>%
+      filter(!(Education != 666 & Race != "All"))#rural_urban_class == 666 &
   }else{
     pop_summary2 <- pop_summary2 %>%
       mutate(county = FIPS.code,
@@ -59,8 +60,7 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
   pop_summary <- pop_summary %>%
-    mutate_at(c("rural_urban_class", "svi_bin", "Education"), as.factor) %>%
-    mutate(source2 = NULL)
+    mutate_at(c("rural_urban_class", "svi_bin", "Education"), as.factor)
 
   if(agr_by == "county") pop_summary <- pop_summary %>% select(-rural_urban_class, -svi_bin)
 
@@ -99,17 +99,30 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   }
 
   if("svi_bin" %in% colnames(pop_summary)) pop_summary <- pop_summary %>% filter(svi_bin != "Unknown")
-  #check
+
+  #filter out rows, which are also available in more granular
+  pop_summary <- pop_summary %>%
+    group_by(across(-all_of(c("Population", "min_age", "max_age", "source2")))) %>%
+    arrange(min_age, max_age) %>%
+    filter(!(min_age <= lag(min_age) & lag(max_age) <= max_age) | is.na(lag(min_age))) %>%
+    ungroup()
 
   sanity_check <- pop_summary %>%
-    group_by(across(-all_of(c("Population", "min_age", "max_age")))) %>%
+    group_by(across(-all_of(c("Population", "min_age", "max_age", "source2")))) %>%
     nest() %>%
-    mutate(has_overlaps = map(data, ~ has_overlaps(.x))) %>%
-    unnest(cols = c(has_overlaps))
+    mutate(is_partition = map(data, ~ is_partition(.x))) %>%
+    unnest(cols = c(is_partition)) %>%
+    as.data.frame()
 
-  if(any(sanity_check$has_overlaps)){
-    stop("in population_data.R, pop.summary has overlaps")
+  if(any(!sanity_check$is_partition)){
+    browser()
+    #diff_df <- anti_join(pop_summary, pop_summary_filtered)
+    #test <- pop_summary %>% filter(svi_bin == 1 & Race == "All" & Education == "666")
+    stop("in population_data.R, pop.summary has not is_partition")
   }
+
+  pop_summary <- pop_summary %>%
+    mutate(source2 = NULL)
 
   return(pop_summary)
 }
@@ -157,7 +170,7 @@ is_partition <- function(df) {
 #' @return A boolean value indicating if the data.frame has overlapping age intervals.
 #' @export
 #' @examples
-#' df <- data.frame(min_age = c(25, 30, 35, 40), max_age = c(29, 34, 39, 44))
+#' df <- data.frame(min_age = c(25, 26), max_age = c(25, 26))
 #' has_overlaps(df)
 has_overlaps <- function(df) {
   require(dplyr)
@@ -178,6 +191,3 @@ has_overlaps <- function(df) {
 
   return(overlaps)
 }
-
-
-
