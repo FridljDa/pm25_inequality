@@ -102,7 +102,7 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   #check
 
   sanity_check <- pop_summary %>%
-    group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
+    group_by(across(-all_of(c("Population", "min_age", "max_age")))) %>%
     nest() %>%
     mutate(has_overlaps = map(data, ~ has_overlaps(.x))) %>%
     unnest(cols = c(has_overlaps))
