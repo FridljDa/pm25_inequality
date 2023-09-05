@@ -100,6 +100,7 @@ if(rlang::is_empty(args) & FALSE){
 
 
 # Add additional columns for rural/urban classification and social vulnerability index
+cat("add svi bin and rural urban class to pop.summary-start")
 tic("added svi bin and rural urban class to pop.summary")
 pop.summary <- pop.summary %>%
   mutate(Year = year) %>%
@@ -109,6 +110,8 @@ pop.summary <- pop.summary %>%
 toc()
 #print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
+
+cat("add summarise svi_bin and rural_urban_class out in pop.summary-start")
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
 # Determine the population column name
