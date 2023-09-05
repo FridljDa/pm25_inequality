@@ -63,9 +63,9 @@ if (file.exists(pop.summary.dirX)) {
 
 census_meta <- file.path(censDir, "meta", paste0("cens_meta_", toString(year), ".csv")) %>% read_data()
 
-if(rlang::is_empty(args) & TRUE){
-  states <- states[1,]
-}
+#if(rlang::is_empty(args) & TRUE){
+#  states <- states[1,]
+#}
 
 # Begin a loop to summarize population data for each state in the given year
 # agr_by specifies the level at which to aggregate the data (e.g., "county")
@@ -93,9 +93,9 @@ pop.summary = foreach(i = seq_len(nrow(states)), .combine = rbind) %do% {
   return(pop.summary)
 }
 
-if(rlang::is_empty(args) & FALSE){
-  pop.summary <- pop.summary %>% sample_n(20)
-}
+#if(rlang::is_empty(args) & FALSE){
+#  pop.summary <- pop.summary %>% sample_n(20)
+#}
 
 
 
