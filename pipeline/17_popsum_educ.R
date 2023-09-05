@@ -30,7 +30,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2010
+  year <- 2016
   agr_by <- "nation"
 
   dataDir <- "data"
@@ -63,7 +63,10 @@ if (file.exists(pop.summary.dirX)) {
 
 census_meta <- file.path(censDir, "meta", paste0("cens_meta_", toString(year), ".csv")) %>% read_data()
 
-#states <- states[1:5,]
+if(rlang::is_empty(args) & TRUE){
+  states <- states[1,]
+}
+
 # Begin a loop to summarize population data for each state in the given year
 # agr_by specifies the level at which to aggregate the data (e.g., "county")
 tic(paste("summarized population data in", year, "by", agr_by))
@@ -90,7 +93,10 @@ pop.summary = foreach(i = seq_len(nrow(states)), .combine = rbind) %do% {
   return(pop.summary)
 }
 
-#pop.summary <- pop.summary %>% sample_n(20)
+if(rlang::is_empty(args) & FALSE){
+  pop.summary <- pop.summary %>% sample_n(20)
+}
+
 
 
 # Add additional columns for rural/urban classification and social vulnerability index
