@@ -1,5 +1,9 @@
 
-suppressMessages({library(tidyr)})
+suppressMessages({
+  library(tidyr)
+  library(purrr)
+  })
+
 get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_population_summary"){
   #---read population data----
   # Mapping Summary:
@@ -97,11 +101,15 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   if("svi_bin" %in% colnames(pop_summary)) pop_summary <- pop_summary %>% filter(svi_bin != "Unknown")
   #check
 
-  result <- pop_summary %>%
-    group_by(across(-all_of(c("Population", "min_age", "max_age")))) %>%
+  sanity_check <- pop_summary %>%
+    group_by(across(-all_of(c(pop_col, "min_age", "max_age")))) %>%
     nest() %>%
-    mutate(is_partition = map(data, ~ is_partition(.x))) %>%
-    unnest(cols = c(is_partition))
+    mutate(has_overlaps = map(data, ~ has_overlaps(.x))) %>%
+    unnest(cols = c(has_overlaps))
+
+  if(any(sanity_check$has_overlaps)){
+    stop("in population_data.R, pop.summary has overlaps")
+  }
 
   return(pop_summary)
 }
