@@ -122,11 +122,11 @@ attr_total_burden_prop_overall_burden <- attr_total_burden %>%
   )
 
 ### ---disparity to race-ethnicity----
-browser()
+#browser()
 # Race == "Black or African American" & Hispanic.Origin == "All Origins"
 group_variables <- setdiff(colnames(attr_total_burden), c("mean", "lower", "upper", "overall_total_burden", "Race", "Hispanic.Origin"))
 attr_total_burden_prop_of_difference <- attr_total_burden %>%
-  group_by_at(vars(all_of(group_variables))) %>%
+  group_by(across(all_of(group_variables))) %>%
   filter("Black or African American" %in% c(Race)) %>%
   mutate(
     mean = 100 * (mean - mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
