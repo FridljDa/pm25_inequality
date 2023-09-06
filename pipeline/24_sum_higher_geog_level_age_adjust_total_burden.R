@@ -14,8 +14,8 @@ suppressMessages({pkgload::load_all()})
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  agr_by <- "nation"
-  year <- 2010
+  agr_by <- "STATEFP"
+  year <- 2016
 } else {
   year <- args[1]
   agr_by <- args[10]
@@ -76,12 +76,13 @@ total_burden <- total_burden %>%
 
 
 if (agr_by != "county") {
+  browser()
   cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
   total_burden <- rbind(
     total_burden %>% mutate(rural_urban_class = as.factor(666)),
     total_burden %>% mutate(svi_bin = as.factor(666)),
-    total_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666)),
+    total_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666))
   )
   total_burden <- total_burden %>%
     group_by_at(setdiff(
