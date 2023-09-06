@@ -46,6 +46,7 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
 
   # Perform anti_join to identify unjoinable rows
   anti_joined <- anti_join(df1, df2, by = join_cols)
+  full_joined <- full_join(df1, df2, by = join_cols)
 
   if (nrow(anti_joined) == 0) {
     return(anti_joined)
@@ -53,7 +54,9 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
   # Check if there are unjoinable rows
 
   # Generate informative warning messages
-  warning(paste("In diagnose_join_issues():", df1_name, "and", df2_name, "are not joinable in", nrow(anti_joined), "rows."))
+  warning(paste("In diagnose_join_issues():", df1_name, "and",
+                df2_name, "are not joinable in", nrow(anti_joined), "rows of",
+                nrow(full_joined), "rows."))
 
   problem_identified <- FALSE
   # Identify which columns have problematic values
@@ -115,7 +118,7 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
       }
     }
   }
-  browser()
+
   # Show first few unjoinable rows for diagnostic purposes
   warning("First few unjoinable rows:")
   print(head(anti_joined))

@@ -188,6 +188,7 @@ sanity_check <- pop.summary %>%
     unnest(cols = c(has_overlaps))
 
 if(any(sanity_check$has_overlaps)){
+
   stop("in 17_popsum_educ.R, pop.summary has overlaps")
 }
 #result <- pop.summary %>%

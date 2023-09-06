@@ -146,6 +146,16 @@ g5 <- g5 + ylim(min2, max2)
 g6 <- g6 + ylim(min2, max2)
 g8 <- g8 + ylim(min2, max2)
 
+g1 <- g1 + xlim(1990, 2016)
+g2 <- g2 + xlim(1990, 2016)
+g3 <- g3 + xlim(1990, 2016)
+g7 <- g7 + xlim(1990, 2016)
+
+g4 <- g4 + xlim(1990, 2016)
+g5 <- g5 + xlim(1990, 2016)
+g6 <- g6 + xlim(1990, 2016)
+g8 <- g8 + xlim(1990, 2016)
+
 # g6 <- g6 + scale_y_continuous(breaks = pretty_breaks())
 
 plots <- list(g1, g2, g3, g4, g5, g6) # , g7, g8

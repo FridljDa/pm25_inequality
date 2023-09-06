@@ -39,7 +39,7 @@ dir.create(summaryHigherDir, recursive = T, showWarnings = F)
 summaryHigherDir <- file.path(summaryHigherDir, paste0("attr_burden_age_adjusted_", year, ".csv"))
 
 if (file.exists(summaryHigherDir)) {
-  #quit()
+  quit()
 }
 ## --- read attr burden----
 attr_burdenDir <- file.path(attr_burdenDir, "county", "nvss")
@@ -80,6 +80,11 @@ if(year <= 2008){
   attr_burden <- attr_burden %>%
     filter(Education == "666")
 }
+
+attr_burden <- attr_burden %>%
+  filter(!(Education != "666" & Race != "All" & svi_bin != "666")) %>%
+  filter(!(Education != "666" & Race != "All" & rural_urban_class != "666"))
+
 #attr_burden <- attr_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)

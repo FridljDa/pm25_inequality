@@ -115,7 +115,7 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
     as.data.frame()
 
   if(any(!sanity_check$is_partition)){
-    browser()
+    #browser()
     #diff_df <- anti_join(pop_summary, pop_summary_filtered)
     #test <- pop_summary %>% filter(svi_bin == 1 & Race == "All" & Education == "666")
     stop("in population_data.R, pop.summary has not is_partition")
@@ -157,7 +157,10 @@ is_partition <- function(df) {
   }
 
   # Check if the data frame covers the whole interval [min(min_age), max(max_age)]
-  if (df$min_age[1] != min_val || df$max_age[nrow(df)] != max_val) {
+  #if (df$min_age[1] != min_val || df$max_age[nrow(df)] != max_val) {
+  #  return(FALSE)
+  #}
+  if (df$min_age[1] != 25 || df$max_age[nrow(df)] != 150) {
     return(FALSE)
   }
 
