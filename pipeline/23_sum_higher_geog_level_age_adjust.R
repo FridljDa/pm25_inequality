@@ -94,7 +94,7 @@ if (agr_by != "county") {
   attr_burden <- rbind(
     attr_burden %>% mutate(rural_urban_class = as.factor(666)),
     attr_burden %>% mutate(svi_bin = as.factor(666)),
-    attr_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666)),
+    attr_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666))
   )
   attr_burden <- attr_burden %>%
     group_by_at(setdiff(
