@@ -76,52 +76,66 @@ total_burden <- total_burden %>%
 
 
 if (agr_by != "county") {
+  cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
-  cat("marginalised svi and rural_urban class info to attr_burden 1-starting\n")
-  tic("marginalised svi and rural_urban class info to attr_burden 1")
-  total_burden_with_rural_urban_class <- total_burden %>%
-    group_by_at(setdiff(
-      colnames(total_burden),
-      c("rural_urban_class", "value")
-    )) %>%
-    summarise(value = sum(value)) %>%
-    mutate(rural_urban_class = as.factor(666))
-  toc()
-
-  cat("marginalised svi and rural_urban class info to attr_burden 2-starting\n")
-  tic("marginalised svi and rural_urban class info to attr_burden 2")
-  total_burden_with_svi_bin <- total_burden %>%
-    group_by_at(setdiff(
-      colnames(total_burden),
-      c("svi_bin", "value")
-    )) %>%
-    summarise(value = sum(value)) %>%
-    mutate(svi_bin = as.factor(666))
-  toc()
-
-  cat("marginalised svi and rural_urban class info to attr_burden 3-starting\n")
-  tic("marginalised svi and rural_urban class info to attr_burden 3")
-  total_burden_with_all <- total_burden %>%
-    group_by_at(setdiff(
-      colnames(total_burden),
-      c("rural_urban_class", "svi_bin", "value")
-    )) %>%
-    summarise(value = sum(value)) %>%
-    mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
-  toc()
-
   total_burden <- rbind(
-    total_burden_with_rural_urban_class,
-    total_burden_with_svi_bin,
-    total_burden_with_all
+    total_burden %>% mutate(rural_urban_class = as.factor(666)),
+    total_burden %>% mutate(svi_bin = as.factor(666)),
+    total_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666)),
   )
-
-  rm(
-    total_burden_with_rural_urban_class,
-    total_burden_with_svi_bin,
-    total_burden_with_all
-  )
+  total_burden <- total_burden %>%
+    group_by_at(setdiff(
+      colnames(total_burden),
+      c("value")
+    )) %>%
+    summarise(value = sum(value), .groups = 'drop')
   toc()
+
+  #cat("marginalised svi and rural_urban class info to attr_burden 1-starting\n")
+  #tic("marginalised svi and rural_urban class info to attr_burden 1")
+  #total_burden_with_rural_urban_class <- total_burden %>%
+  #  group_by_at(setdiff(
+  #    colnames(total_burden),
+  #    c("rural_urban_class", "value")
+  #  )) %>%
+  #  summarise(value = sum(value)) %>%
+  #  mutate(rural_urban_class = as.factor(666))
+  #toc()
+
+  #cat("marginalised svi and rural_urban class info to attr_burden 2-starting\n")
+  #tic("marginalised svi and rural_urban class info to attr_burden 2")
+  #total_burden_with_svi_bin <- total_burden %>%
+  #  group_by_at(setdiff(
+  #    colnames(total_burden),
+  #    c("svi_bin", "value")
+  #  )) %>%
+  #  summarise(value = sum(value)) %>%
+  #  mutate(svi_bin = as.factor(666))
+  #toc()
+
+  #cat("marginalised svi and rural_urban class info to attr_burden 3-starting\n")
+  #tic("marginalised svi and rural_urban class info to attr_burden 3")
+  #total_burden_with_all <- total_burden %>%
+  #  group_by_at(setdiff(
+  #    colnames(total_burden),
+  #    c("rural_urban_class", "svi_bin", "value")
+  #  )) %>%
+  #  summarise(value = sum(value)) %>%
+  #  mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
+  #toc()
+
+  #total_burden <- rbind(
+  #  total_burden_with_rural_urban_class,
+  #  total_burden_with_svi_bin,
+  #  total_burden_with_all
+  #)
+
+  #rm(
+  #  total_burden_with_rural_urban_class,
+  #  total_burden_with_svi_bin,
+  #  total_burden_with_all
+  #)
+  #toc()
 } else {
   #total_burden$rural_urban_class <- NA
   #total_burden$svi_bin <- NA
