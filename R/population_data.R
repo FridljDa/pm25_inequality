@@ -110,15 +110,15 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   sanity_check <- pop_summary %>%
     group_by(across(-all_of(c("Population", "min_age", "max_age", "source2")))) %>%
     nest() %>%
-    mutate(is_partition = map(data, ~ is_partition(.x))) %>%
-    unnest(cols = c(is_partition)) %>%
+    mutate(has_overlaps = map(data, ~ has_overlaps(.x))) %>%
+    unnest(cols = c(has_overlaps)) %>%
     as.data.frame()
 
-  if(any(!sanity_check$is_partition)){
+  if(any(sanity_check$has_overlaps)){
     #browser()
     #diff_df <- anti_join(pop_summary, pop_summary_filtered)
     #test <- pop_summary %>% filter(svi_bin == 1 & Race == "All" & Education == "666")
-    stop("in population_data.R, pop.summary has not is_partition")
+    stop("in population_data.R, pop.summary has not has_overlaps")
   }
 
   pop_summary <- pop_summary %>%
