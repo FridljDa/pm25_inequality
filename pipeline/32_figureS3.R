@@ -53,8 +53,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
 pm_summ <- pm_summ %>%
-  filter(Region == "United States") #TODO
-
+  filter(Region == "United States")
 
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == scenarioI)
@@ -91,7 +90,7 @@ g3 <- g3 + ylim(0, max1)
 plots <- list(g1, g2, g3)
 rm(min1, max1)
 rm(
-  pm_summ1, pm_summ2, pm_summ3,
+  #pm_summ1, pm_summ2, pm_summ3,
   g1, g2, g3
 )
 #----formatting------

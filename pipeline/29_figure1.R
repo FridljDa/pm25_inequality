@@ -258,6 +258,7 @@ t7 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
   textGrob("PM2.5-attributable mortality rate", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"))
 )
+
 t8 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
   textGrob("Percentage of mortality \n attributable to PM2.5", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"))
