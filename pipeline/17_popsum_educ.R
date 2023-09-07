@@ -30,8 +30,8 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2016
-  agr_by <- "nation"
+  year <- 2011
+  agr_by <- "STATEFP"
 
   dataDir <- "data"
   tmpDir <- "data/tmp"
@@ -100,7 +100,7 @@ pop.summary = foreach(i = seq_len(nrow(states)), .combine = rbind) %do% {
 
 
 # Add additional columns for rural/urban classification and social vulnerability index
-cat("add svi bin and rural urban class to pop.summary-start")
+cat("add svi bin and rural urban class to pop.summary-start\n")
 tic("added svi bin and rural urban class to pop.summary")
 pop.summary <- pop.summary %>%
   mutate(Year = year) %>%
@@ -111,7 +111,7 @@ toc()
 #print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
 
-cat("add summarise svi_bin and rural_urban_class out in pop.summary-start")
+cat("add summarise svi_bin and rural_urban_class out in pop.summary-start\n")
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
 # Determine the population column name
@@ -188,7 +188,6 @@ sanity_check <- pop.summary %>%
     unnest(cols = c(has_overlaps))
 
 if(any(sanity_check$has_overlaps)){
-
   stop("in 17_popsum_educ.R, pop.summary has overlaps")
 }
 #result <- pop.summary %>%
@@ -197,6 +196,6 @@ if(any(sanity_check$has_overlaps)){
 #  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
 #  unnest(cols = c(is_partition))
 
-print(paste("written file to", pop.summary.dirX))
+cat("written file to", pop.summary.dirX)
 write.csv(pop.summary, pop.summary.dirX, row.names = FALSE)
 toc()
