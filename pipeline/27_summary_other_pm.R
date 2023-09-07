@@ -9,6 +9,7 @@
 
 
 # load packages, install if missing
+library(tidyr)
 packages <- c("dplyr", "magrittr", "data.table", "testthat", "tictoc", "stats", "matrixStats")
 
 for (p in packages) {
@@ -49,15 +50,19 @@ if (file.exists(pm_summDir)) {
 
 tic(paste("summarized pm data"))
 #agr_bys <- setdiff("STATEFP", "nation")
- agr_bys <- list.files(dem_agrDir)
+agr_bys <- list.files(dem_agrDir)
 # agr_bys <- "nation" #TODO löschen
 pm_summ <- lapply(agr_bys, function(agr_by) {
   tic(paste("summarized pm data by", agr_by))
-  years <- list.files(file.path(dem_agrDir, agr_by))
+  #years <- list.files(file.path(dem_agrDir, agr_by))
+  years <- 1990:2016
   pm_summ <- lapply(years, function(year) {
-    meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
+    meta <- read.csv(paste0("data/05_demog/meta/cens_meta_", year, ".csv"))
+    #meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year)))
     files <- list.files(file.path(dem_agrDir, agr_by, year))
+
     pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+
     if (agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
 
     if (nrow(pm_summ) == 0) {
@@ -78,7 +83,7 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
       summarise(pop_size = sum(pop_size)) %>%
       mutate(min_age = 65, max_age = 150)
 
-    pm_summ_over <- rbind(pm_summ_over25, pm_summ_over65)
+    pm_summ <- rbind(pm_summ_over25, pm_summ_over65)
 
     pm_summ <- pm_summ %>%
       group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
@@ -87,9 +92,9 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
         mean = weighted.mean(pm, pop_size),
         median = matrixStats::weightedMedian(pm, pop_size)
       )
-
-    pm_summ
     toc()
+    return(pm_summ)
+
   }) %>% rbindlist()
   # make compatible
   pm_summ <- pm_summ %>% rename("Region" := !!agr_by)
@@ -105,7 +110,7 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 #            median = matrixStats::weightedMedian(pm, pop_size))
 
 pm_summ <- pm_summ %>%
-  pivot_longer(c(mean, median),
+  tidyr::pivot_longer(c(mean, median),
     names_to = "pm_metric"
   )
 
@@ -157,6 +162,7 @@ levels(pm_summ$Ethnicity) <- rindreplace7
 rindreplace8 <- list("Large metro" = 1, "Small-medium metro" = 2, "Non metro" = 3, "All" = 666, "Unknown" = "Unknown")
 levels(pm_summ$rural_urban_class) <- rindreplace8
 
+cat("written pm_summ to", pm_summDir, "\n")
 fwrite(pm_summ, pm_summDir)
 rm(rindreplace1, rindreplace2, rindreplace3, rindreplace7, rindreplace8)
 toc()

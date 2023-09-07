@@ -15,6 +15,7 @@ packages <- c(
   "dplyr", "stringr", "tidyr",
   "gridExtra", "grid", "lattice"
 )
+suppressMessages({pkgload::load_all()})
 
 for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
