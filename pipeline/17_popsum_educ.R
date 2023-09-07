@@ -115,7 +115,6 @@ cat("add summarise svi_bin and rural_urban_class out in pop.summary-start\n")
 tic("add summarise svi_bin and rural_urban_class out in pop.summary")
 # For the 'all' summary
 # Determine the population column name
-# Determine the population column name
 pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
 
 # Create the 'all' summary
@@ -196,6 +195,7 @@ if(any(sanity_check$has_overlaps)){
 #  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
 #  unnest(cols = c(is_partition))
 
-cat("written file to", pop.summary.dirX)
+
+cat("written file to", pop.summary.dirX,"\n")
 write.csv(pop.summary, pop.summary.dirX, row.names = FALSE)
 toc()

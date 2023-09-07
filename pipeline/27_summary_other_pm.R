@@ -9,7 +9,7 @@
 
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat", "tidyverse", "tictoc", "stats", "matrixStats")
+packages <- c("dplyr", "magrittr", "data.table", "testthat", "tictoc", "stats", "matrixStats")
 
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -28,13 +28,13 @@ pop.summary.dir <- args[4]
 summaryDir <- args[7]
 
 # TODO delete
-if (rlang::is_empty(args)) {
+#if (rlang::is_empty(args)) {
   tmpDir <- "data/tmp"
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   pop.summary.dir <- "data/12_population_summary"
   summaryDir <- "data/17_summary"
-}
+#}
 
 
 states <- file.path(tmpDir, "states.csv") %>%
@@ -48,8 +48,8 @@ if (file.exists(pm_summDir)) {
 }
 
 tic(paste("summarized pm data"))
-agr_bys <- setdiff("STATEFP", "nation")
-# agr_bys <- list.files(dem_agrDir)
+#agr_bys <- setdiff("STATEFP", "nation")
+ agr_bys <- list.files(dem_agrDir)
 # agr_bys <- "nation" #TODO löschen
 pm_summ <- lapply(agr_bys, function(agr_by) {
   tic(paste("summarized pm data by", agr_by))
