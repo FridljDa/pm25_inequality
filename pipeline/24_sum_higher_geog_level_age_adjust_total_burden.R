@@ -67,16 +67,10 @@ if(year <= 2008){
     filter(Education == "666")
 }
 
-total_burden <- total_burden %>%
-  filter(!(Education != "666" & Race != "All" & svi_bin != "666")) %>%
-  filter(!(Education != "666" & Race != "All" & rural_urban_class != "666"))
-
 #total_burden <- total_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 
-
 if (agr_by != "county") {
-  browser()
   cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
   total_burden <- rbind(
@@ -142,6 +136,10 @@ if (agr_by != "county") {
   #total_burden$svi_bin <- NA
 }
 
+#filter out combination
+total_burden <- total_burden %>%
+  filter(!(Education != "666" & Race != "All" &
+             (rural_urban_class != "666" | svi_bin != "666")))
 
 ## ----group out counties---
 

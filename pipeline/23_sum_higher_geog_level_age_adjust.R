@@ -81,10 +81,6 @@ if(year <= 2008){
     filter(Education == "666")
 }
 
-attr_burden <- attr_burden %>%
-  filter(!(Education != "666" & Race != "All" & svi_bin != "666")) %>%
-  filter(!(Education != "666" & Race != "All" & rural_urban_class != "666"))
-
 #attr_burden <- attr_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 #attr_burden <- attr_burden %>% sample_n(20)
@@ -185,7 +181,10 @@ if (agr_by != "county") {
 }
 
 
-
+#filter out combination
+attr_burden <- attr_burden %>%
+  filter(!(Education != "666" & Race != "All" &
+             (rural_urban_class != "666" | svi_bin != "666")))
 
 ## ----group out counties---
 
