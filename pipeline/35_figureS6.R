@@ -41,8 +41,10 @@ if (rlang::is_empty(args)) {
   methodI <- "di_gee"
 }
 
-file_list <- list.files("data/17_summary")
-file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
+file_list <- list.files(summaryDir)
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+file_list <- file.path(summaryDir, file_list)
 attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)

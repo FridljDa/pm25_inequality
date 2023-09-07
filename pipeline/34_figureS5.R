@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -36,9 +36,9 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
-  
+
   min_ageI <- 25
-  
+
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -58,7 +58,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & agr_by == "STATEFP" & pm_metric == "mean" & scenario == scenarioI)
 
-pm_summ <- pm_summ %>% 
+pm_summ <- pm_summ %>%
   filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All") %>%
   select(Year, Education, Ethnicity, rural_urban_class, value, Region)
 
@@ -66,20 +66,20 @@ all_burden <- all_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            source == "National Vital Statistics System" & agr_by == "STATEFP")
 
-all_burden <- all_burden %>% 
+all_burden <- all_burden %>%
   filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All") %>%
-  select(Year, Education, Ethnicity, rural_urban_class, overall_value, Region)
+  select(Year, Education, Ethnicity, rural_urban_class, overall_value = value, Region)
 
 all_burden_pm_summ <- inner_join(pm_summ, all_burden,
-                                 by = c("Year", "Education", "Ethnicity", "rural_urban_class", "Region"))  
+                                 by = c("Year", "Education", "Ethnicity", "rural_urban_class", "Region"))
 
 g1 <- ggplot(all_burden_pm_summ, aes(x = value, y = overall_value, color = Year)) +
   geom_point()+
-  labs( 
-       x= "Population-weighted mean PM2.5 exposure (\u03bcg/m^3)",    
+  labs(
+       x= "Population-weighted mean PM2.5 exposure (\u03bcg/m^3)",
        y= "Age-adjusted mortality\n per 100,000 from all causes") +
   theme(text = element_text(size=15))
 
 g1
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS5.png"), dpi = 300, g1, height = 4, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS5.png"), dpi = 300, g1, height = 4, width = 8)

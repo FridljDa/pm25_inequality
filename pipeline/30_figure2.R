@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(ggpubr)
-suppressMessages({pkgload::load_all()})
+
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
@@ -35,9 +35,9 @@ if (rlang::is_empty(args)) {
 
 file_list <- list.files("data/17_summary")
 file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = T, fill = TRUE)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
-all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
+all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
 all_burd <- all_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
@@ -51,8 +51,8 @@ if(min_ageI == 65){
 
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    source == "National Vital Statistics System" & agr_by == "nation" & svi_bin == "All" &
-    Ethnicity != "All, All Origins" & rural_urban_class == "All" & Education == 666) # %>%
+    source == "National Vital Statistics System" & agr_by == "nation" &
+    Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "All" & Education == 666) # %>%
 # filter(Ethnicity != "White") #Year %in% c(2000, 2015) &
 
 all_burd <- all_burd %>%
@@ -61,7 +61,7 @@ all_burd <- all_burd %>%
 ## -- attributable burden---
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    attr == "attributable" & svi_bin == "All" &
+    attr == "attributable" &svi_bin == "All" &
     source == "National Vital Statistics System" & scenario == scenarioI & agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
     rural_urban_class == "All" & method %in% c("di_gee") & Ethnicity != "White")
 
@@ -74,7 +74,6 @@ attr_burd1 <- attr_burd %>%
   filter(measure3 %in% c("prop. of overall burden")) %>%
   select(Year, Ethnicity, measure3, mean, value) %>%
   mutate(xlab = "%")
-
 attr_burd2 <- attr_burd %>%
   filter(measure3 == "proportion of disparity to Black or African American attributable") %>%
   select(Year, Ethnicity, measure3, mean, value) %>%
@@ -99,7 +98,7 @@ attr_burd3 <- attr_burd3 %>%
 
 ### ---- combine -----
 # & Year %in% c(2000, 2015)
-attr_burd_combined <- rbindlist(list(attr_burd1, attr_burd2, attr_burd3), use.names = TRUE, fill = TRUE)
+attr_burd_combined <- rbindlist(list(attr_burd1, attr_burd2, attr_burd3), use.names = TRUE)
 
 attr_burd_combined <- attr_burd_combined %>%
   filter(Year %in% 2000:2015)
@@ -130,14 +129,9 @@ attr_burd_combined_wide <- attr_burd_combined %>%
   )
 
 ## ---plotting---
-attr_burd_combined <- attr_burd_combined %>%
-  #dplyr::mutate(across(where(is.factor), droplevels))
-  dplyr::mutate(measure3 = droplevels(measure3))
-
 attr_burdens <- split(attr_burd_combined, attr_burd_combined$measure3)
 
 plots <- lapply(attr_burdens, function(attr_burdens_i) {
-
   attr_burd_i_wide <- attr_burdens_i %>%
     pivot_wider(
       names_from = Year,
@@ -222,5 +216,5 @@ gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay,
 # gg_combined <- cowplot::plot_grid(g1, g3,g2, legend,  nrow = 2)
 as_ggplot(gg_combined)
 
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure2.png"), dpi = 300, gg_combined, height = 6, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.png"), dpi = 300, gg_combined, height = 6, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)

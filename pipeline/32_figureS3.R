@@ -38,7 +38,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 25
+  min_ageI <- 65
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -178,4 +178,4 @@ g_combined <- grid.arrange(
 as_ggplot(g_combined)
 
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS3.png"), dpi = 300, g_combined, height = 4, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS3.png"), dpi = 300, g_combined, height = 4, width = 8)

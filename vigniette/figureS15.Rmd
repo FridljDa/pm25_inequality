@@ -36,7 +36,7 @@ attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     attr == "attributable" & Ethnicity != "All, All Origins" &
     source == "National Vital Statistics System" & scenario == "real") %>%
-  filter(agr_by == "nation" & Education == 666 & rural_urban_class == "All" &
+  filter(agr_by == "nation" & Education == 666 & svi_bin == "All" & rural_urban_class == "All" &
     method %in% c("di_gee", "di_gee_white")  &
       measure3 == "prop. of overall burden" ) 
 

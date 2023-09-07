@@ -46,7 +46,8 @@ if (rlang::is_empty(args)) {
 }
 
 file_list <- list.files(summaryDir)
-file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file.path(summaryDir, file_list)
 attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
 all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
@@ -198,11 +199,11 @@ t2 <- textGrob("", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("high svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("high SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("middle svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0.5)
+  textGrob("middle SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0.5)
 ) # "Some college education but no 4-year college degree"
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
@@ -235,5 +236,5 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS36.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS36.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS36.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS36.pdf"), dpi = 300, g_combined, height = 9, width = 8)

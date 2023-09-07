@@ -68,7 +68,7 @@ options(bitmapType = "cairo")
 # source("theme.R")
 
 # theme_set(theme_bw( base_family = "Helvetica"))
-dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI)), recursive = T, showWarnings = F)
+dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI)), recursive = T, showWarnings = F)
 # attr_burd <-  attr_burd %>% filter (Year <= 2000)
 ### ----- read stuff----
 attr_burd <- attr_burd %>%
@@ -293,5 +293,5 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure1.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure1.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.pdf"), dpi = 300, g_combined, height = 9, width = 8)

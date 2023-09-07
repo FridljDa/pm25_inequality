@@ -163,15 +163,15 @@ t1 <- textGrob("Age-adjusted mortality rate per 100,000", rot = 90, gp = gpar(fo
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("high svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("high SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("middle svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("middle SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("low svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("low SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(
@@ -200,4 +200,4 @@ g_combined <- grid.arrange(
 g_combined
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figureS7_svi.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS7_svi.png"), dpi = 300, g_combined, height = 9, width = 8)

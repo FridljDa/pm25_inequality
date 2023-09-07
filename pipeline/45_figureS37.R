@@ -222,5 +222,5 @@ gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay,
 # gg_combined <- cowplot::plot_grid(g1, g3,g2, legend,  nrow = 2)
 as_ggplot(gg_combined)
 
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure2.png"), dpi = 300, gg_combined, height = 6, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.png"), dpi = 300, gg_combined, height = 6, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)
