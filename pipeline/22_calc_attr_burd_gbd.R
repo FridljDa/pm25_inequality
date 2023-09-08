@@ -12,7 +12,7 @@ suppressMessages(library("dplyr", character.only = T, warn.conflicts = FALSE, qu
 suppressMessages(library("magrittr", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("data.table", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("testthat", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library("tidyverse", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
+#suppressMessages(library("tidyverse", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("tictoc", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("MALDIquant", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 
@@ -176,13 +176,13 @@ rm(exp_rr)
 group_variable <- setdiff(colnames(attr_burden_gbd), c("matched_pm_level","attr", "label_cause", "age_group_id", "value", "paf"))
 
 #attr_burden_gbd <- attr_burden_gbd %>%
-#  split(list(attr_burden_gbd$Race, attr_burden_gbd$min_age, attr_burden_gbd$max_age, 
+#  split(list(attr_burden_gbd$Race, attr_burden_gbd$min_age, attr_burden_gbd$max_age,
 #             attr_burden_gbd$Hispanic.Origin, attr_burden_gbd$Education, attr_burden_gbd$measure1,
 #             attr_burden_gbd$measure2), drop=TRUE)
 
 attr_burden_gbd <- attr_burden_gbd %>%
   split(list(attr_burden_gbd$county), drop=TRUE)
-#, 
+#,
 print("expensive calculation in GBD")
 attr_burden_gbd <- lapply(attr_burden_gbd, function(attr_burden_gbd_i){
   #nrow(attr_burden_gbd %>%
@@ -191,7 +191,7 @@ attr_burden_gbd <- lapply(attr_burden_gbd, function(attr_burden_gbd_i){
   attr_burden_gbd_i <- attr_burden_gbd_i %>%
     left_join(exp_paf, by =c("matched_pm_level" = "exposure_spline", "label_cause",  "age_group_id")) %>%
     mutate(attr = paf*value)
-  
+
   attr_burden_gbd_i <- attr_burden_gbd_i %>%
     dplyr::group_by_at(vars(one_of(group_variable))) %>%
     dplyr::summarise(
@@ -207,7 +207,7 @@ print("done with expensive calculation in GBD")
 
 attr_burden_gbd <- attr_burden_gbd %>% rbindlist()
 ###----
-attr_burden_gbd <- attr_burden_gbd %>% 
+attr_burden_gbd <- attr_burden_gbd %>%
   mutate(method = "GBD",
          attr = "attributable")
 

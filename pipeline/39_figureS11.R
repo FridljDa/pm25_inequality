@@ -11,7 +11,7 @@ library(data.table)
 library(magrittr)
 library(dplyr)
 library(testthat)
-library(tidyverse)
+#library(tidyverse)
 
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
