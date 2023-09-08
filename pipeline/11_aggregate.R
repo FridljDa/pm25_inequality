@@ -195,31 +195,43 @@ if (agr_by != "county") {
     if (nrow(cens_agr) <= 0) {
       return(NULL)
     }
-    cens_agr_all <- cens_agr %>%
-      group_by(variable, scenario, pm) %>%
+    cens_agr <- rbind(
+      cens_agr %>% mutate(rural_urban_class = "666"),
+      cens_agr %>% mutate(svi_bin = "666"),
+      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666")
+    )
+
+    cens_agr <- cens_agr %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin, pm) %>%
       summarise(pop_size = sum(pop_size)) %>%
-      mutate(rural_urban_class = "666", svi_bin = "666") %>%
       group_by(variable, rural_urban_class, scenario, svi_bin) %>%
       mutate(prop = pop_size / sum(pop_size))
 
-    cens_agr_rural_urban_class <- cens_agr %>%
-      filter(!is.na(rural_urban_class) & rural_urban_class != "Unknown") %>%
-      group_by(variable, rural_urban_class, scenario, pm) %>%
-      summarise(pop_size = sum(pop_size)) %>%
-      mutate(svi_bin = "666") %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
-      mutate(prop = pop_size / sum(pop_size))
+    #cens_agr_all <- cens_agr %>%
+    #  group_by(variable, scenario, pm) %>%
+    #  summarise(pop_size = sum(pop_size)) %>%
+    #  mutate(rural_urban_class = "666", svi_bin = "666") %>%
+    #  group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+    #  mutate(prop = pop_size / sum(pop_size))
 
-    cens_agr_svi <- cens_agr %>%
-      filter(!is.na(svi_bin) & svi_bin != "Unknown") %>%
-      group_by(variable, svi_bin, scenario, pm) %>%
-      summarise(pop_size = sum(pop_size)) %>%
-      mutate(rural_urban_class = "666") %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
-      mutate(prop = pop_size / sum(pop_size))
+    #cens_agr_rural_urban_class <- cens_agr %>%
+    #  filter(!is.na(rural_urban_class) & rural_urban_class != "Unknown") %>%
+    #  group_by(variable, rural_urban_class, scenario, pm) %>%
+    #  summarise(pop_size = sum(pop_size)) %>%
+    #  mutate(svi_bin = "666") %>%
+    #  group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+    #  mutate(prop = pop_size / sum(pop_size))
 
-    cens_agr <- rbind(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
-    rm(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
+    #cens_agr_svi <- cens_agr %>%
+    #  filter(!is.na(svi_bin) & svi_bin != "Unknown") %>%
+    #  group_by(variable, svi_bin, scenario, pm) %>%
+    #  summarise(pop_size = sum(pop_size)) %>%
+    #  mutate(rural_urban_class = "666") %>%
+    #  group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+    #  mutate(prop = pop_size / sum(pop_size))
+
+    #cens_agr <- rbind(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
+    #rm(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
 
     # add proportions
 

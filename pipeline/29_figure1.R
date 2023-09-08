@@ -54,7 +54,9 @@ if (rlang::is_empty(args)) {
 }
 options(bitmapType = "cairo")
 file_list <- list.files(summaryDir)
-file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+file_list <- file.path(summaryDir, file_list)
 attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
@@ -293,5 +295,5 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.png"), dpi = 300, g_combined, height = 9, width = 11)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.pdf"), dpi = 300, g_combined, height = 9, width = 11)

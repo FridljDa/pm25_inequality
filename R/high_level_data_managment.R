@@ -56,9 +56,9 @@ read_data <- function(path) {
       "All", "666"
     )),
     svi_bin = col_factor(levels = c(
-      "low svi", "1",
-      "middle svi", "2",
-      "high svi", "3",
+      "low SVI", "1",
+      "middle SVI", "2",
+      "high SVI", "3",
       "All", "666",
       "Unknown"
     )),

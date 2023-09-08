@@ -27,6 +27,17 @@ This function takes a dataframe and a specified FIPS code column, then adds a So
 using a lookup table provided in a CSV file.
 }
 \examples{
-# Assuming existence of a dataframe 'df' with a "FIPS.code" column
-df_with_svi <- add_social_vuln_index(df)
+\dontrun{
+# Create example dataframe
+example_df <- data.frame(
+  FIPS.code = c("1001", "1003", "1005", "1007", "1009"),
+  Year = c("1990", "1991", "1992", "1993", "1994"),
+  some_data = c(23, 45, 67, 89, 12)
+)
+
+# Use the function to add SVI to example_df
+result_df <- add_social_vuln_index(example_df, "FIPS.code", "Year", "data/08_svi/svi_lookup_table.csv")
+print(result_df)
+}
+
 }

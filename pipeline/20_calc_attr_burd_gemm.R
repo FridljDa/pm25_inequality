@@ -34,16 +34,17 @@ totalBurdenParsed2Dir <- args[17]
 attr_burdenDir <- args[18]
 
 if (rlang::is_empty(args)) {
-  year <- 1995
+  year <- 2001
   agr_by <- "county"
   source <- "nvss"
-  
+
   tmpDir <-  "data/tmp"
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   pafDir <- "data/07_gbd_paf"
   totalBurdenParsed2Dir <-"data/13_total_burden_rate"
   attr_burdenDir <- "data/14_attr_burd"
+
 }
 
 if (agr_by != "county") {
@@ -60,7 +61,7 @@ if (!file.exists(attr_burdenDir)) {
   tic(paste("calculated attributable burden with GEMM", year, agr_by, source))
   #----read some data-----
   total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
-    fread() 
+    fread()
   total_burden <- total_burden %>% dplyr::filter(label_cause == "ncd_lri")
   total_burden <- total_burden %>%
     filter(county != "Unknown") %>%
@@ -77,15 +78,15 @@ if (!file.exists(attr_burdenDir)) {
   files <- list.files(file.path(dem_agrDir, agr_by, year))
   pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
   pm_summ <- pm_summ %>% left_join(meta, by = "variable")
-  pm_summ <- pm_summ %>% 
+  pm_summ <- pm_summ %>%
     filter(min_age >= 25) %>%
     select(-c(rural_urban_class,min_age,max_age))
-  
+
   pm_summ <- pm_summ %>% filter(scenario == "real")
-  
+
   pm_summ <- pm_summ %>% mutate_at(c("Education"), as.factor)
   total_burden <- total_burden %>% mutate_at(c("rural_urban_class","Education"), as.factor)
-    
+
   pm_summ <- pm_summ %>%
     dplyr::group_by_at(vars(one_of("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education","scenario", "pm"))) %>%
     dplyr::summarize(pop_size = sum(pop_size))
@@ -142,7 +143,7 @@ if (!file.exists(attr_burdenDir)) {
     paf_burnett,
     by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education")
   )
-  
+
   attr_burden <- attr_burden %>%
     mutate(
       mean = value * mean,

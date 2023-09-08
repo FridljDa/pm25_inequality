@@ -8,7 +8,7 @@ add_age_adjusted_rate(
   total_burden,
   year,
   agr_by,
-  pop.summary.dir = "../data/12_population_summary"
+  pop.summary.dir = "data/12_population_summary"
 )
 }
 \arguments{

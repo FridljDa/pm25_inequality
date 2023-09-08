@@ -32,10 +32,11 @@ scenarioI <- args[10]
 methodI <- args[11]
 min_ageI <- args[13]
 
+summaryDir <- "data/17_summary"
+figuresDir <- "data/18_figures"
+
 # TODO delete
 if (rlang::is_empty(args)) {
-  summaryDir <- "data/17_summary"
-  figuresDir <- "data/18_figures"
 
   min_ageI <- 25
   scenarioI <- "real"

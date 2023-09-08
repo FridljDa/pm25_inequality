@@ -15,9 +15,9 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   dataDir <- "data"
 
-  agr_by <- "nation"
+  agr_by <- "STATEFP"
   source <- "nvss"
-  year <- 2010
+  year <- 2016
 } else {
   year <- args[1]
   source <- "nvss"

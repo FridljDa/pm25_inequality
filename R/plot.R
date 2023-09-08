@@ -20,9 +20,9 @@ get_group_colors <- function(){
     "Non metro",
     "Large metro",
     "Small-medium metro",
-    "high svi",
-    "middle svi",
-    "low svi"#TODO svi
+    "high SVI",
+    "middle SVI",
+    "low SVI"#TODO svi
   )
 
   return(group.colors)

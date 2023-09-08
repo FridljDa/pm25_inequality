@@ -226,9 +226,9 @@ attr_burden <- attr_burden %>%
   mutate(
     svi_bin = as.factor(svi_bin),
     svi_bin = forcats::fct_recode(svi_bin,
-      "high svi" = "1",
-      "middle svi" = "2",
-      "low svi" = "3",
+      "high SVI" = "1",
+      "middle SVI" = "2",
+      "low SVI" = "3",
       "All" = "666"
     )
   )
@@ -236,9 +236,9 @@ total_burden <- total_burden %>%
   mutate(
     svi_bin = as.factor(svi_bin),
     svi_bin = forcats::fct_recode(svi_bin,
-      "high svi" = "1",
-      "middle svi" = "2",
-      "low svi" = "3",
+      "high SVI" = "1",
+      "middle SVI" = "2",
+      "low SVI" = "3",
       "All" = "666"
     )
   )
