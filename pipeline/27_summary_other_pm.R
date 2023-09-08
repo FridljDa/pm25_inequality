@@ -61,7 +61,7 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
     #meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year)))
     files <- list.files(file.path(dem_agrDir, agr_by, year))
 
-    pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+    pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist(fill = TRUE)
 
     if (agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
 
@@ -95,13 +95,13 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
     toc()
     return(pm_summ)
 
-  }) %>% rbindlist()
+  }) %>% rbindlist(fill = TRUE)
   # make compatible
   pm_summ <- pm_summ %>% rename("Region" := !!agr_by)
   pm_summ <- pm_summ %>% tibble::add_column(agr_by = agr_by)
 
   return(pm_summ)
-}) %>% rbindlist()
+}) %>% rbindlist(fill = TRUE)
 
 # pm_summ <- pm_summ %>%
 #  group_by_at(vars(all_of(setdiff(colnames(pm_summ),c("variable","pop_size","prop","pm"))))) %>%

@@ -81,7 +81,7 @@ pop_summary2 <- lapply(agr_bys, function(agr_by) {
   colnames(pop_summary2)[colnames(pop_summary2) == agr_by] <- "Region"
   # pop_summary2 <- pop_summary2 %>% rename("Region":=!!agr_by)
   pop_summary2 <- pop_summary2 %>% tibble::add_column(agr_by = agr_by)
-}) %>% rbindlist(use.name = TRUE)
+}) %>% rbindlist(use.name = TRUE, fill = TRUE)
 # pop_summary2 <- pop_summary2 %>% filter(Education != 666) #TODO
 
 pop_summary <- rbind(pop_summary1, pop_summary2)
