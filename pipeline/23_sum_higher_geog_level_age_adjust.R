@@ -20,13 +20,13 @@ if (rlang::is_empty(args)) {
   year <- args[1]
   dataDir <- args[2]
   agr_by <- args[10]
-  pop.summary.dir <- args[16]
+  attr_burden.dir <- args[16]
   attr_burdenDir <- args[18]
   summaryHigherDir <- args[19]
 }
 
 dataDir <- "data"
-pop.summary.dir <- "data/12_population_summary"
+attr_burden.dir <- "data/12_population_summary"
 attr_burdenDir <- "data/14_attr_burd"
 summaryHigherDir <- "data/15_sum_higher_geog_level"
 
@@ -88,10 +88,15 @@ if (agr_by != "county") {
   cat("marginalised svi and rural_urban class info to attr_burden -starting\n")
   tic("marginalised svi and rural_urban class info to attr_burden")
   attr_burden <- rbind(
-    attr_burden %>% mutate(rural_urban_class = as.factor(666)),
-    attr_burden %>% mutate(svi_bin = as.factor(666)),
-    attr_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666))
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    attr_burden %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
   )
+
   attr_burden <- attr_burden %>%
     group_by_at(setdiff(
       colnames(attr_burden),
@@ -184,7 +189,8 @@ if (agr_by != "county") {
 #filter out combination
 attr_burden <- attr_burden %>%
   filter(!(Education != "666" & Race != "All" &
-             (rural_urban_class != "666" | svi_bin != "666")))
+             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" |
+                svi_bin2 != "666" | svi_bin3 != "666"| svi_bin4 != "666")))
 
 ## ----group out counties---
 
@@ -230,7 +236,7 @@ tic("age standardised attributable burden")
 attr_burden <- add_age_adjusted_rate(attr_burden_absolute_number,
   year,
   agr_by,
-  pop.summary.dir = "data/12_population_summary"
+  attr_burden.dir = "data/12_population_summary"
 )
 
 toc()

@@ -487,7 +487,11 @@ total_burden_agr_by <- total_burden_agr_by %>%
     min_age != "Unknown" &
     Education != "Unknown" &
     rural_urban_class != "Unknown" &
-    svi_bin != "Unknown") %>%
+    svi_bin != "Unknown",
+    svi_bin1 != "Unknown",
+    svi_bin2 != "Unknown",
+    svi_bin3 != "Unknown",
+    svi_bin4 != "Unknown") %>%
   mutate(min_age = as.numeric(min_age), max_age = as.numeric(max_age))
 
 #---write csv---

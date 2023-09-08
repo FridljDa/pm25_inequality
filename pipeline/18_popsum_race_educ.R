@@ -126,5 +126,9 @@ pop.summary$nation <- "us"
 pop.summary$Gender.Code <- 'A'
 pop.summary$rural_urban_class <- 666
 pop.summary$svi_bin <- 666
+pop.summary$svi_bin1 <- 666
+pop.summary$svi_bin2 <- 666
+pop.summary$svi_bin3 <- 666
+pop.summary$svi_bin4 <- 666
 pop.summary$source2 <- "cens2"
 write.csv(pop.summary, pop.summary.dir, row.names = FALSE)

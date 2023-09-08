@@ -419,22 +419,41 @@ findreplaces_rural_urban_class <- rbind(
 )
 
 ##-----svi_bin------
-
 findreplaces_svi_bin_after_2000 <- findreplaces_county %>%
   select(Year, from) %>%
   filter(Year >= 2000) %>%
   #filter(can_be_numeric(from)) %>%
-  filter(grepl("^\\d", from)) %>%
-  #mutate() %>%
-  add_social_vuln_index(FIPS.code.column = "from") %>%
-  dplyr::mutate(replacecolumns = "svi_bin") %>%
-  select(Year, replacecolumns, from, to = svi_bin)
+  filter(grepl("^\\d", from))
+
+findreplaces_svi_bin_after_2000 <- findreplaces_svi_bin_after_2000 %>%
+  add_social_vuln_index_new(FIPS.code.column = "from")
+
+findreplaces_svi_bin_after_2000 <-  rbind(
+  findreplaces_svi_bin_after_2000 %>%
+    select(Year, replacecolumns, from, to = svi_bin),
+  findreplaces_svi_bin_after_2000 %>%
+    select(Year, replacecolumns, from, to = svi_bin1),
+  findreplaces_svi_bin_after_2000 %>%
+    select(Year, replacecolumns, from, to = svi_bin2),
+  findreplaces_svi_bin_after_2000 %>%
+    select(Year, replacecolumns, from, to = svi_bin3),
+  findreplaces_svi_bin_after_2000 %>%
+    select(Year, replacecolumns, from, to = svi_bin4)
+  )
 
 findreplaces_svi_bin_before_2000 <- findreplaces_county %>%
   select(Year, from) %>%
   filter(Year < 2000) %>%
-  mutate(replacecolumns = "svi_bin", to = "Unknown") %>%
-  select(Year, replacecolumns, from, to)
+  select(Year, from) %>%
+  mutate(to = "Unknown")
+
+findreplaces_svi_bin_before_2000 <- rbind(
+  findreplaces_svi_bin_before_2000 %>% mutate(replacecolumns = "svi_bin"),
+  findreplaces_svi_bin_before_2000 %>% mutate(replacecolumns = "svi_bin1"),
+  findreplaces_svi_bin_before_2000 %>% mutate(replacecolumns = "svi_bin2"),
+  findreplaces_svi_bin_before_2000 %>% mutate(replacecolumns = "svi_bin3"),
+  findreplaces_svi_bin_before_2000 %>% mutate(replacecolumns = "svi_bin4")
+)
 
 findreplaces <- rbind(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016,
                       findreplaces_county)

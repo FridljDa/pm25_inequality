@@ -62,6 +62,34 @@ read_data <- function(path) {
       "All", "666",
       "Unknown"
     )),
+    svi_bin1 = col_factor(levels = c(
+      "low", "1",
+      "middle", "2",
+      "high", "3",
+      "All", "666",
+      "Unknown"
+    )),
+    svi_bin2 = col_factor(levels = c(
+      "low", "1",
+      "middle", "2",
+      "high", "3",
+      "All", "666",
+      "Unknown"
+    )),
+    svi_bin3 = col_factor(levels = c(
+      "low", "1",
+      "middle", "2",
+      "high", "3",
+      "All", "666",
+      "Unknown"
+    )),
+    svi_bin4 = col_factor(levels = c(
+      "low", "1",
+      "middle", "2",
+      "high", "3",
+      "All", "666",
+      "Unknown"
+    )),
     Deaths = col_integer(),
     Education = col_factor(levels = c(
       "666", "Unknown",

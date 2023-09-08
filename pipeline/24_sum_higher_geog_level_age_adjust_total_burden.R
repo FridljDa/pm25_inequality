@@ -73,11 +73,17 @@ if(year <= 2008){
 if (agr_by != "county") {
   cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
+
   total_burden <- rbind(
-    total_burden %>% mutate(rural_urban_class = as.factor(666)),
-    total_burden %>% mutate(svi_bin = as.factor(666)),
-    total_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666))
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    total_burden %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
   )
+
   total_burden <- total_burden %>%
     group_by_at(setdiff(
       colnames(total_burden),
@@ -139,7 +145,8 @@ if (agr_by != "county") {
 #filter out combination
 total_burden <- total_burden %>%
   filter(!(Education != "666" & Race != "All" &
-             (rural_urban_class != "666" | svi_bin != "666")))
+             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" | svi_bin2 != "666"
+              | svi_bin3 != "666" | svi_bin4 != "666")))
 
 ## ----group out counties---
 
