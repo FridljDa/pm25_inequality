@@ -426,19 +426,19 @@ findreplaces_svi_bin_after_2000 <- findreplaces_county %>%
   filter(grepl("^\\d", from))
 
 findreplaces_svi_bin_after_2000 <- findreplaces_svi_bin_after_2000 %>%
-  add_social_vuln_index_new(FIPS.code.column = "from")
+  add_social_vuln_index(FIPS.code.column = "from")
 
 findreplaces_svi_bin_after_2000 <-  rbind(
   findreplaces_svi_bin_after_2000 %>%
-    select(Year, replacecolumns, from, to = svi_bin),
+    transmute(Year, replacecolumns = "svi_bin", from, to = svi_bin),
   findreplaces_svi_bin_after_2000 %>%
-    select(Year, replacecolumns, from, to = svi_bin1),
+    transmute(Year, replacecolumns = "svi_bin1", from, to = svi_bin1),
   findreplaces_svi_bin_after_2000 %>%
-    select(Year, replacecolumns, from, to = svi_bin2),
+    transmute(Year, replacecolumns = "svi_bin2", from, to = svi_bin2),
   findreplaces_svi_bin_after_2000 %>%
-    select(Year, replacecolumns, from, to = svi_bin3),
+    transmute(Year, replacecolumns = "svi_bin3", from, to = svi_bin3),
   findreplaces_svi_bin_after_2000 %>%
-    select(Year, replacecolumns, from, to = svi_bin4)
+    transmute(Year, replacecolumns = "svi_bin4", from, to = svi_bin4)
   )
 
 findreplaces_svi_bin_before_2000 <- findreplaces_county %>%
@@ -459,4 +459,3 @@ findreplaces <- rbind(findreplaces_1990_to_1991, findreplaces_1992_to_2002, find
                       findreplaces_county)
 #, findreplaces_rural_urban_class, findreplaces_svi_bin_after_2000, findreplaces_svi_bin_before_2000
 write.csv(findreplaces, findreplaceDir, row.names = FALSE)
-rm(findreplaces_1990_to_1991, findreplaces_1992_to_2002, findreplaces_2003_to_2016, findreplaces_rural_urban_class)
