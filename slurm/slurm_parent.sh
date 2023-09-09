@@ -16,6 +16,6 @@
 #SBATCH --mail-user=daniel.fridljand@gmail.com # send-to address
 
 # Load software
-#module load R #
-# Run R script
-Rscript /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/pipeline/00_parent.R
+year=$1
+
+Rscript /share/pi/mkiang/dfridljand_air_pollution/pm25_inequality/pipeline/00_parent.R $year
