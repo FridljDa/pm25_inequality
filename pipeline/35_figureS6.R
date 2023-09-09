@@ -63,7 +63,7 @@ attr_burd <- attr_burd %>%
 attr_burden_proportion_to_black <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            Region == "United States" & method == "di_gee" & measure3 == "value" & scenario == "real" &
-           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All") %>%
+           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class == "All") %>%
   select(Year, Ethnicity, mean) %>%
   #mutate(ethnicity_african_american = ifelse(Ethnicity == "Black American",
   #       "Black")) %>%
