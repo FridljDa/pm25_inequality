@@ -62,7 +62,7 @@ attr_burd <- attr_burd %>%
 
 attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
                                      measure3 == "proportion of disparity to Black or African American attributable" &
-                                     rural_urban_class == "All" & svi_bin == "All"
+                                     rural_urban_class == "All" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
                                    & method %in% c("di_gee","di_gee_white")) #"di_gee","di_gee_white"
 range(attr_burd1$mean) %>% round(1)
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity, linetype = method))

@@ -52,7 +52,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & agr_by == "nation" &
-    Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All" & Education == 666) # %>%
+    Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class == "All" & Education == 666) # %>%
 # filter(Ethnicity != "White") #Year %in% c(2000, 2015) &
 
 all_burd <- all_burd %>%
@@ -62,7 +62,7 @@ all_burd <- all_burd %>%
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    attr == "attributable" & svi_bin == "All" &
+    attr == "attributable" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
     source == "National Vital Statistics System" & scenario == scenarioI & agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
     rural_urban_class == "All" & method %in% c("GBD","burnett") & Ethnicity != "White")
 

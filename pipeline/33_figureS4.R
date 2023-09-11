@@ -56,7 +56,7 @@ options(bitmapType = "cairo")
 # test <- fread(file.path(summaryDir, "all_burd.csv")) %>% #& measure2 == "age-adjusted rate per 100,000"
 #  filter(Gender.Code == "All genders" & measure1 == "Deaths"  &
 #           source == "National Vital Statistics System" & Region == "United States") %>%
-#  filter(Education == 666 & rural_urban_class == "Large metro" &Ethnicity == "All, All Origins" & svi_bin == "All" &
+#  filter(Education == 666 & rural_urban_class == "Large metro" &Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
 #           rural_urban_class != "All" & Year %in% c(2008, 2009)) %>%
 #  filter(min_age == 25)
 
@@ -66,11 +66,11 @@ all_burden <- all_burden %>%
 
 ## -- figure 3, attributable burden---
 # TODO method di_gee/burnett
-all_burden1 <- all_burden %>% filter(Education == 666 & svi_bin == "All" & Ethnicity != "All, All Origins" & rural_urban_class == "All")
+all_burden1 <- all_burden %>% filter(Education == 666 & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & Ethnicity != "All, All Origins" & rural_urban_class == "All")
 g1 <- ggplot(all_burden1, aes(x = Year, y = value, color = Ethnicity))
 
 all_burden2 <- all_burden %>%
-  filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" &
+  filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
     rural_urban_class == "All")
 
 all_burden2$Education <- factor(all_burden2$Education, # Relevel group factor
@@ -83,7 +83,7 @@ all_burden2$Education <- factor(all_burden2$Education, # Relevel group factor
 g2 <- ggplot(all_burden2, aes(x = Year, y = value, color = Education))
 
 all_burden3 <- all_burden %>%
-  filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" &
+  filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
     rural_urban_class != "All" & Year >= 2000)
 
 all_burden3$rural_urban_class <- factor(all_burden3$rural_urban_class, # Relevel group factor
