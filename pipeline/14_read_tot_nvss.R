@@ -96,8 +96,8 @@ if(agr_by != "county"){
 }
 ## ----- read total burden ---------
 total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year) # , fix_states = FALSE
-if(FALSE){
-  total_burden <- total_burden %>% sample_n(2000)
+if(TRUE){
+  total_burden <- total_burden %>% sample_n(5)
 }
 # total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year)
 # filter out rows where everything is just na
@@ -289,14 +289,23 @@ total_burden_agr_by <- total_burden_agr_by %>%
   add_social_vuln_index(FIPS.code.column = "county") %>%
   add_rural_urban_class(FIPS.code.column = "county")
 
+cat("distinct 1\n")
+total_burden_agr_by <- as.data.frame(total_burden_agr_by)
+print(total_burden_agr_by)
+cat("distinct 2\n")
 ##---add hispanic Origin---
 # add Hispanic Origin All Origins
 total_burden_agr_by_all_his <- group_summarize_add_column(total_burden_agr_by,
   column = "Hispanic.Origin",
   new_col_value = "All Origins"
 )
-
-total_burden_agr_by <- rbind(total_burden_agr_by, total_burden_agr_by_all_his) %>% distinct()
+total_burden_agr_by_all_his <- as.data.frame(total_burden_agr_by_all_his)
+cat("distinct 3\n")
+print(total_burden_agr_by)
+total_burden_agr_by <- rbind(total_burden_agr_by, total_burden_agr_by_all_his) #%>% distinct()
+cat("distinct 4\n")
+total_burden_agr_by <- as.data.frame(total_burden_agr_by)
+print(total_burden_agr_by)
 rm(total_burden_agr_by_all_his)
 
 # add Gender A
@@ -305,7 +314,7 @@ total_burden_agr_by_all_gend <- group_summarize_add_column(total_burden_agr_by,
   new_col_value = "A"
 )
 
-total_burden_agr_by <- rbind(total_burden_agr_by, total_burden_agr_by_all_gend) %>% distinct()
+total_burden_agr_by <- rbind(total_burden_agr_by, total_burden_agr_by_all_gend) #%>% distinct()
 rm(total_burden_agr_by_all_gend)
 
 #--- add all-cause rows---
@@ -337,7 +346,7 @@ total_burden_agr_by_cause <- apply(causes_year2, 1, function(cause) {
     )
 }) %>% rbindlist()
 
-total_burden_agr_by <- rbind(total_burden_agr_by_all, total_burden_agr_by_cause) %>% distinct()
+total_burden_agr_by <- rbind(total_burden_agr_by_all, total_burden_agr_by_cause) #%>% distinct()
 rm(total_burden_agr_by_all, total_burden_agr_by_cause)
 
 # seperate education, add "All Education"
@@ -363,10 +372,10 @@ if ("Education" %in% colnames(total_burden_agr_by)) {
     ) %>%
     mutate(Education = Education %>% as.factor())
 
-  total_burden_agr_by <- rbind(total_burden_agr_by_race, total_burden_agr_by_educ, total_burden_agr_by_all, total_burden_agr_by) %>% distinct()
+  total_burden_agr_by <- rbind(total_burden_agr_by_race, total_burden_agr_by_educ, total_burden_agr_by_all, total_burden_agr_by) #%>% distinct()
   rm(total_burden_agr_by_educ)
 } else {
-  total_burden_agr_by <- rbind(total_burden_agr_by_race, total_burden_agr_by_all) %>% distinct()
+  total_burden_agr_by <- rbind(total_burden_agr_by_race, total_burden_agr_by_all)# %>% distinct()
 }
 
 rm(total_burden_agr_by_race, total_burden_agr_by_all)
@@ -376,7 +385,7 @@ total_burden_agr_by <- total_burden_agr_by %>%
   ungroup()
 
 #------filter ------
-total_burden_agr_by <- total_burden_agr_by %>% distinct()
+#total_burden_agr_by <- total_burden_agr_by %>% distinct()
 
 total_burden_agr_by <- total_burden_agr_by %>% filter(Gender.Code == "A")
 total_burden_agr_by <- total_burden_agr_by %>%
