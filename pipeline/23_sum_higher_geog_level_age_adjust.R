@@ -2,7 +2,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  # library(tidyverse)
+  # 
   library(tictoc)
 })
 
@@ -235,8 +235,7 @@ cat("start: age standardised attributable burden\n")
 tic("age standardised attributable burden")
 attr_burden <- add_age_adjusted_rate(attr_burden_absolute_number,
   year,
-  agr_by,
-  attr_burden.dir = "data/12_population_summary"
+  agr_by
 )
 
 toc()

@@ -11,10 +11,10 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tictoc", "truncnorm", "triangle",
+  "dplyr", "magrittr", "data.table", "testthat", "tictoc", "truncnorm",# "triangle",
   "matrixStats"
 )
-
+library(tidyr)
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }

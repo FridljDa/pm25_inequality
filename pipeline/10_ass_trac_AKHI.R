@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 
-packages <- c("data.table", "plyr", "magrittr", "testthat", "tigris", "sf", "tidyverse", "sp", "tmap", "tictoc", "units")
+packages <- c("data.table", "plyr", "magrittr", "testthat", "tigris", "sf",  "sp", "tmap", "tictoc", "units")
 
 options(tidyverse.quiet = TRUE)
 options(tigris.quiet = TRUE)

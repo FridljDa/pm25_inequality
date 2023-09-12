@@ -14,10 +14,11 @@ library(dplyr)
 library(magrittr)
 library(data.table)
 library(testthat)
-#library(tidyverse)
+#
 library(readxl)
 library(stringr)
 library(tictoc)
+#require(assertthat)
 suppressMessages({pkgload::load_all()})
 
 options(dplyr.summarise.inform = FALSE)
@@ -216,7 +217,8 @@ if (agr_by != "county") {
       group_by(variable, rural_urban_class, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, scenario) %>%
       summarise(sum_prop = sum(prop))
 
-    assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+    #assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+    stopifnot(all(abs(cens_agr_check$sum_prop - rep(1, nrow(cens_agr_check))) <= 0.01))
 
     # add region
     cens_agr[, agr_by] <- region
