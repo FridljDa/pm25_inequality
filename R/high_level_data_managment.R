@@ -293,3 +293,38 @@ run_script <- function(script, args = "") {
 
 
 
+#' Add custom rows to a data frame
+#'
+#' This function takes a data frame `df` and adds custom rows to it by mutating specific columns.
+#' The custom rows have the value "666" for the specified columns.
+#'
+#' @param df A data frame that you want to add custom rows to.
+#' @return A data frame with the custom rows added.
+#' @examples
+#' # Create a sample data frame
+#' sample_df <- data.frame(
+#'   rural_urban_class = c("A", "B"),
+#'   svi_bin = c(1, 2),
+#'   svi_bin1 = c(3, 4),
+#'   svi_bin2 = c(5, 6),
+#'   svi_bin3 = c(7, 8),
+#'   svi_bin4 = c(9, 10)
+#' )
+#'
+#' # Add custom rows
+#' modified_df <- add_custom_rows(sample_df)
+add_custom_rows <- function(df) {
+  library(dplyr)
+
+  df <- rbind(
+    df %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    df %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
+    df %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
+    df %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    df %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    df %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
+    df %>% mutate(svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
+  )
+
+  return(df)
+}

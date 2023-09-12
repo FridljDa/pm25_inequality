@@ -197,15 +197,7 @@ if (agr_by != "county") {
       return(NULL)
     }
 
-    cens_agr <- rbind(
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666",  svi_bin3 = "666", svi_bin4 = "666"),
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666",  svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-      cens_agr %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-      cens_agr %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
-    )
+    cens_agr <- add_custom_rows(cens_agr)
 
     cens_agr <- cens_agr %>%
       group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm) %>%

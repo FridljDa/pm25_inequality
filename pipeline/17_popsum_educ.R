@@ -111,51 +111,44 @@ toc()
 #print(paste("column names in pop.summary:", colnames(pop.summary)))
 # Summarize population by different categories
 
-cat("add summarise svi_bin and rural_urban_class out in pop.summary-start\n")
-tic("add summarise svi_bin and rural_urban_class out in pop.summary")
-# For the 'all' summary
-pop.summary <- rbind(
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-  pop.summary %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-  pop.summary %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
-)
-
-# Determine the population column name
-pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
-
-# Create the 'all' summary
-pop.summary <- pop.summary %>%
-  group_by(across(-all_of(c(pop_col)))) %>%
-  summarize(Population = sum(!!sym(pop_col)), .groups = "drop")
-
-toc()
-
-# Combine all summary data into one object
-
 #sum up
-if (agr_by == "county") {
-  pop.summary <- pop.summary %>%
-    filter(rural_urban_class == 666, svi_bin == 666, svi_bin1 == 666, svi_bin2 == 666, svi_bin3 == 666, svi_bin4 == 666) #TODO
-  #  dplyr::mutate(county = paste0(state, str_pad(county, 3, pad = "0")) %>% as.integer()) %>%
-  #  dplyr::group_by(county, variable) %>% # state,
-  #  dplyr::summarize(Population = sum(Population)) %>%
-  #  dplyr::mutate(rural_urban_class = as.factor(666))
-} else {
+if (agr_by != "county"){
+  cat("17_popsum_educ.R: sum up to national/STATEFP level-start\n")
+  tic("17_popsum_educ.R: sum up to national/STATEFP level")
+
+  # Determine the population column name
+  pop_col <- if ("pop_size" %in% colnames(pop.summary)) "pop_size" else "Population"
+
   pop.summary <- states %>%
     right_join(pop.summary, by = c("STATEFP" = "state")) %>%
     dplyr::group_by_at(vars(all_of(c(agr_by, "variable", "rural_urban_class", "svi_bin", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4")))) %>%
-    summarize(Population = sum(Population)) %>%
+    summarize(Population = sum(!!sym(pop_col)), .groups = "drop") %>%
     as.data.frame()
+
+  toc()
+
+  cat("17_popsum_educ.R: add summarise svi_bin and rural_urban_class out in pop.summary-start\n")
+  tic("17_popsum_educ.R: add summarise svi_bin and rural_urban_class out in pop.summary")
+  # For the 'all' summary
+  pop.summary <- add_custom_rows(pop.summary)
+
+  # Create the 'all' summary
+  pop.summary <- pop.summary %>%
+    group_by(across(-all_of(c("Population")))) %>%
+    summarize(Population = sum(Population), .groups = "drop")
+
+  toc()
 }
 
+
+# Combine all summary data into one object
+
+cat("17_popsum_educ.R: add variable\n")
+tic("17_popsum_educ.R: add variable")
 pop.summary <- pop.summary %>%
   left_join(census_meta, by = "variable") %>%
   select(-c(variable))
-
+toc()
 #browser()
 # Create the 'all' summary
 #pop.summary.education <- pop.summary %>%
