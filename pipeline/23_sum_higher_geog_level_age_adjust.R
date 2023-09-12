@@ -2,7 +2,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  # 
+  #
   library(tictoc)
 })
 
@@ -87,15 +87,7 @@ if(year <= 2008){
 if (agr_by != "county") {
   cat("marginalised svi and rural_urban class info to attr_burden -starting\n")
   tic("marginalised svi and rural_urban class info to attr_burden")
-  attr_burden <- rbind(
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    attr_burden %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    attr_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
-  )
+  attr_burden <- add_custom_rows(attr_burden)
 
   attr_burden <- attr_burden %>%
     group_by_at(setdiff(
