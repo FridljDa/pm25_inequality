@@ -32,9 +32,13 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
     filter(Year == year)
 
   if(agr_by != "county"){
-    pop_summary2 <- pop_summary2 %>%
+    pop_summary2 <- pop_summary2 #%>%
       filter(!(Education == 666 & rural_urban_class == 666) |
-               !(Education == 666 & svi_bin == 666)) %>%
+               !(Education == 666 & svi_bin == 666) |
+               !(Education == 666 & svi_bin1 == 666) |
+               !(Education == 666 & svi_bin2 == 666) |
+               !(Education == 666 & svi_bin3 == 666) |
+               !(Education == 666 & svi_bin4 == 666)) %>%
       filter(!(Education != 666 & Race != "All"))#rural_urban_class == 666 &
   }else{
     pop_summary2 <- pop_summary2 %>%
