@@ -2,7 +2,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  # library(tidyverse)
+  #
   library(tictoc)
 })
 
@@ -74,15 +74,7 @@ if (agr_by != "county") {
   cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
 
-  total_burden <- rbind(
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666"),
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin4 = "666"),
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    total_burden %>% mutate(svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666"),
-    total_burden %>% mutate(rural_urban_class = "666", svi_bin = "666", svi_bin1 = "666", svi_bin2 = "666", svi_bin3 = "666", svi_bin4 = "666")
-  )
+  total_burden <- add_custom_rows(total_burden)
 
   total_burden <- total_burden %>%
     group_by_at(setdiff(
@@ -189,8 +181,7 @@ total_burden_absolute_number <- total_burden %>%
 tic("age standardised attributable burden")
 total_burden <- add_age_adjusted_rate(total_burden_absolute_number,
                                                year,
-                                               agr_by,
-                                               pop.summary.dir = "data/12_population_summary")
+                                               agr_by)
 
 
 toc()

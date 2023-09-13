@@ -1,7 +1,6 @@
 suppressMessages(library(dplyr, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(magrittr, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(data.table, warn.conflicts = FALSE, quietly = TRUE))
-# suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
 
 options(dplyr.summarise.inform = FALSE)
