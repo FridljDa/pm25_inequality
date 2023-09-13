@@ -18,6 +18,7 @@ library(tidyverse)
 library(tictoc)
 library(Hmisc)
 library(ggpubr)
+library(GGally)
 
 options(bitmapType ="cairo")
 theme_set(theme_classic(base_family = "Helvetica"))
@@ -67,11 +68,11 @@ pm_weighted_county <- lapply(2000:2016, function(year){
       dplyr::summarize(
                 number_census_tracts = n(),
                 pm_weighted_mean = Hmisc::wtd.mean(pm, pop_size),
-                pm_weighted_variance = Hmisc::wtd.var(pm, pop_size)
+                pm_weighted_variance = Hmisc::wtd.var(pm, pop_size) 
                 ) %>%
       mutate(pm_weighted_stddev = sqrt(pm_weighted_variance)) %>%
       mutate_at(c("pm_weighted_mean", "pm_weighted_variance", "pm_weighted_stddev"),
-                function(x) round(x,digits = 5)) %>%
+                function(x) round(x, digits = 5)) %>%
       ungroup()
   })
   
@@ -108,7 +109,7 @@ attr_burd <- attr_burd %>%
   filter(
     Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & method == "di_gee" &
       attr == "attributable" &
-      source == "National Vital Statistics System" & rural_urban_class == "All" & agr_by == "county" &
+      source == "National Vital Statistics System" & agr_by == "county" &
        scenario == "real" & Year %in% 2000:2016 &
       Education == 666
   )
@@ -181,6 +182,78 @@ g3<-ggplot(attr_burd_pm_weighted_county,
 
 g3
 ```
+```{r}
+g7 <- ggplot(attr_burd_pm_weighted_county, aes(number_census_tracts)) +
+  geom_histogram(bins = 50) +
+  xlab("Number of census tract per county")
+
+#sum(attr_burd_pm_weighted_county$number_census_tracts <= 300)/nrow(attr_burd_pm_weighted_county)
+ggsave( file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS32_extra_hist.png"), g7, dpi = 300, height = 6, width = 8)
+```
+
+```{r}
+attr_burd_pm_weighted_county %>%
+  filter(state != 2 & state != 6) %>%
+  ggplot(aes(x = rank(number_census_tracts, ties.method = "random"), y=pm_weighted_stddev)) +
+  geom_point()
+```
+
+```{r, eval = FALSE}
+attr_burd_pm_weighted_county_filtered <- attr_burd_pm_weighted_county %>%
+  filter(state != 2 & state != 6) %>%
+  mutate(pm_weighted_stddev_quantile = ntile(pm_weighted_stddev, 5),
+         pm_weighted_stddev_quantile = as.factor(pm_weighted_stddev_quantile))
+
+g3<-ggplot(attr_burd_pm_weighted_county_filtered,
+           aes(x=pm_weighted_stddev_quantile, y=mean/100)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 5L))+
+  geom_boxplot() +
+  xlab("Quintiles of population-weighted std of PM2.5") +
+  ylab("Percent of all-cause mortality\n attributable to PM2.5")
+  #labs(title="each point corresponds to one year-county combination, without California, Alaska",
+  #      x = "quantile of population-weighted std of PM2.5", 
+  #      y = "Percentage of mortality \n attributable to PM2.5"
+  #     )
+
+g3
+```
+
+```{r}
+g5 <- attr_burd_pm_weighted_county %>%
+  mutate(number_census_tracts_quantile = ntile(number_census_tracts, 4) %>% as.factor) %>%
+  group_by(number_census_tracts_quantile) %>%
+  mutate(
+         pm_weighted_stddev_quantile = ntile(pm_weighted_stddev, 5) %>% as.factor)%>%
+  ggplot(
+           aes(x=pm_weighted_stddev_quantile, y=mean/100)) +
+  scale_y_continuous(labels = scales::percent_format())+ #accuracy = 3L
+  #ylim(0,5)+
+  geom_boxplot() +#outlier.shape = NA, outlier.alpha = 0
+  xlab("Quintiles of population-weighted std of PM2.5") +
+  ylab("Percent of all-cause mortality\n attributable to PM2.5") +
+  facet_wrap(vars(number_census_tracts_quantile))
+
+g5
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS32_extra.png"), dpi = 300, g5, height = 6, width = 8)
+```
+
+```{r}
+# Load the GGally package
+#hist(attr_burd_pm_weighted_county$number_census_tracts)
+
+custom_fn <- function(data, mapping, ...) {
+    ggplot(data = data, mapping = mapping) +
+      scale_fill_gradient(trans = "log") +
+      geom_hex() #+
+      #theme_minimal()
+  }
+  
+g_pais <- ggpairs(attr_burd_pm_weighted_county %>%
+          transmute(number_census_tracts, number_census_tracts_rank = rank(number_census_tracts), pm_weighted_mean, pm_weighted_variance, pm_weighted_stddev, mean),
+        lower = list(continuous = custom_fn))
+g_pais
+```
+
 ## Panel d
 ```{r}
 unique(attr_burd$Ethnicity)
@@ -213,7 +286,7 @@ g4
 ```
 
 ```{r}
-g_combined <- ggarrange(g1,g2,g3, g4, labels = c("A","B","C", "D"),
+g_combined <- ggarrange(g1, g2, g3, g4, labels = c("A", "B", "C", "D"),
                         vjust	= 0.4) +
   theme(plot.margin = unit(c(0.3, 0, 0, 0), "cm"),
         panel.background = element_rect(fill = 'white', colour = 'white'))

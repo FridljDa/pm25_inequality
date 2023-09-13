@@ -9,7 +9,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(sf)
-library(mapview)
+#library(mapview)
 library(spdep)
 library(sp)
 library(purrr)

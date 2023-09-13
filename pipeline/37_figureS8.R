@@ -61,15 +61,15 @@ attr_burd <- attr_burd %>%
            measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class == "All" &
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All" &
                                      Year >= 2000 & Ethnicity != "White, All Origins")
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class != "All" &
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class != "All" &
                                      Year >= 2001 & Ethnicity != "White, All Origins")
-attr_burd3 <- attr_burd %>% filter(Education != 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class == "All" &
+attr_burd3 <- attr_burd %>% filter(Education != 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All" &
                                      Year >= 2000 & Ethnicity != "White, All Origins")
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class == "All")
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class != "All" & Year >= 2001)
-attr_burd6 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & & rural_urban_class != "All" & Year >= 2001)
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class != "All" & Year >= 2001)
+attr_burd6 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class != "All" & Year >= 2001)
 
 attr_burd7 <- attr_burd %>% filter(Education == 666 & Ethnicity == "All, All Origins" & svi_bin != "All" & rural_urban_class == "All" & Year >= 2001)
 

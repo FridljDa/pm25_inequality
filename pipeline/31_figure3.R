@@ -60,7 +60,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           attr == "attributable" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
+           attr == "attributable" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
            source == "National Vital Statistics System" & scenario == scenarioI &
            agr_by == "nation" & method == methodI & Year >= 2009 & measure3 == "value" & Ethnicity != "All, All Origins"
          & rural_urban_class == "All" #& Education != 666
@@ -68,7 +68,7 @@ attr_burd <- attr_burd %>%
 
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           source == "National Vital Statistics System" & agr_by == "nation" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & &
+           source == "National Vital Statistics System" & agr_by == "nation" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
            Ethnicity != "All, All Origins"  & rural_urban_class == "All" & Education != 666)
 
 ## -- figure 3, attributable burden---

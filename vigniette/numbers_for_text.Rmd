@@ -20,7 +20,7 @@ tracDir <- "../data/02_tracts"
 exp_tracDir <- "../data/03_exp_tracts"
 censDir <- "../data/05_demog"
 cens_agrDir <- "../data/06_dem.agr/nation"
-summaryDir <- "../data/15_summary"
+summaryDir <- "../data/17_summary"
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
@@ -390,5 +390,62 @@ pm_summ %>%
 ```
 
 
+ 
+## Analysis by education and rural-ruban class
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education != 666 & 
+           rural_urban_class == "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Year %in% c(2016)  #2009, 
+     & method == "di_gee" & measure3 == "value" 
+    & scenario == "real")  %>% 
+  transmute(
+    Year, Education,
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) #%>%
+  #ggplot(aes(x = Year, y= mean, color = Education)) +
+  #geom_line()
+```
 
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education == 666 & 
+           rural_urban_class != "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    #Year %in% c(2016) & #2009, 
+      method == "di_gee" & measure3 == "value" 
+    & scenario == "real")  %>% 
+  transmute(
+    Year, rural_urban_class,
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) %>%
+  ggplot(aes(x = Year, y= mean, color = rural_urban_class)) +
+  geom_line()
+```
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education == 666 & 
+           rural_urban_class != "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Year %in% c(1990, 2016) & #2009, 
+      method == "di_gee" & measure3 == "value" 
+    & scenario == "real")  %>% 
+  group_by(Year) %>%
+    summarize(max_abs_diff = max(mean)-min(mean),
+              rel_diff = max(mean)/min(mean),
+              .groups = 'drop') %>%
+  transmute(
+    Year, #rural_urban_class,
+    max_abs_diff = round(max_abs_diff, 2),
+    rel_diff = round(rel_diff, 2)
+  )
+  #%>%
+  #ggplot(aes(x = Year, y= mean, color = rural_urban_class)) +
+  #geom_line()
+```
 
