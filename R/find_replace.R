@@ -190,7 +190,7 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
       df[, replacecolumn] <- replacement$to
     }
 
-    if(is_factor_column) df[, replacecolumn] <- as.factor(df[, replacecolumn])
+    #if(is_factor_column) df[, replacecolumn] <- as.factor(df[, replacecolumn])
   }
 
   # Convert the unique string back to NA

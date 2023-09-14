@@ -4,9 +4,10 @@ suppressMessages({
 
 findreplace_education <- tribble(
   ~replacecolumns,  ~from, ~to,
-  "Education", "lower", "High school graduate or lower",
+  "Education", "lower", "High school graduate or Lower",
   "Education", "middle", "Some college education but no 4-year college degree",
-  "Education", "higher", "4-year college graduate or higher"
+  "Education", "higher", "4-year college graduate or Higher",
+  "Education", "666", "666"
 )
 
 findreplace_measure2 <- tribble(
@@ -50,9 +51,9 @@ findreplace_rural_urban_class <- tribble(
 
 findreplace_svi_bin <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin", "1", "high SVI",
-  "svi_bin", "2", "middle SVI",
-  "svi_bin", "3", "low SVI",
+  "svi_bin", "1", "High SVI",
+  "svi_bin", "2", "Middle SVI",
+  "svi_bin", "3", "Low SVI",
   "svi_bin", "666", "All"
 )
 
@@ -63,33 +64,33 @@ findreplace_svi_bin <- tribble(
 
 findreplace_svi_bin1 <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin1", "1", "high Socioeconomic Status",
-  "svi_bin1", "2", "middle Socioeconomic Status",
-  "svi_bin1", "3", "low Socioeconomic Status",
+  "svi_bin1", "1", "High Socioeconomic Status",
+  "svi_bin1", "2", "Middle Socioeconomic Status",
+  "svi_bin1", "3", "Low Socioeconomic Status",
   "svi_bin1", "666", "All"
 )
 
 findreplace_svi_bin2 <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin2", "1", "high Household Characteristics",
-  "svi_bin2", "2", "middle Household Characteristics",
-  "svi_bin2", "3", "low Household Characteristics",
+  "svi_bin2", "1", "High Household Characteristics",
+  "svi_bin2", "2", "Middle Household Characteristics",
+  "svi_bin2", "3", "Low Household Characteristics",
   "svi_bin2", "666", "All"
 )
 
 findreplace_svi_bin3 <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin3", "1", "high",
-  "svi_bin3", "2", "middle",
-  "svi_bin3", "3", "low",
+  "svi_bin3", "1", "High Minority Status",
+  "svi_bin3", "2", "Middle Minority Status",
+  "svi_bin3", "3", "Low Minority Status",
   "svi_bin3", "666", "All"
 )
 
 findreplace_svi_bin4 <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin4", "1", "high",
-  "svi_bin4", "2", "middle",
-  "svi_bin4", "3", "low",
+  "svi_bin4", "1", "High Housing Type & Transportation",
+  "svi_bin4", "2", "Middle Housing Type & Transportation",
+  "svi_bin4", "3", "Low Housing Type & Transportation",
   "svi_bin4", "666", "All"
 )
 
