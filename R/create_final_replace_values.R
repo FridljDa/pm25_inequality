@@ -1,5 +1,6 @@
 suppressMessages({
   library(tibble)
+  library(dplyr)
 })
 
 findreplace_education <- tribble(
