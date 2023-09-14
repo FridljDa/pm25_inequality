@@ -12,6 +12,10 @@ get_group_colors <- function(df = NULL) {
   group.colors <- c(
     RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
     RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2],
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2")[1:3],
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2")[1:3],
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2")[1:3],
+    RColorBrewer::brewer.pal(n = 8, name = "Dark2")[1:3],
     RColorBrewer::brewer.pal(n = 8, name = "Dark2")[1:3]
   )
 
@@ -31,8 +35,23 @@ get_group_colors <- function(df = NULL) {
     "Small-medium metro",
     "high SVI",
     "middle SVI",
-    "low SVI"
-  )
+    "low SVI",
+
+    "High Socioeconomic Status",
+    "Middle Socioeconomic Status",
+    "Low Socioeconomic Status",
+
+    "High Household Characteristics",
+    "Middle Household Characteristics",
+    "Low Household Characteristics",
+
+    "High Minority Status",
+    "Middle Minority Status",
+    "Low Minority Status",
+
+    "High Housing Type & Transportation",
+    "Middle Housing Type & Transportation",
+    "Low Housing Type & Transportation")
 
   #if (!is.null(df)) {
   #  browser()

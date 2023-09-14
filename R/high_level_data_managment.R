@@ -57,37 +57,37 @@ read_data <- function(path) {
       "All", "666"
     )),
     svi_bin = col_factor(levels = c(
-      "low SVI", "1",
-      "middle SVI", "2",
-      "high SVI", "3",
+      "Low SVI", "1",
+      "Middle SVI", "2",
+      "High SVI", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin1 = col_factor(levels = c(
-      "low", "1",
-      "middle", "2",
-      "high", "3",
+      "Low Socioeconomic Status", "1",
+      "Middle Socioeconomic Status", "2",
+      "High Socioeconomic Status", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin2 = col_factor(levels = c(
-      "low", "1",
-      "middle", "2",
-      "high", "3",
+      "Low Household Characteristics", "1",
+      "Middle Household Characteristics", "2",
+      "High Household Characteristics", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin3 = col_factor(levels = c(
-      "low", "1",
-      "middle", "2",
-      "high", "3",
+      "Low Minority Status", "1",
+      "Middle Minority Status", "2",
+      "High Minority Status", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin4 = col_factor(levels = c(
-      "low", "1",
-      "middle", "2",
-      "high", "3",
+      "Low Housing Type & Transportation", "1",
+      "Middle Housing Type & Transportation", "2",
+      "High Housing Type & Transportation", "3",
       "All", "666",
       "Unknown"
     )),
@@ -152,7 +152,6 @@ read_data <- function(path) {
       "White", "White, All Origins",
       "All, All Origins", "All, All Origins"
     ))
-    # TODO Hispanic.Origin
   )
 
   column_names_available <- names(col_types_data[["cols"]])
