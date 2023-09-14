@@ -1,5 +1,4 @@
-
-#read_data
+# read_data
 #' Read Data from CSV file
 #'
 #' This function reads data from a CSV file at a given path. It specifies column types
@@ -18,8 +17,8 @@
 read_data <- function(path) {
   # Read the first row of the CSV file
   first_row <- readr::read_csv(path,
-                               n_max = 1,
-                               show_col_types = FALSE
+    n_max = 1,
+    show_col_types = FALSE
   )
 
   # Get the column names
@@ -28,10 +27,12 @@ read_data <- function(path) {
   col_types_data <- cols(
     source2 = col_factor(levels = c("Census", "CDC", "cens2")),
     attr = col_factor(levels = c("overall", "total", "attributable")),
-    label_cause = col_factor(levels = c("all-cause",  "ncd_lri",
-                                              "cvd_ihd", "cvd_stroke",
-                                              "neo_lung", "resp_copd",
-                                              "lri", "t2_dm")),
+    label_cause = col_factor(levels = c(
+      "all-cause", "ncd_lri",
+      "cvd_ihd", "cvd_stroke",
+      "neo_lung", "resp_copd",
+      "lri", "t2_dm"
+    )),
     pop_size = col_double(),
     mean = col_double(), lower = col_double(), upper = col_double(),
     pm = col_double(), prop = col_double(),
@@ -48,7 +49,7 @@ read_data <- function(path) {
     tract = col_integer(),
     GEO_ID = col_character(),
     Population = col_double(),
-    agr_by = col_factor(levels = c("nation","county", "STATEFP")),
+    agr_by = col_factor(levels = c("nation", "county", "STATEFP")),
     rural_urban_class = col_factor(levels = c(
       "Large metro", "1",
       "Small-medium metro", "2",
@@ -93,9 +94,9 @@ read_data <- function(path) {
     Deaths = col_integer(),
     Education = col_factor(levels = c(
       "666", "Unknown",
-      "High school graduate or lower" , "lower",
+      "High school graduate or lower", "lower",
       "Some college education but no 4-year college degree", "middle",
-      "4-year college graduate or higher","higher"
+      "4-year college graduate or higher", "higher"
     )),
     nation = col_factor(levels = c(
       "us"
@@ -164,8 +165,8 @@ read_data <- function(path) {
   col_types_data[["cols"]] <- col_types_data[["cols"]][column_names_intersection]
 
   df <- readr::read_csv(path,
-                        col_types = col_types_data,
-                        show_col_types = FALSE
+    col_types = col_types_data,
+    show_col_types = FALSE
   )
 
   parsing_problems <- readr::problems(df)
@@ -175,10 +176,12 @@ read_data <- function(path) {
     unique_levels <- lapply(df2, unique)
     problem_column <- parsing_problems$col[1]
     first_problem <- df2[1, problem_column]
-    #browser()
+    # browser()
 
-    warning(paste("Parsing issues detected in" , path, "in column",
-                  problem_column, "(", first_problem, "). Please check the CSV file."))
+    warning(paste(
+      "Parsing issues detected in", path, "in column",
+      problem_column, "(", first_problem, "). Please check the CSV file."
+    ))
     return(df2)
   }
 
@@ -208,7 +211,6 @@ read_data <- function(path) {
 #' }
 #' @export
 search_files <- function(directory, string, ends_with = FALSE) {
-
   # Ensure the directory exists before proceeding
   if (!dir.exists(directory)) {
     stop(paste("Directory", directory, "does not exist."))
@@ -255,7 +257,7 @@ create_directory <- function(dir_path) {
 #' The function will also print which script was run and how long it took.
 #'
 #' @param script A string specifying the name/path of the script to be run.
-#' @param args A string specifying the arguments to be passed to the script. Default is "" (no arguments).
+#' @param args A string specifying the arguments to be passed to the script. Default is NULL (no arguments).
 #'
 #' @return NULL. This function is mainly called for its side effects (running the script and printing the results).
 #' @examples
@@ -264,7 +266,7 @@ create_directory <- function(dir_path) {
 #' run_script("my_script.R", "--arg value")
 #' }
 #' @export
-run_script <- function(script, args = "") {
+run_script <- function(script, args = NULL) {
   sysname <- Sys.info()["sysname"]
 
   # Record the start time
@@ -328,3 +330,81 @@ add_custom_rows <- function(df) {
 
   return(df)
 }
+
+#' Generate Filtered Dataframes Based on Condition Combinations
+#'
+#' This function takes a dataframe and filters it based on all possible combinations
+#' of the conditions specified for each variable.
+#'
+#' @param df A dataframe to filter.
+#' @return A list of filtered dataframes.
+generate_filtered_dfs <- function(df) {
+  df_list <- list()
+
+  columns <- c("Education", "Ethnicity", "rural_urban_class", "svi_bin", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4")
+
+  # bool_list <- rep(list(c(TRUE, FALSE)), length(columns))
+
+  # Use expand.grid to generate all combinations
+  # all_combinations <- do.call(expand.grid, bool_list)
+  # colnames(all_combinations) <- columns
+
+  # Loop through all combinations of conditions
+  for (edu in c(666, "not 666")) {
+    for (eth in c("All, All Origins", "not All, All Origins")) {
+      for (ruc in c("All", "not All")) {
+        for (svi in c("All", "not All")) {
+          for (svi1 in c("All", "not All")) {
+            for (svi2 in c("All", "not All")) {
+              for (svi3 in c("All", "not All")) {
+                for (svi4 in c("All", "not All")) {
+                  # Generate filter conditions
+                  filter_conditions <- list(
+                    if (edu == 666) quote(Education == 666) else quote(Education != 666),
+                    if (eth == "All, All Origins") quote(Ethnicity == "All, All Origins") else quote(Ethnicity != "All, All Origins"),
+                    if (ruc == "All") quote(rural_urban_class == "All") else quote(rural_urban_class != "All"),
+                    if (svi == "All") quote(svi_bin == "All") else quote(svi_bin != "All"),
+                    if (svi1 == "All") quote(svi_bin1 == "All") else quote(svi_bin1 != "All"),
+                    if (svi2 == "All") quote(svi_bin2 == "All") else quote(svi_bin2 != "All"),
+                    if (svi3 == "All") quote(svi_bin3 == "All") else quote(svi_bin3 != "All"),
+                    if (svi4 == "All") quote(svi_bin4 == "All") else quote(svi_bin4 != "All")
+                  )
+
+                  # Filter dataframe based on conditions
+                  temp_df <- df %>% filter(!!!filter_conditions)
+
+
+                  key <- list(
+                    if (edu == 666) NA else "Education",
+                    if (eth == "All, All Origins") NA else "Ethnicity",
+                    if (ruc == "All") NA else "rural_urban_class",
+                    if (svi == "All") NA else "svi_bin",
+                    if (svi1 == "All") NA else "svi_bin1",
+                    if (svi2 == "All") NA else "svi_bin2",
+                    if (svi3 == "All") NA else "svi_bin3",
+                    if (svi4 == "All") NA else "svi_bin4"
+                  )
+                  key <- key[!is.na(key)]
+                  if(rlang::is_empty(key)){
+                    key <- "All"
+                  }else{
+                    key <- paste(key, collapse = "*")
+                  }
+
+                  df_list[[key]] <- temp_df
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  # Filter out empty dataframes
+  df_list <- purrr::discard(df_list, ~ nrow(.x) == 0)
+  return(df_list)
+}
+
+# Use the function
+#df_list <- generate_filtered_dfs(attr_burd)

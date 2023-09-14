@@ -146,6 +146,7 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
       dplyr::filter(replacecolumns == replacecolumn) %>%
       dplyr::mutate(replacecolumns = NULL)
 
+    is_factor_column <- is.factor(df[, replacecolumn])
     # reduce everything
     df <- df %>%
       simplify_columns_df(columns = replacecolumn)
@@ -188,6 +189,8 @@ replace_values <- function(df, findreplace, keep_value_if_missing = TRUE, NA_str
     }else{
       df[, replacecolumn] <- replacement$to
     }
+
+    if(is_factor_column) df[, replacecolumn] <- as.factor(df[, replacecolumn])
   }
 
   # Convert the unique string back to NA

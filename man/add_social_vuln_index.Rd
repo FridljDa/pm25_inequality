@@ -36,8 +36,7 @@ example_df <- data.frame(
 )
 
 # Use the function to add SVI to example_df
-result_df <- add_social_vuln_index(example_df, "FIPS.code", "Year", "data/08_svi/svi_lookup_table.csv")
+result_df <- add_social_vuln_index_new(example_df, "FIPS.code", "Year", "data/08_svi/svi_lookup_table.csv")
 print(result_df)
 }
-
 }
