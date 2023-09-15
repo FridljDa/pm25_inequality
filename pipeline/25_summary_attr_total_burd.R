@@ -41,7 +41,7 @@ states <- file.path(tmpDir, "states.csv") %>%
 tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
-
+#agr_bys <- "nation"
 ## --- read and bind attr burden----
 attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
@@ -72,6 +72,7 @@ if (nrow(attr_burden) == 0) {
 }
 ## --- read and bind all burden----
 agr_bys <- list.files(summaryHigherTotalDir)
+#agr_bys <- "nation"
 # Main operation
 total_burden <- map_dfr(agr_bys, function(agr_by) {
   files <- list.files(file.path(summaryHigherTotalDir, agr_by))

@@ -4,7 +4,13 @@
 \alias{plot_df}
 \title{Plot Data Frame with ggplot2}
 \usage{
-plot_df(df, color.column, group.colors = get_group_colors(df))
+plot_df(
+  df,
+  color.column,
+  group.colors = get_group_colors(df),
+  remove_legend = TRUE,
+  remove_y_titel = TRUE
+)
 }
 \arguments{
 \item{df}{Data frame containing the data to be plotted.}
