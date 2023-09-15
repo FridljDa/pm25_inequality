@@ -171,7 +171,7 @@ read_data <- function(path) {
   parsing_problems <- readr::problems(df)
 
   if (nrow(parsing_problems) > 0) {
-    df2 <- readr::read_csv(path)
+    df2 <- readr::read_csv(path, show_col_types = FALSE)
     unique_levels <- lapply(df2, unique)
     problem_column <- parsing_problems$col[1]
     first_problem <- df2[1, problem_column]
