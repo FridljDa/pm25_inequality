@@ -80,104 +80,6 @@ if(year <= 2008){
   attr_burden <- attr_burden %>%
     filter(Education == "666")
 }
-
-#attr_burden <- attr_burden %>% sample_n(20)
-## --sum up geographic levels from county----
-#attr_burden <- attr_burden %>% sample_n(20)
-if (agr_by != "county") {
-  cat("marginalised svi and rural_urban class info to attr_burden -starting\n")
-  tic("marginalised svi and rural_urban class info to attr_burden")
-  attr_burden <- add_custom_rows(attr_burden)
-
-  attr_burden <- attr_burden %>%
-    group_by_at(setdiff(
-      colnames(attr_burden),
-      c("mean", "lower", "upper")
-    )) %>% #summarise(across(c("mean", "lower", "upper"), sum), .groups = 'drop')
-    summarise(
-      mean = sum(mean),
-      lower = sum(lower),
-      upper = sum(upper),
-      .groups = 'drop')
-  toc()
-
-  # tic("added rural_urban class info to attr_burden")
-  # attr_burden_with_svi_rural_urban_class <- attr_burden %>%
-  #  add_rural_urban_class(FIPS.code.column = "county", silent = FALSE)
-  # toc()
-
-  # tic("added svi info to attr_burden")
-  # attr_burden_with_svi_rural_urban_class <- attr_burden_with_svi_rural_urban_class %>%
-  #  add_social_vuln_index(FIPS.code.column = "county", silent = FALSE)
-  # toc()
-
-  #TODO smarter and faster way:
-  #attr_burden_with_rural_urban_class <- rbind(
-  #  attr_burden %>% mutate(),
-  #  ...
-  #)
-
-  #tic("marginalised svi and rural_urban class info to attr_burden")
-  #cat("marginalised svi and rural_urban class info to attr_burden 1-starting\n")
-  #tic("marginalised svi and rural_urban class info to attr_burden 1")
-  #cols_to_group_by <- setdiff(names(attr_burden), c("rural_urban_class", "mean", "lower", "upper"))
-  #attr_burden_with_rural_urban_class <- attr_burden %>%
-  #  group_by(across(all_of(cols_to_group_by))) %>%
-  #  summarise(
-  #    mean = sum(mean),
-  #    lower = sum(lower),
-  #    upper = sum(upper),
-  #    .groups = 'drop'
-  #  ) %>%
-  #  mutate(rural_urban_class = as.factor(666))
-  #toc()
-
-  #cat("marginalised svi and rural_urban class info to attr_burden 2-starting\n")
-  #tic("marginalised svi and rural_urban class info to attr_burden 2")
-  #cols_to_group_by <- setdiff(names(attr_burden), c("svi_bin", "mean", "lower", "upper"))
-  #attr_burden_with_svi_bin <- attr_burden %>%
-  #  group_by(across(all_of(cols_to_group_by))) %>%
-  #  summarise(
-  #    mean = sum(mean),
-  #    lower = sum(lower),
-  #    upper = sum(upper),
-  #    .groups = 'drop'
-  #  ) %>%
-  #  mutate(svi_bin = as.factor(666))
-  #toc()
-
-  #cat("marginalised svi and rural_urban class info to attr_burden 3-starting\n")
-  #tic("marginalised svi and rural_urban class info to attr_burden 3")
-  #cols_to_group_by <- setdiff(names(attr_burden), c("rural_urban_class", "svi_bin", "mean", "lower", "upper"))
-  #attr_burden_with_all <- attr_burden %>%
-  #  group_by(across(all_of(cols_to_group_by))) %>%
-  #  summarise(
-  #    mean = sum(mean),
-  #    lower = sum(lower),
-  #    upper = sum(upper),
-  #    .groups = 'drop'
-  #  ) %>%
-  #  mutate(rural_urban_class = as.factor(666), svi_bin = as.factor(666))
-  #toc()
-
-  #attr_burden <- rbind(
-  #  attr_burden_with_rural_urban_class,
-  #  attr_burden_with_svi_bin,
-  #  attr_burden_with_all
-  #)
-
-  #rm(
-  #  attr_burden_with_rural_urban_class,
-  #  attr_burden_with_svi_bin,
-  #  attr_burden_with_all
-  #)
-  #toc()
-} else {
-  # attr_burden$rural_urban_class <- NA
-  # attr_burden$svi_bin <- NA
-}
-
-
 #filter out combination
 attr_burden <- attr_burden %>%
   filter(!(Education != "666" & Race != "All" &
@@ -218,12 +120,40 @@ attr_burden <- attr_burden %>%
 
 toc()
 
+#attr_burden <- attr_burden %>% sample_n(20)
+## --sum up geographic levels from county----
+#attr_burden <- attr_burden %>% sample_n(20)
+if (agr_by != "county") {
+  cat("marginalised svi and rural_urban class info to attr_burden -starting\n")
+  tic("marginalised svi and rural_urban class info to attr_burden")
+  attr_burden <- add_custom_rows(attr_burden)
+
+  attr_burden <- attr_burden %>%
+    group_by_at(setdiff(
+      colnames(attr_burden),
+      c("mean", "lower", "upper")
+    )) %>% #summarise(across(c("mean", "lower", "upper"), sum), .groups = 'drop')
+    summarise(
+      mean = sum(mean),
+      lower = sum(lower),
+      upper = sum(upper),
+      .groups = 'drop')
+  toc()
+
+
+} else {
+  # attr_burden$rural_urban_class <- NA
+  # attr_burden$svi_bin <- NA
+}
+
+
+
 #------ age-standartised rates-------
 attr_burden_absolute_number <- attr_burden %>%
   filter(measure1 == "Deaths" &
     measure2 == "absolute number")
 
-cat("start: age standardised attributable burden\n")
+cat("age standardised attributable burden-start\n")
 tic("age standardised attributable burden")
 attr_burden <- add_age_adjusted_rate(attr_burden_absolute_number,
   year,
@@ -233,7 +163,8 @@ attr_burden <- add_age_adjusted_rate(attr_burden_absolute_number,
 toc()
 
 ### ----sum out age ----
-
+cat("summed out age-start\n")
+tic("summed out age")
 group_variables <- setdiff(colnames(attr_burden), c("mean", "lower", "upper", "min_age", "max_age"))
 attr_burden_over_25 <- attr_burden %>%
   filter(min_age >= 25) %>%
@@ -264,5 +195,6 @@ attr_burden_over_65 <- attr_burden %>%
   )
 
 attr_burden <- rbind(attr_burden_over_25, attr_burden_over_65)
+toc()
 
 fwrite(attr_burden, summaryHigherDir)

@@ -67,6 +67,38 @@ if(year <= 2008){
     filter(Education == "666")
 }
 
+## ----group out counties---
+
+if (agr_by == "STATEFP") {
+  total_burden <- total_burden %>%
+    mutate(
+      STATEFP = stringr::str_sub(county, 1, -4) %>%
+        as.integer() %>%
+        as.factor()
+    )
+  group_variables <- setdiff(
+    colnames(total_burden),
+    c("value", "county")
+  )
+} else if (agr_by == "nation") {
+  total_burden <- total_burden %>%
+    mutate(
+      nation = "us"
+    )
+  group_variables <- setdiff(colnames(total_burden), c("value", "county"))
+} else if (agr_by == "county") {
+  group_variables <- setdiff(colnames(total_burden), c("value"))
+}
+
+tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
+total_burden <- total_burden %>%
+  group_by_at(vars(all_of(c(group_variables)))) %>%
+  summarise(
+    value = sum(value)
+  ) %>%
+  ungroup()
+
+toc()
 #total_burden <- total_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 
@@ -140,38 +172,7 @@ total_burden <- total_burden %>%
              (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" | svi_bin2 != "666"
               | svi_bin3 != "666" | svi_bin4 != "666")))
 
-## ----group out counties---
 
-if (agr_by == "STATEFP") {
-  total_burden <- total_burden %>%
-    mutate(
-      STATEFP = stringr::str_sub(county, 1, -4) %>%
-        as.integer() %>%
-        as.factor()
-    )
-  group_variables <- setdiff(
-    colnames(total_burden),
-    c("value", "county")
-  )
-} else if (agr_by == "nation") {
-  total_burden <- total_burden %>%
-    mutate(
-      nation = "us"
-    )
-  group_variables <- setdiff(colnames(total_burden), c("value", "county"))
-} else if (agr_by == "county") {
-  group_variables <- setdiff(colnames(total_burden), c("value"))
-}
-
-tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
-total_burden <- total_burden %>%
-  group_by_at(vars(all_of(c(group_variables)))) %>%
-  summarise(
-    value = sum(value)
-  ) %>%
-  ungroup()
-
-toc()
 
 #------ age-standartised rates-------
 total_burden_absolute_number <- total_burden %>%
