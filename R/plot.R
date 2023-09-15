@@ -81,19 +81,16 @@ get_legend_custom <- function(group.colors){
   return(legend_plot)
 }
 
-#' Plot Data Frame with ggplot2
+#' Plot data frame using ggplot2
 #'
-#' This function takes a data frame and plots it using ggplot2. It allows for optional
-#' lower and upper bounds to be plotted as a ribbon.
-#'
-#' @param df Data frame containing the data to be plotted.
-#' @param color.column Character string specifying the column to be used for coloring.
-#' @param group.colors Vector of colors to be used for the groups. Default is obtained from `get_group_colors()`.
-#'
+#' @param df Data frame containing the data to plot.
+#' @param color.column The column in df that will be used to color the lines.
+#' @param group.colors A vector of colors to use for the different groups.
+#' @param remove_legend Logical value to indicate whether to remove the legend or not.
+#' @param remove_y_titel Logical value to indicate whether to remove the y-axis title or not.
 #' @return A ggplot object.
-#' @export
 #' @examples
-#' plot_df(df, "Ethnicity")
+#' plot_df(data.frame(Year = c(2000, 2001), mean = c(1, 2), color = c("red", "blue")))
 plot_df <- function(df, color.column, group.colors = get_group_colors(df),
                     remove_legend = TRUE, remove_y_titel = TRUE) {
   # Check that all required columns are present
@@ -101,11 +98,41 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
     stop("Required columns (Year, mean, and color column) are not present in the data frame.")
   }
 
+  # Check for multiple values for x, y, and color
+  check_df <- df %>% group_by(Year, !!sym(color.column)) %>% summarise(n = n())
+  if(any(check_df$n > 1)) {
+
+    # Check for multiple unique values in all columns except "Year" and color.column
+    excluded_columns <- c("Year", color.column, "lower", "upper", "mean", "value")
+    other_columns <- setdiff(colnames(df), excluded_columns)
+
+    for (col in other_columns) {
+      unique_values <- df %>%
+        select(!!sym(col)) %>%
+        unlist %>%
+        unique
+        #group_by(Year, !!sym(color.column)) %>%
+        #summarise(unique_vals = list(unique(!!sym(col)))) %>%
+        #ungroup()
+
+      #problematic_rows <- unique_values %>% filter(length(unique_vals) > 1)
+
+      if (length(unique_values) > 1) {
+        print(glue::glue("Column '{col}' has multiple unique values: {unique_values}"))
+        #print(unique(unlist(unique_values$unique_vals)))
+        #print("problematic multiple values:")
+        #print(unique_values)
+      }
+    }
+
+    stop("Multiple values for x, y, and color are not allowed.")
+  }
+
   # Add ribbon if lower and upper columns are present
   if ("lower" %in% colnames(df)) {
     g <- ggplot(df, aes(x = Year, y = mean, color = !!sym(color.column)))
     g <- g + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
-  }else if ("value" %in% colnames(df)){
+  } else if ("value" %in% colnames(df)) {
     g <- ggplot(df, aes(x = Year, y = value, color = !!sym(color.column)))
   }
 
@@ -118,7 +145,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
 
   if(remove_legend){
     g <- g + theme(legend.title = element_blank(), legend.position = "none")
-  }else{
+  } else {
     g <- g + theme(legend.position = "bottom")
   }
   if(remove_y_titel){
@@ -128,6 +155,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
 
   return(g)
 }
+
 
 #' Create Combined Plot
 #'
@@ -142,7 +170,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
 #' @examples
 #' # Assuming `plots`, `legend_plot`, `row_annotations`, and `column_annotations` are defined
 #' create_combined_plot(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000")
-create_combined_plot_new <- function(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000") {
+create_combined_plot <- function(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000") {
   require(gridExtra)
   require(grid)
 
