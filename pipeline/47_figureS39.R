@@ -103,24 +103,26 @@ attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-grep("\\*", attr_b
 attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-(attr_burd_filtered_dfs_names == "All")]
 
 # Create plots
-plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+attr_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
   attr_burd_i <- attr_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
-  all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
-
-  attr_plot_i <- plot_df(attr_burd_i, color.column = attr_burd_filtered_dfs_names_i)
-  all_plot_i <- plot_df(all_burd_i, color.column = attr_burd_filtered_dfs_names_i)
+  attr_plot_i <- plot_df(attr_burd_i, color.column = attr_burd_filtered_dfs_names_i,
+                         remove_legend = FALSE)
   # Create the plot
 
   # Save the plot as both PNG and PDF
   ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "attr", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
          dpi = 300, attr_plot_i, height = 9, width = 8)
-  ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
-         dpi = 300, attr_plot_i, height = 9, width = 8)
+
+  return(attr_plot_i)
+})
+
+all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+  all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
+
+  all_plot_i <- plot_df(all_burd_i, color.column = attr_burd_filtered_dfs_names_i,
+                      remove_legend = FALSE)
 
   ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
          dpi = 300, all_plot_i, height = 9, width = 8)
-  ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
-         dpi = 300, all_plot_i, height = 9, width = 8)
-
-  return(attr_plot_i)
+  return(all_plot_i)
 })

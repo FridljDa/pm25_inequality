@@ -92,7 +92,7 @@ get_legend_custom <- function(group.colors){
 #' @examples
 #' plot_df(data.frame(Year = c(2000, 2001), mean = c(1, 2), color = c("red", "blue")))
 plot_df <- function(df, color.column, group.colors = get_group_colors(df),
-                    remove_legend = TRUE, remove_y_titel = TRUE) {
+                    remove_legend = TRUE, remove_y_titel = TRUE, title = NA) {
   # Check that all required columns are present
   if (!all(c("Year", color.column) %in% colnames(df))) {
     stop("Required columns (Year, mean, and color column) are not present in the data frame.")
@@ -153,6 +153,11 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
       theme(axis.title.y = element_blank())
   }
 
+  if(!is.na(title)){
+    g <- g +
+      theme(title = title)
+  }
+
   return(g)
 }
 
@@ -168,12 +173,11 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
 #' @param y_axis A string for the y-axis label.
 #' @return A combined plot.
 #' @examples
-#' # Assuming `plots`, `legend_plot`, `row_annotations`, and `column_annotations` are defined
+#' # Assuming plots, legend_plot, row_annotations, and column_annotations are defined
 #' create_combined_plot(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000")
 create_combined_plot <- function(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000") {
   require(gridExtra)
   require(grid)
-
   blank_space <- 0.05
   figure_width <- 1.3
   figure_height <- 1
@@ -181,7 +185,6 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
   # Check that length(legend_plot) = n_row * n_row
   n_row <- length(row_annotations)
   n_col <- length(column_annotations)
-
   if (length(legend_plot) != n_row * n_row) {
     stop("Error: The length of legend_plot must be equal to n_row * n_row.")
   }
@@ -193,44 +196,80 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
     plots[start_idx:end_idx] <- update_ylim(plots[start_idx:end_idx])
   }
 
-  lay <- rbind(
-    c(NA, NA, 13, NA, 14),
-    c(10, 7, 1, NA, 4),
-    c(NA, 7, NA, NA, NA),
-    c(11, 7, 2, NA, 5),
-    c(NA, 7, NA, NA, NA),
-    c(12, 7, 3, NA, 6),
-    c(NA, NA, 9, 9, 9)
-  )
+  if(TRUE){
+    total_rows <- 2 * n_row + 1 # Each plot row is separated by a blank space row, plus one row for col_text_grobs
+    total_cols <- 2 * n_col + 1
+    # Initialize matrix with NA
+    lay <- matrix(NA, nrow = total_rows, ncol = total_cols)
+    # Fill in matrix with indices for plots
+    counter <- 1
+
+    for (c in seq(3, total_cols, by = 2)) {
+      for (r in seq(2, total_rows, by = 2)) {
+        #print(c+r)
+        #print(c)
+        lay[r, c] <- counter
+        counter <- counter + 1
+      }
+    }
+    # Add for y title
+    lay[2:(total_rows-1), 2] <- counter
+    counter <- counter + 1
+
+    # Add index for legend
+    lay[total_rows, 3:total_cols] <- counter
+    counter <- counter + 1
+
+    # Add indices for row_text_grobs and col_text_grobs
+    lay[seq(2, total_rows, by = 2), 1] <- counter:(counter + n_row - 1)
+    counter <- counter + n_row
+
+    lay[1, seq(3, total_cols, by = 2)] <- counter:(counter + n_col - 1)
+    counter <- counter + n_col
+  }
+
+  #lay <- rbind(
+  #  c(NA, NA, 13, NA, 14),
+  #  c(10, 7, 1, NA, 4),
+  #  c(NA, 7, NA, NA, NA),
+  #  c(11, 7, 2, NA, 5),
+  #  c(NA, 7, NA, NA, NA),
+  #  c(12, 7, 3, NA, 6),
+  #  c(NA, NA, 9, 9, 9)
+  #)
 
   t1 <- textGrob(y_axis, rot = 90, gp = gpar(fontsize = 10), vjust = 1)
-
   # Create textGrobs for row and column annotations
   row_text_grobs <- lapply(row_annotations, function(text) {
-    text <- insert_line_break(text, 20)
+    text <- insert_line_break(text, n = 15)
     grobTree(
       rectGrob(gp = gpar(fill = "grey")),
       textGrob(text, rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
     )
   })
-
   col_text_grobs <- lapply(column_annotations, function(text) {
-    text <- insert_line_break(text, 20)
+    text <- insert_line_break(text, n = 15)
     grobTree(
       rectGrob(gp = gpar(fill = "grey")),
       textGrob(text, gp = gpar(fontsize = 10, fontface = "bold"))
     )
   })
-
   # Combine all grobs
-  #n_col*n_row + n_row+ n_col +1+1
-  all_grobs <- c(plots, row_text_grobs, col_text_grobs, list(legend_plot), t1)
-  #list(t1),
+  all_grobs <- c(plots, list(t1), list(legend_plot), row_text_grobs, col_text_grobs)
+
+  #g_combined <- grid.arrange(
+  #  grobs = all_grobs,
+  #  widths = c(0.25, 0.1, figure_width, blank_space, figure_width),
+  #  heights = c(0.2, figure_height, blank_space, figure_height, blank_space, figure_height, 0.6),
+  #  layout_matrix = lay
+  #)
+  widths = c(0.25, 0.1, figure_width, rep(c(blank_space, figure_width), times = n_col - 1))
+  heights = c(0.2, figure_height, rep(c(blank_space, figure_height), times = n_row - 1), 0.6)
 
   g_combined <- grid.arrange(
     grobs = all_grobs,
-    widths = c(0.25, 0.1, figure_width, blank_space, figure_width),
-    heights = c(0.2, figure_height, blank_space, figure_height, blank_space, figure_height, 0.6),
+    widths = widths,
+    heights = heights,
     layout_matrix = lay
   )
 
