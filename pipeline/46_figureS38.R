@@ -65,10 +65,10 @@ file_list <- file_list[grepl("nation", file_list)]
 file_list <- file.path(summaryDir, file_list)
 
 # Read data from file_list into a list and combine into a single data table
-attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
+attr_burd <- lapply(file_list, read.csv) %>% rbindlist(use.names = TRUE, fill = TRUE)
 
 # Read data from 'all_burd.csv' into a data table
-all_burd <- file.path(summaryDir, "all_burd.csv") %>% read_data()
+all_burd <- file.path(summaryDir, "all_burd.csv") %>% read.csv() #read_data()
 
 # Filter data tables based on 'min_ageI'
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
@@ -82,16 +82,20 @@ options(bitmapType = "cairo")
 
 # Filter and prepare data
 attr_burd <- attr_burd %>%
-  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" &
            attr == "attributable"  &
            source == "National Vital Statistics System" & scenario == scenarioI &
-           agr_by == "nation" & method == methodI & measure3 == "value")
+           agr_by == "nation" & method == methodI & measure2 == "age-adjusted rate per 100,000")
+
+attr_burd_prop <- attr_burd %>% filter(measure3 == "prop. of overall burden")
+attr_burd <- attr_burd %>% filter(measure3 == "value")
 
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            source == "National Vital Statistics System" & agr_by == "nation" )
 
 # Generate filtered data frames
+attr_burd_prop_filtered_dfs <- generate_filtered_dfs(attr_burd)
 attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd)
 all_burd_filtered_dfs <- generate_filtered_dfs(all_burd)
 
@@ -115,8 +119,40 @@ plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_na
   # Save the plot as both PNG and PDF
   ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
          dpi = 300, plot_i, height = 9, width = 8)
-  ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
+  #ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
+  #       dpi = 300, plot_i, height = 9, width = 8)
+
+  return(plot_i)
+})
+
+# Get the names of filtered data frames
+attr_burd_prop_filtered_dfs_names <- names(attr_burd_prop_filtered_dfs)
+
+# Filter names to include only those with '*'
+attr_burd_prop_filtered_dfs_names <- attr_burd_prop_filtered_dfs_names[grep("\\*", attr_burd_prop_filtered_dfs_names)]
+
+plots <- lapply(attr_burd_prop_filtered_dfs_names, function(attr_burd_prop_filtered_dfs_names_i){
+  split_color_var <- strsplit(attr_burd_prop_filtered_dfs_names_i, "\\*")
+  split_color_var <- unlist(split_color_var)
+  color.column <- split_color_var[[1]]
+  split.column <- split_color_var[[2]]
+
+  #attr_burd_prop_filtered_dfs_names_i <- attr_burd_prop_filtered_dfs_names[[1]]
+
+  attr_burd_prop_i <- attr_burd_prop_filtered_dfs[[attr_burd_prop_filtered_dfs_names_i]]
+
+  attr_burd_prop_split_i <- split(attr_burd_prop_i,  attr_burd_prop_i[[split.column]])
+
+
+  plots <- lapply(attr_burd_prop_split_i, function(x) plot_df(x, color.column))
+
+  browser()
+
+  # Save the plot as both PNG and PDF
+  ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
          dpi = 300, plot_i, height = 9, width = 8)
+  #ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
+  #       dpi = 300, plot_i, height = 9, width = 8)
 
   return(plot_i)
 })
