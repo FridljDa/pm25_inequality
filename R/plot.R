@@ -94,7 +94,8 @@ get_legend_custom <- function(group.colors){
 #' @export
 #' @examples
 #' plot_df(df, "Ethnicity")
-plot_df <- function(df, color.column, group.colors = get_group_colors(df)) {
+plot_df <- function(df, color.column, group.colors = get_group_colors(df),
+                    remove_legend = TRUE, remove_y_titel = TRUE) {
   # Check that all required columns are present
   if (!all(c("Year", color.column) %in% colnames(df))) {
     stop("Required columns (Year, mean, and color column) are not present in the data frame.")
@@ -113,9 +114,17 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df)) {
     geom_line(size = 1.5) +
     xlab("Year") +
     scale_colour_manual(values = group.colors) +
-    theme(legend.title = element_blank()) +
-    theme(legend.position = "none", axis.title.y = element_blank()) +
     ylim(0, NA)
+
+  if(remove_legend){
+    g <- g + theme(legend.title = element_blank(), legend.position = "none")
+  }else{
+    g <- g + theme(legend.position = "bottom")
+  }
+  if(remove_y_titel){
+    g <- g +
+      theme(axis.title.y = element_blank())
+  }
 
   return(g)
 }
@@ -133,7 +142,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df)) {
 #' @examples
 #' # Assuming `plots`, `legend_plot`, `row_annotations`, and `column_annotations` are defined
 #' create_combined_plot(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000")
-create_combined_plot <- function(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000") {
+create_combined_plot_new <- function(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000") {
   require(gridExtra)
   require(grid)
 
@@ -170,6 +179,7 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
 
   # Create textGrobs for row and column annotations
   row_text_grobs <- lapply(row_annotations, function(text) {
+    text <- insert_line_break(text, 20)
     grobTree(
       rectGrob(gp = gpar(fill = "grey")),
       textGrob(text, rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
@@ -177,6 +187,7 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
   })
 
   col_text_grobs <- lapply(column_annotations, function(text) {
+    text <- insert_line_break(text, 20)
     grobTree(
       rectGrob(gp = gpar(fill = "grey")),
       textGrob(text, gp = gpar(fontsize = 10, fontface = "bold"))
@@ -184,7 +195,9 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
   })
 
   # Combine all grobs
-  all_grobs <- c(plots, list(t1), list(legend_plot), row_text_grobs, col_text_grobs)
+  #n_col*n_row + n_row+ n_col +1+1
+  all_grobs <- c(plots, row_text_grobs, col_text_grobs, list(legend_plot), t1)
+  #list(t1),
 
   g_combined <- grid.arrange(
     grobs = all_grobs,
@@ -229,8 +242,10 @@ update_ylim <- function(ggplot_list) {
   # Calculate the overall maximum value
   max1 <- max(max_values, na.rm = TRUE)
 
-  # Update y-axis limits for each ggplot
-  updated_ggplot_list <- lapply(ggplot_list, function(g) g + ylim(0, max1))
+  suppressMessages({
+    # Update y-axis limits for each ggplot
+    updated_ggplot_list <- lapply(ggplot_list, function(g) g + ylim(0, max1))
+  })
 
   return(updated_ggplot_list)
 }
@@ -260,8 +275,8 @@ plot_attr_all_burd <- function(attr_burd, all_burd, color.column, split.column) 
   attr_burd <- attr_burd %>% replace_values(findreplace)
 
   # Drop empty factor levels
-  attr_burd[[split.column]] <- droplevels(attr_burd[[split.column]])
-  all_burd[[split.column]] <- droplevels(all_burd[[split.column]])
+  attr_burd <- attr_burd %>% dplyr::mutate(across(where(is.factor), droplevels))
+  all_burd <- all_burd %>% dplyr::mutate(across(where(is.factor), droplevels))
 
   # Get unique split values
   unique_split_values <- unique(attr_burd[[split.column]])
@@ -290,3 +305,36 @@ plot_attr_all_burd <- function(attr_burd, all_burd, color.column, split.column) 
 
   return(g_combined)
 }
+
+#' Insert a line break at an appropriate space in a string
+#'
+#' This function takes a string and an integer n as input.
+#' If the string has length n or more, it inserts a "\n" at a space character,
+#' ideally as centrally as possible within the string.
+#'
+#' @param string Character vector containing the string to be modified.
+#' @param n Integer specifying the length threshold for line break insertion.
+#'
+#' @return A modified string with a line break at an appropriate space if the original string's length is n or more.
+#' @examples
+#' insert_line_break("alle meine Entchen schwimmen auf dem See", 20)
+#' insert_line_break("short string", 20)
+insert_line_break <- function(string, n = 20) {
+  str_len <- nchar(string)
+
+  if (str_len < n) {
+    return(string)
+  }
+
+  # Find all the positions of space characters in the string
+  space_positions <- gregexpr(" ", string)[[1]]
+
+  # Find the space that is closest to the middle of the string
+  central_space <- space_positions[which.min(abs(space_positions - str_len / 2))]
+
+  # Insert the line break at the central space position
+  modified_string <- paste0(substr(string, 1, central_space - 1), "\n ", substr(string, central_space + 1, str_len))
+
+  return(modified_string)
+}
+
