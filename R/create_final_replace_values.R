@@ -5,9 +5,9 @@ suppressMessages({
 
 findreplace_education <- tribble(
   ~replacecolumns,  ~from, ~to,
-  "Education", "lower", "High school graduate or Lower",
+  "Education", "lower", "High school graduate or lower",
   "Education", "middle", "Some college education but no 4-year college degree",
-  "Education", "higher", "4-year college graduate or Higher",
+  "Education", "higher", "4-year college graduate or higher",
   "Education", "666", "666"
 )
 
