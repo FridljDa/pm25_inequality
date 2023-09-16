@@ -41,7 +41,7 @@ states <- file.path(tmpDir, "states.csv") %>%
 tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
-#agr_bys <- "nation"
+agr_bys <- "nation"
 ## --- read and bind attr burden----
 cat("row-bind attr_burden-start")
 tic("row-bind attr_burden")
@@ -77,7 +77,7 @@ if (nrow(attr_burden) == 0) {
 cat("row-bind total_burden-start")
 tic("row-bind total_burden")
 agr_bys <- list.files(summaryHigherTotalDir)
-#agr_bys <- "nation"
+agr_bys <- "nation"
 # Main operation
 total_burden <- map_dfr(agr_bys, function(agr_by) {
   files <- list.files(file.path(summaryHigherTotalDir, agr_by))
@@ -154,12 +154,12 @@ attr_burden <- attr_burden %>%
 findreplace <- read.csv("data/final_findreplace.csv")
 
 cat("total_burden findreplace-start")
-tic("total_burden findreplace-start")
+tic("total_burden findreplace")
 total_burden <- total_burden %>% replace_values(findreplace)
 toc()
 
 cat("attr_burden findreplace-start")
-tic("attr_burden findreplace-start")
+tic("attr_burden findreplace")
 attr_burden <- attr_burden %>% replace_values(findreplace)
 toc()
 
