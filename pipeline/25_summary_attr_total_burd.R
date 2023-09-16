@@ -43,6 +43,8 @@ tic("summarized all burden and attributable burden data")
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
 #agr_bys <- "nation"
 ## --- read and bind attr burden----
+cat("row-bind attr_burden-start")
+tic("row-bind attr_burden")
 attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
   attr_burden <- lapply(files, function(file) read_data(file.path(propOfAttrBurdDir, agr_by, file)))
@@ -63,6 +65,7 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   }
   return(attr_burden)
 })
+toc()
 attr_burden <- attr_burden %>%
   rbindlist(use.names = TRUE, fill = TRUE) %>%
   as.data.frame()
@@ -71,6 +74,8 @@ if (nrow(attr_burden) == 0) {
   stop(paste("attr_burd still missing in year", year, "in 25_summary_attr_total_burd.R"))
 }
 ## --- read and bind all burden----
+cat("row-bind total_burden-start")
+tic("row-bind total_burden")
 agr_bys <- list.files(summaryHigherTotalDir)
 #agr_bys <- "nation"
 # Main operation
@@ -92,6 +97,7 @@ total_burden <- map_dfr(agr_bys, function(agr_by) {
   return(total_burden)
 }) %>%
   as.data.frame()
+toc()
 
 # Optionally, remove rows where all columns have NAs or are empty
 # total_burden <- total_burden %>% filter(!complete.cases(sapply(., is.na)))
@@ -146,8 +152,16 @@ attr_burden <- attr_burden %>%
   mutate(Ethnicity = as.factor(Ethnicity))
 
 findreplace <- read.csv("data/final_findreplace.csv")
+
+cat("total_burden findreplace-start")
+tic("total_burden findreplace-start")
 total_burden <- total_burden %>% replace_values(findreplace)
+toc()
+
+cat("attr_burden findreplace-start")
+tic("attr_burden findreplace-start")
 attr_burden <- attr_burden %>% replace_values(findreplace)
+toc()
 
 ## --- test final---
 total_burden <- total_burden %>% filter(!is.na(rural_urban_class)) # TODO
