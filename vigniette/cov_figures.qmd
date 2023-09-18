@@ -1,0 +1,198 @@
+---
+title: "cov_figures"
+format: html
+editor: visual
+---
+
+## CoV
+
+```{r}
+library(data.table)
+library(dplyr)
+library(magrittr)
+library(scales)
+library(ggplot2)
+library(here)
+```
+
+```{r}
+min_ageI <- 25
+```
+
+```{r}
+summaryDir <- here("data/17_summary")
+file_list <- list.files(summaryDir)
+file_list <- file_list[grepl("nation", file_list)]
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file.path(summaryDir, file_list)
+
+attr_burden <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
+attr_burden <- attr_burden %>% filter(min_age == min_ageI)
+```
+
+```{r}
+# Filter and prepare data
+attr_burden <- attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" &
+    attr == "attributable" &
+    source == "National Vital Statistics System" & scenario == "real" &
+    agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
+    measure3 == "value")
+
+
+attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burden)
+
+attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
+```
+
+```{r}
+attr_burd_filtered_dfs_names_star <- attr_burd_filtered_dfs_names[grep("\\*", attr_burd_filtered_dfs_names)]
+```
+
+## 1
+
+```{r}
+attr_burd_filtered_dfs_star <- attr_burd_filtered_dfs[attr_burd_filtered_dfs_names_star]
+```
+
+```{r}
+attr_burd_filtered_dfs_star_sum <- lapply(seq_along(attr_burd_filtered_dfs_names_star), function(i) {
+  attr_burd_prop_filtered_dfs_names_i <- attr_burd_filtered_dfs_names_star[i]
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_star[[i]]
+
+  split_color_var <- strsplit(attr_burd_prop_filtered_dfs_names_i, "\\*")
+  split_color_var <- unlist(split_color_var)
+
+  color.column <- split_color_var[[1]]
+  split.column <- split_color_var[[2]]
+
+  attr_burd_filtered_dfs_i %>%
+    group_by(across(c(split.column, "Year"))) %>%
+    mutate(n = n()) %>%
+    ungroup() %>%
+    group_by(across(c(split.column, "Year", "n"))) %>%
+    summarise(
+      CoV = sqrt(var(mean, na.rm = TRUE)) / mean(mean, na.rm = TRUE),
+      max_abs_diff = max(mean, na.rm = TRUE) - min(mean, na.rm = TRUE),
+      rel_diff = max(mean, na.rm = TRUE) / min(mean, na.rm = TRUE),
+      average = mean(mean, na.rm = TRUE),
+      over = list(unique(.data[[color.column]][mean >= average]))
+    )
+})
+names(attr_burd_filtered_dfs_star_sum) <- names(attr_burd_filtered_dfs_star)
+```
+
+### Ethnicity
+
+```{r}
+attr_burd_filtered_dfs_names_star_ethn <- attr_burd_filtered_dfs_names_star[grep("Ethnicity", names(attr_burd_filtered_dfs_star_sum))]
+
+attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtered_dfs_names_star_ethn), function(i) {
+  attr_burd_filtered_dfs_names_star_ethn_i <- attr_burd_filtered_dfs_names_star_ethn[i]
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_star_sum[[attr_burd_filtered_dfs_names_star_ethn_i]]
+
+  split_color_var <- strsplit(attr_burd_filtered_dfs_names_star_ethn_i, "\\*")
+  split_color_var <- unlist(split_color_var)
+
+  color.column <- split_color_var[[1]]
+  split.column <- split_color_var[[2]]
+
+  attr_burd_filtered_dfs_i %>%
+      ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
+      geom_line() +
+      ylim(0, NA) +
+      theme(legend.position = "bottom") #, title = color.column 
+})
+combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
+combined_plot
+```
+```{r}
+ggsave(filename = here("data/18_figures/di_gee-real-25/figure_cov_ethnicity.png"), 
+       combined_plot)
+```
+
+### Education
+
+```{r}
+attr_burd_filtered_dfs_names_star_educ <- attr_burd_filtered_dfs_names_star[grep("Education", names(attr_burd_filtered_dfs_star_sum))]
+
+attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtered_dfs_names_star_educ), function(i) {
+  attr_burd_filtered_dfs_names_star_educ_i <- attr_burd_filtered_dfs_names_star_educ[i]
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_star_sum[[attr_burd_filtered_dfs_names_star_educ_i]]
+
+  split_color_var <- strsplit(attr_burd_filtered_dfs_names_star_educ_i, "\\*")
+  split_color_var <- unlist(split_color_var)
+
+  color.column <- split_color_var[[1]]
+  split.column <- split_color_var[[2]]
+
+  attr_burd_filtered_dfs_i %>%
+      ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
+      geom_line() +
+      ylim(0, NA) +
+      theme(legend.position = "bottom") #, title = color.column 
+})
+combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
+combined_plot
+```
+```{r}
+ggsave(filename = here("data/18_figures/di_gee-real-25/figure_cov_education.png"), 
+       combined_plot)
+```
+
+## 2
+
+```{r}
+attr_burd_filtered_df_year <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i){
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_i %>%
+    group_by(Year) %>%
+    summarise(n = n(),
+              CoV = sqrt(var(mean))/mean(mean), .groups = "drop")
+})
+```
+
+```{r}
+attr_burd_filtered_df_year <- lapply(names(attr_burd_filtered_df_year), function(name) {
+  # Use dplyr's mutate to add a new column with the name of the list element
+  attr_burd_subsets_i <- attr_burd_filtered_df_year[[name]]
+  attr_burd_subsets_i <- dplyr::mutate(attr_burd_subsets_i, "cat" := name)
+  return(attr_burd_subsets_i)
+})
+attr_burd_filtered_df_year <-  rbindlist(attr_burd_filtered_df_year)
+```
+
+```{r}
+attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
+  filter(!is.na(CoV))
+```
+
+```{r}
+attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
+  mutate(new_factor = factor(
+    case_when(
+      str_detect(cat, "Ethnicity") ~ "Ethnicity",
+      str_detect(cat, "Education") ~ "Education",
+      TRUE ~ "Other"
+    ),
+    levels = c("Ethnicity", "Education", "Other")
+  ))
+```
+
+```{r}
+g <- ggplot(attr_burd_filtered_df_year, aes(x = Year, y = CoV, color = cat))
+g <- g +
+  geom_line(size = 1) +
+  guides(color=guide_legend(ncol=3,byrow=TRUE))+
+  theme(legend.title=element_blank()) +
+  ylim(0, NA) +
+  ylab("Coefficient of Variation (CoV)") +
+  theme(legend.position = "bottom")+
+  theme(text = element_text(size=14.5)) +
+  facet_wrap(vars(new_factor))
+g
+```
+```{r}
+ggsave(filename = here("data/18_figures/di_gee-real-25/figureS8.png"), 
+       combined_plot, height = 6, width = 8)
+```
+

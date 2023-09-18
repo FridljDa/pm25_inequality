@@ -97,6 +97,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
   if (!all(c("Year", color.column) %in% colnames(df))) {
     stop("Required columns (Year, mean, and color column) are not present in the data frame.")
   }
+  df <- df %>% distinct()
 
   # Check for multiple values for x, y, and color
   check_df <- df %>% group_by(Year, !!sym(color.column)) %>% summarise(n = n())

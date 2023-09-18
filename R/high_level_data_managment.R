@@ -338,6 +338,7 @@ add_custom_rows <- function(df) {
 #' @param df A dataframe to filter.
 #' @return A list of filtered dataframes.
 generate_filtered_dfs <- function(df) {
+  df <- as.data.frame(df)
   df_list <- list()
 
   columns <- c("Education", "Ethnicity", "rural_urban_class", "svi_bin", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4")
