@@ -66,6 +66,7 @@ file_list <- file.path(summaryDir, file_list)
 
 # Read data from file_list into a list and combine into a single data table
 attr_burd <- lapply(file_list, read.csv) %>% rbindlist(use.names = TRUE, fill = TRUE)
+attr_burd <- attr_burd %>% select(-starts_with("..."))
 
 # Read data from 'all_burd.csv' into a data table
 all_burd <- file.path(summaryDir, "all_burd.csv") %>% read.csv() # read_data()
@@ -93,6 +94,10 @@ attr_burd <- attr_burd %>% filter(measure3 == "value")
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & agr_by == "nation")
+
+### get distinct---
+#all_burd <- all_burd %>% distinct()
+#attr_burd <- attr_burd %>% distinct()
 
 # Generate filtered data frames
 attr_burd_prop_filtered_dfs <- generate_filtered_dfs(attr_burd_prop)
@@ -147,6 +152,7 @@ plots <- lapply(attr_burd_prop_filtered_dfs_names, function(attr_burd_prop_filte
   group.colors <- get_group_colors(attr_burd_prop_i)
   group.colors <- group.colors[names(group.colors) %in% unique(attr_burd_prop_i[[color.column]])]
   legend_plot <- get_legend_custom(group.colors)
+  #browser()
 
   combined_plot <- create_combined_plot(
     plots = plots,
