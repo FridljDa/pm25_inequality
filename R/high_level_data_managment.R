@@ -64,30 +64,30 @@ read_data <- function(path) {
       "Unknown"
     )),
     svi_bin1 = col_factor(levels = c(
-      "Low Socioeconomic Status", "1",
-      "Middle Socioeconomic Status", "2",
-      "High Socioeconomic Status", "3",
+      "Low SES", "1",
+      "Middle SES", "2",
+      "High SES", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin2 = col_factor(levels = c(
-      "Low Household Characteristics", "1",
-      "Middle Household Characteristics", "2",
-      "High Household Characteristics", "3",
+      "Low HC", "1",
+      "Middle HC", "2",
+      "High HC", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin3 = col_factor(levels = c(
-      "Low Minority Status", "1",
-      "Middle Minority Status", "2",
-      "High Minority Status", "3",
+      "Low MS", "1",
+      "Middle MS", "2",
+      "High MS", "3",
       "All", "666",
       "Unknown"
     )),
     svi_bin4 = col_factor(levels = c(
-      "Low Housing Type & Transportation", "1",
-      "Middle Housing Type & Transportation", "2",
-      "High Housing Type & Transportation", "3",
+      "Low HTT", "1",
+      "Middle HTT", "2",
+      "High HTT", "3",
       "All", "666",
       "Unknown"
     )),

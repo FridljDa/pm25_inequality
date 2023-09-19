@@ -37,21 +37,21 @@ get_group_colors <- function(df = NULL) {
     "middle SVI",
     "low SVI",
 
-    "High Socioeconomic Status",
-    "Middle Socioeconomic Status",
-    "Low Socioeconomic Status",
+    "High SES",
+    "Middle SES",
+    "Low SES",
 
-    "High Household Characteristics",
-    "Middle Household Characteristics",
-    "Low Household Characteristics",
+    "High HC",
+    "Middle HC",
+    "Low HC",
 
-    "High Minority Status",
-    "Middle Minority Status",
-    "Low Minority Status",
+    "High MS",
+    "Middle MS",
+    "Low MS",
 
-    "High Housing Type & Transportation",
-    "Middle Housing Type & Transportation",
-    "Low Housing Type & Transportation")
+    "High HTT",
+    "Middle HTT",
+    "Low HTT")
 
   #if (!is.null(df)) {
   #  browser()
