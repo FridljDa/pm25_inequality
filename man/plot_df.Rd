@@ -2,30 +2,34 @@
 % Please edit documentation in R/plot.R
 \name{plot_df}
 \alias{plot_df}
-\title{Plot Data Frame with ggplot2}
+\title{Plot data frame using ggplot2}
 \usage{
 plot_df(
   df,
   color.column,
   group.colors = get_group_colors(df),
   remove_legend = TRUE,
-  remove_y_titel = TRUE
+  remove_y_titel = TRUE,
+  title = NA
 )
 }
 \arguments{
-\item{df}{Data frame containing the data to be plotted.}
+\item{df}{Data frame containing the data to plot.}
 
-\item{color.column}{Character string specifying the column to be used for coloring.}
+\item{color.column}{The column in df that will be used to color the lines.}
 
-\item{group.colors}{Vector of colors to be used for the groups. Default is obtained from \code{get_group_colors()}.}
+\item{group.colors}{A vector of colors to use for the different groups.}
+
+\item{remove_legend}{Logical value to indicate whether to remove the legend or not.}
+
+\item{remove_y_titel}{Logical value to indicate whether to remove the y-axis title or not.}
 }
 \value{
 A ggplot object.
 }
 \description{
-This function takes a data frame and plots it using ggplot2. It allows for optional
-lower and upper bounds to be plotted as a ribbon.
+Plot data frame using ggplot2
 }
 \examples{
-plot_df(df, "Ethnicity")
+plot_df(data.frame(Year = c(2000, 2001), mean = c(1, 2), color = c("red", "blue")))
 }

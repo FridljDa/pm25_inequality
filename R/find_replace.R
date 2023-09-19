@@ -303,3 +303,30 @@ group_summarize_add_column <- function(df, column, new_col_value) {
   # result %>%
   #  mutate({{ column }} := new_col_value)
 }
+
+#' Replace strings or rename columns based on a find-replace mapping
+#'
+#' @param input A string vector or a data.frame.
+#' @param findreplace A data.frame with two character columns: 'from' and 'to'.
+#' @return Either a modified string vector or a data.frame with renamed columns.
+#' @examples
+#' findreplace <- data.frame(from = c("apple", "banana"), to = c("fruit", "berry"))
+#' replaceOrRename(c("apple", "banana", "apple pie"), findreplace)
+#' replaceOrRename(data.frame(apple = 1:3, banana = 4:6), findreplace)
+replaceOrRename <- function(input, findreplace) {
+  # Check if input is a string vector
+  if (is.character(input)) {
+    for (i in 1:nrow(findreplace)) {
+      input <- gsub(findreplace$from[i], findreplace$to[i], input)
+    }
+    return(input)
+  }
+
+  # Check if input is a data.frame
+  if (is.data.frame(input)) {
+    colnames(input) <- plyr::revalue(colnames(input), setNames(as.character(findreplace$to), findreplace$from))
+    return(input)
+  }
+
+  stop("Input must be either a string vector or a data.frame.")
+}

@@ -30,6 +30,6 @@ A combined plot.
 This function combines multiple plots and additional elements like text and legends into a single plot.
 }
 \examples{
-# Assuming `plots`, `legend_plot`, `row_annotations`, and `column_annotations` are defined
+# Assuming plots, legend_plot, row_annotations, and column_annotations are defined
 create_combined_plot(plots, legend_plot, row_annotations, column_annotations, y_axis = "Age-adjusted mortality per 100,000")
 }
