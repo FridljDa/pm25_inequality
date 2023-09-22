@@ -184,7 +184,7 @@ group.colors <- get_group_colors()
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     scale_colour_manual(

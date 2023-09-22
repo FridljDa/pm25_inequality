@@ -119,7 +119,7 @@ names(group.colors) <- c(
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     scale_colour_manual(values = group.colors, limits = force) +
     theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +

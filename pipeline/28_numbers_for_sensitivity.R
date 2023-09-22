@@ -42,7 +42,7 @@ attr_burd_methods <- attr_burd_methods %>%
   summarise(CoV = sqrt(var(mean))/mean(mean))
 
 plot_attr_burd_methods <- ggplot(attr_burd_methods, aes(x = Year, y = CoV, color = method)) +
-  geom_line(size = 1.5)
+  geom_line(linewidth = 1.5)
 
 #variability by Race-ethnicity for each scenario
 attr_burd_scenario <- attr_burd %>%
@@ -58,7 +58,7 @@ attr_burd_scenario <- attr_burd_scenario %>%
   summarise(CoV = sqrt(var(mean))/mean(mean))
 
 plot_attr_burd_scenario <- ggplot(attr_burd_scenario, aes(x = Year, y = CoV, color = scenario)) +
-  geom_line(size = 1.5)
+  geom_line(linewidth = 1.5)
 
 ##same exposure
 year <- 2016

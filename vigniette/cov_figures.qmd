@@ -13,6 +13,9 @@ library(magrittr)
 library(scales)
 library(ggplot2)
 library(here)
+library(stringr)
+devtools::load_all()
+theme_set(theme_classic(base_family = "Helvetica"))
 ```
 
 ```{r}
@@ -38,14 +41,73 @@ attr_burden <- attr_burden %>%
     source == "National Vital Statistics System" & scenario == "real" &
     agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
     measure3 == "value")
-
-
-attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burden)
-
-attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
+attr_burden <- attr_burden %>% select(-"...1")
 ```
 
 ```{r}
+attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burden)
+```
+
+## rename stuff
+
+```{r}
+attr_burd_filtered_dfs <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i) {
+  attr_burd_filtered_dfs_i %>%
+    rename(
+      SVI = svi_bin,
+      SES = svi_bin1,
+      HCD = svi_bin2,
+      MSL = svi_bin3,
+      HT = svi_bin4,
+      Rurality = rural_urban_class
+    )
+})
+```
+
+```{r}
+findreplace <- tribble(
+  ~to, ~from,
+  "SES", "svi_bin1",
+  "HCD", "svi_bin2",
+  "MSL", "svi_bin3",
+  "HT", "svi_bin4",
+  "SVI", "svi_bin",
+  "Rurality", "rural_urban_class",
+  "SES", "Socioeconomic Status",
+  "HCD", "Household Characteristics",
+  "MS", "Minority Status",
+  "HT", "Housing Type & Transportation",
+  "All", "All"
+)
+findreplace <- findreplace %>%
+  mutate(replacecolumns = to)
+
+findreplace <- rbind(findreplace,
+                     findreplace %>%
+                       mutate(to = paste("High", to),
+                              from = paste("High", from)),
+                     findreplace %>%
+                       mutate(to = paste("Middle", to),
+                              from = paste("Middle", from)),
+                     findreplace %>%
+                       mutate(to = paste("Low", to),
+                              from = paste("Low", from)),
+                     findreplace %>%
+                       mutate(to = "All",
+                              from = "All"))
+findreplace <- distinct(findreplace)
+
+names(attr_burd_filtered_dfs) <- replaceOrRename(names(attr_burd_filtered_dfs), findreplace)
+
+
+attr_burd_filtered_dfs <- lapply(attr_burd_filtered_dfs,
+                                 function(attr_burd_filtered_dfs_i){
+                                   replace_values(attr_burd_filtered_dfs_i, findreplace = findreplace)
+                                 })
+```
+
+```{r}
+attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
 attr_burd_filtered_dfs_names_star <- attr_burd_filtered_dfs_names[grep("\\*", attr_burd_filtered_dfs_names)]
 ```
 
@@ -98,17 +160,25 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
   split.column <- split_color_var[[2]]
 
   attr_burd_filtered_dfs_i %>%
-      ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
-      geom_line() +
-      ylim(0, NA) +
-      theme(legend.position = "bottom") #, title = color.column 
+    ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
+    geom_line(linewidth = 1.5) +
+    xlab("Year") +
+    ylim(0, NA) +
+    theme(legend.position = "bottom") +
+    guides(color = guide_legend(nrow = 3, byrow = TRUE))
 })
+
+attr_burd_filtered_dfs_star_sum_ethn_plots <- update_ylim(attr_burd_filtered_dfs_star_sum_ethn_plots, column = "CoV")
+
 combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
 combined_plot
 ```
+
 ```{r}
-ggsave(filename = here("data/18_figures/di_gee-real-25/figure_cov_ethnicity.png"), 
-       combined_plot)
+ggsave(
+  filename = here("data/18_figures/di_gee-real-25/figure_cov_ethnicity.png"),
+  combined_plot
+)
 ```
 
 ### Education
@@ -127,27 +197,36 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
   split.column <- split_color_var[[2]]
 
   attr_burd_filtered_dfs_i %>%
-      ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
-      geom_line() +
-      ylim(0, NA) +
-      theme(legend.position = "bottom") #, title = color.column 
+    ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
+    geom_line(linewidth = 1.5) +
+    xlab("Year") +
+    ylim(0, NA) +
+    theme(legend.position = "bottom") +
+    guides(color = guide_legend(nrow = 3, byrow = TRUE)) # , title = color.column
 })
+attr_burd_filtered_dfs_star_sum_ethn_plots <- update_ylim(attr_burd_filtered_dfs_star_sum_ethn_plots, column = "CoV")
+
 combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
 combined_plot
 ```
+
 ```{r}
-ggsave(filename = here("data/18_figures/di_gee-real-25/figure_cov_education.png"), 
-       combined_plot)
+ggsave(
+  filename = here("data/18_figures/di_gee-real-25/figure_cov_education.png"),
+  combined_plot
+)
 ```
 
 ## 2
 
 ```{r}
-attr_burd_filtered_df_year <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i){
+attr_burd_filtered_df_year <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i) {
   attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_i %>%
     group_by(Year) %>%
-    summarise(n = n(),
-              CoV = sqrt(var(mean))/mean(mean), .groups = "drop")
+    summarise(
+      n = n(),
+      CoV = sqrt(var(mean)) / mean(mean), .groups = "drop"
+    )
 })
 ```
 
@@ -158,7 +237,7 @@ attr_burd_filtered_df_year <- lapply(names(attr_burd_filtered_df_year), function
   attr_burd_subsets_i <- dplyr::mutate(attr_burd_subsets_i, "cat" := name)
   return(attr_burd_subsets_i)
 })
-attr_burd_filtered_df_year <-  rbindlist(attr_burd_filtered_df_year)
+attr_burd_filtered_df_year <- rbindlist(attr_burd_filtered_df_year)
 ```
 
 ```{r}
@@ -181,18 +260,21 @@ attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
 ```{r}
 g <- ggplot(attr_burd_filtered_df_year, aes(x = Year, y = CoV, color = cat))
 g <- g +
-  geom_line(size = 1) +
-  guides(color=guide_legend(ncol=3,byrow=TRUE))+
-  theme(legend.title=element_blank()) +
+  geom_line(linewidth = 1.5) +
+  xlab("Year") +
+  guides(color = guide_legend(ncol = 3, byrow = TRUE)) +
+  theme(legend.title = element_blank()) +
   ylim(0, NA) +
   ylab("Coefficient of Variation (CoV)") +
-  theme(legend.position = "bottom")+
-  theme(text = element_text(size=14.5)) +
+  theme(legend.position = "bottom") +
+  theme(text = element_text(size = 14.5)) +
   facet_wrap(vars(new_factor))
 g
 ```
-```{r}
-ggsave(filename = here("data/18_figures/di_gee-real-25/figureS8.png"), 
-       combined_plot, height = 6, width = 8)
-```
 
+```{r}
+ggsave(
+  filename = here("data/18_figures/di_gee-real-25/figureS8.png"),
+  combined_plot, height = 6, width = 8
+)
+```
