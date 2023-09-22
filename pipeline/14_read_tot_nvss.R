@@ -32,7 +32,7 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   agr_by <- "county"
-  year <- 2003
+  year <- 2013
 
   totalBurdenDir <- "data/08_total_burden/nvss"
   totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
@@ -52,6 +52,7 @@ agr_bys <- agr_by
 # totalBurdenDir <- "data/raw_restricted_fake"
 totalBurdenDir <- "data/08_total_burden/nvss"
 totalBurdenDir <- "/share/pi/mkiang/mcod_restricted"
+totalBurdenDir <- "/Volumes/DanielDrive/restricted use mortality counts"
 # Where the parsed files should be stored
 # totalBurdenParsedDir <- "./Transfer_for_daniel"
 totalBurdenParsedDir <- "data/09_total_burden_parsed"
@@ -89,14 +90,14 @@ totalBurdenParsedDirX <- file.path(
 
 if (file.exists(totalBurdenParsedDirX)) {
   #next
-  quit()
+  #quit()
 }
 if(agr_by != "county"){
   quit()
 }
 ## ----- read total burden ---------
 total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year) # , fix_states = FALSE
-if(TRUE){
+if(FALSE){
   total_burden <- total_burden %>% sample_n(5)
 }
 # total_burden <- narcan:::.import_restricted_data(totalBurdenDirX, year = year)

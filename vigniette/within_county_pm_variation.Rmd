@@ -31,7 +31,7 @@ censDir <- here::here("data/05_demog")
 summaryDir <- here::here("data/15_summary") 
 tmpDir <- here::here("data/tmp") 
 cens_agrDir <- here::here("data/06_dem.agr")
-figuresDir <- here::here("data/16_figures") 
+figuresDir <- here::here("data/18_figures") 
 ```
 
 ## Calculate within county PM2.5 variation by population
