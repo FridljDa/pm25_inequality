@@ -12,7 +12,6 @@ library(magrittr)
 library(dplyr)
 library(testthat)
 
-
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
 

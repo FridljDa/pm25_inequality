@@ -12,7 +12,6 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  #
 })
 
 options(dplyr.summarise.inform = FALSE)

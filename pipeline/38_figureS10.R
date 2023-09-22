@@ -35,7 +35,7 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   scenarioI <- "real"
   methodI <- "di_gee"
-  
+
   min_ageI <- 25
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
@@ -79,12 +79,12 @@ joined_all_attr <- joined_all_attr %>% filter(Region != "United States")
 
 joined_all_attr <- joined_all_attr %>%
   filter(
-    Region %in% most_pop_states & 
+    Region %in% most_pop_states &
     Year == 2016 &
     Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    source == "National Vital Statistics System" & 
-    method == methodI 
-    ) 
+    source == "National Vital Statistics System" &
+    method == methodI
+    )
 
 joined_all_attr <- joined_all_attr %>%
   group_by_at(vars(all_of(setdiff(colnames(joined_all_attr), c("Year", "overall_value", "mean", "lower", "upper", "population_state_all"))))) %>%
@@ -112,11 +112,11 @@ rm(test1, test, model.lm)
 ## --- seperate three factors----
 joined_all_attr1 <- joined_all_attr %>%
   filter(Ethnicity %in% c("Black American", "NH White") &
-    Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" ) 
+    Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" )
 
 joined_all_attr2 <- joined_all_attr %>%
   filter(Education %in% c("4-year college graduate or higher", "High school graduate or lower") &
-    Education != 666 & Ethnicity == "All, All Origins" & 
+    Education != 666 & Ethnicity == "All, All Origins" &
       rural_urban_class == "All" & method == methodI) #TODO
 
 joined_all_attr3 <- joined_all_attr %>%
@@ -147,9 +147,9 @@ convex_regions2 <- joined_all_attr2[convex_hull2, "Region"]
 convex_regions3 <- joined_all_attr3[convex_hull3, "Region"]
 rm(convex_hull1, convex_hull2, convex_hull3)
 ## ---colors---
-group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
+group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)],
                   RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
-group.colors[c(12,2)] <- group.colors[c(2,12)] 
+group.colors[c(12,2)] <- group.colors[c(2,12)]
 names(group.colors) <- c(
   "NH White",
   "Hispanic or Latino White",
@@ -176,7 +176,7 @@ add_stuff <- function(g, convex_regions, group.colors){
     #  slope = 0.5,
     #  linetype = 3
     #) +
-    
+
     # annotate("text", label = "m = 0.5", x = 885, y = 160, size = 3.5)+
     #theme(
     #  legend.title = element_blank(),
@@ -198,7 +198,7 @@ add_stuff <- function(g, convex_regions, group.colors){
     ) +
     scale_colour_manual(values = group.colors) +
     guides(size = "none")  # , alpha =
-  
+
   # https://stackoverflow.com/questions/8545035/scatterplot-with-marginal-histograms-in-ggplot2
   # https://cran.r-project.org/web/packages/ggExtra/readme/README.html
   g <- ggExtra::ggMarginal(g, groupColour = TRUE, groupFill = TRUE, size = 15)
@@ -223,18 +223,18 @@ max_x <- max(c(joined_all_attr1$overall_value, joined_all_attr2$overall_value, j
 ###-----add information----
 g1 <- g1 +
   geom_errorbar(aes(ymin = lower, ymax = upper), alpha = 0.3, width = 10) +
-  geom_point(aes(size = point_size, color = Ethnicity, shape = agr_by)) 
+  geom_point(aes(size = point_size, color = Ethnicity, shape = agr_by))
 
-g1 <- add_stuff(g1, convex_regions1, group.colors) 
+g1 <- add_stuff(g1, convex_regions1, group.colors)
 
 g2 <- g2 +
   geom_errorbar(aes(ymin = lower, ymax = upper), alpha = 0.3, width = 10) +
-  geom_point(aes(size = point_size, color = Education, shape = agr_by)) 
+  geom_point(aes(size = point_size, color = Education, shape = agr_by))
 g2 <- add_stuff(g2, convex_regions2,  group.colors)
 
 g3 <- g3 +
   geom_errorbar(aes(ymin = lower, ymax = upper), alpha = 0.3, width = 10) +
-  geom_point(aes(size = point_size, color = rural_urban_class, shape = agr_by)) 
+  geom_point(aes(size = point_size, color = rural_urban_class, shape = agr_by))
 g3 <- add_stuff(g3, convex_regions3,  group.colors)
 
 ##--- legend ---
@@ -249,7 +249,7 @@ p1 <- ggplot(legend_df, aes(x, x, color = labels)) +
   theme(legend.title = element_blank(),
         legend.text=element_text(size=8)) +
   guides(col = guide_legend(ncol = 1))
-legend_plot <- cowplot::get_legend(p1) 
+legend_plot <- cowplot::get_legend(p1)
 ggdraw(legend_plot)
 rm(p1, legend_df)
 

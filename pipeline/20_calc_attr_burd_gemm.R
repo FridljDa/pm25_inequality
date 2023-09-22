@@ -7,7 +7,7 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
@@ -35,7 +35,11 @@ attr_burdenDir <- args[18]
 
 if (rlang::is_empty(args)) {
   year <- 2001
+<<<<<<< HEAD
   agr_by <- "county"
+=======
+  agr_by <- "nation"
+>>>>>>> b6376599a8945925bdd9e6a5cc3dda69814de51d
   source <- "nvss"
 
   tmpDir <-  "data/tmp"
