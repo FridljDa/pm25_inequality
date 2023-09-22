@@ -70,12 +70,15 @@ get_legend_custom <- function(group.colors){
     x = seq_along(group.colors),
     labels = names(group.colors)
   )
+
+  ncol = 3
+
   toy_data$labels <- factor(toy_data$labels, levels = names(group.colors))
   toy_plot <- ggplot(toy_data, aes(x, x, color = labels)) +
     geom_point() +
     scale_color_manual(values = group.colors) +
     theme(legend.title = element_blank()) +
-    guides(color = guide_legend(ncol = 3, byrow = TRUE))
+    guides(color = guide_legend(ncol = ncol, byrow = TRUE))
   legend_plot <- get_legend(toy_plot)
   legend_plot <- as_ggplot(legend_plot)
   return(legend_plot)
@@ -139,7 +142,7 @@ plot_df <- function(df, color.column, group.colors = get_group_colors(df),
 
   # Add line and other elements
   g <- g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     scale_colour_manual(values = group.colors) +
     ylim(0, NA)
@@ -186,8 +189,8 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
   # Check that length(legend_plot) = n_row * n_row
   n_row <- length(row_annotations)
   n_col <- length(column_annotations)
-  if (length(legend_plot) != n_row * n_row) {
-    stop("Error: The length of legend_plot must be equal to n_row * n_row.")
+  if (length(plots) != n_row * n_col) {
+    stop("Error: The length of plots must be equal to n_row * n_col")
   }
 
   # Update y-axis limits for each set of ggplot objects in the same column
@@ -281,10 +284,11 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
 #' Update y-axis limits for a list of ggplot objects
 #'
 #' This function takes a list of ggplot objects and sets the y-axis limits
-#' to be the same for all plots, based on the maximum value in either the 'upper' or 'value' column.
+#' to be the same for all plots, based on the maximum value in either the 'upper', 'value', or a specified column.
 #' Throws an error if neither column is present.
 #'
 #' @param ggplot_list A list of ggplot objects.
+#' @param column The name of the column to use for setting the y-axis limits. Defaults to NULL.
 #' @return A list of ggplot objects with updated y-axis limits.
 #' @examples
 #' g1 <- ggplot(data.frame(x = 1:10, upper = rnorm(10)), aes(x, upper)) + geom_line()
@@ -292,13 +296,15 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
 #' g3 <- ggplot(data.frame(x = 1:10, upper = rnorm(10)), aes(x, upper)) + geom_line()
 #' ggplot_list <- list(g1, g2, g3)
 #' updated_ggplot_list <- update_ylim(ggplot_list)
-update_ylim <- function(ggplot_list) {
+update_ylim <- function(ggplot_list, column = NULL) {
   # Initialize an empty vector to store maximum values
   max_values <- c()
 
   # Loop through each ggplot object to find the maximum value
   for (g in ggplot_list) {
-    if ("upper" %in% names(g$data)) {
+    if (!is.null(column) && column %in% names(g$data)) {
+      max_values <- c(max_values, max(g$data[[column]], na.rm = TRUE))
+    } else if ("upper" %in% names(g$data)) {
       max_values <- c(max_values, max(g$data$upper, na.rm = TRUE))
     } else if ("value" %in% names(g$data)) {
       max_values <- c(max_values, max(g$data$value, na.rm = TRUE))
@@ -317,6 +323,7 @@ update_ylim <- function(ggplot_list) {
 
   return(updated_ggplot_list)
 }
+
 
 #' Plot Combined Data for attr_burd and all_burd
 #'
