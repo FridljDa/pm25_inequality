@@ -135,11 +135,20 @@ paf_di <- inner_join_age_right_outer(pm_summ,
   hr,
   by = c("Race", "Hispanic.Origin")
 )
+
 paf_di <- paf_di %>%
   dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
   summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
   ungroup()
-
+#paf_di <- paf_di %>%
+#  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
+#  do({
+#    pm = .$pm
+#    pop_size = .$pop_size
+#    result = calculate_weighted_mean_ci(pm, pop_size)
+#    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp, lower = result$lower, upper = result$upper)
+#  }) %>%
+#  ungroup()
 
 rm(pm_summ, hr)
 paf_di <- paf_di %>%
