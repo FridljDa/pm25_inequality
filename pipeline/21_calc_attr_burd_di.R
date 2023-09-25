@@ -33,8 +33,6 @@ if (rlang::is_empty(args)) {
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  #totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  #
   attr_burdenDir <- "data/14_attr_burd"
 } else {
   year <- args[1]
@@ -55,7 +53,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  quit() #TODO
+  #quit() #TODO
 }
 
 
@@ -142,7 +140,7 @@ paf_di <- inner_join_age_right_outer(pm_summ,
 #  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
 #  summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
 #  ungroup()
-paf_di <- paf_di[1:200, ]
+#paf_di <- paf_di[1:200, ]
 paf_di <- paf_di %>%
   dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
   do({
@@ -164,7 +162,7 @@ paf_di <- paf_di %>%
 #[17] "pop_weight_pm_exp_lower" "pop_weight_pm_exp_upper"
 rm(pm_summ, hr)
 # Assuming delta_method_product is a function defined somewhere in your code
-browser()
+#browser()
 
 paf_di <- paf_di %>%
   rowwise() %>%
