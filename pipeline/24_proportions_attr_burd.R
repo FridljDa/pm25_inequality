@@ -131,7 +131,11 @@ if(nrow(attr_total_burden_prop_of_difference) == 0){
   warning(paste("1: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }
 
-attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference%>%
+#delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
+
+attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
+  #mutate(mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+  #       overall_total_burden_black = )
   mutate(
     mean = 100 * (mean - mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
       (overall_total_burden - overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]),
