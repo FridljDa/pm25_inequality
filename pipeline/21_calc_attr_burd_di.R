@@ -55,7 +55,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  #quit() #TODO
+  quit() #TODO
 }
 
 
@@ -164,8 +164,9 @@ paf_di <- paf_di %>%
 #[17] "pop_weight_pm_exp_lower" "pop_weight_pm_exp_upper"
 rm(pm_summ, hr)
 # Assuming delta_method_product is a function defined somewhere in your code
+browser()
 
-test <- paf_di %>%
+paf_di <- paf_di %>%
   rowwise() %>%
   do({
     mean_x = .$pop_weight_pm_exp - 5
@@ -181,21 +182,16 @@ test <- paf_di %>%
     data.frame(., paf_mean = result$mean, paf_lower = result$lb, paf_upper = result$ub)
   })
 
-
-
 paf_di <- paf_di %>%
-  mutate(
-    # PAF = 1-1/HR #TODO
-    paf_mean = (pop_weight_pm_exp - 5) * (hr_mean - 1) / 10,
-    paf_lower = (pop_weight_pm_exp - 5) * (hr_lower - 1) / 10,
-    paf_upper = (pop_weight_pm_exp - 5) * (hr_upper - 1) / 10,
-    pop_weight_pm_exp = NULL, hr_upper = NULL, hr_mean = NULL, hr_lower = NULL
-  ) %>%
-  mutate(paf_mean = pmin(0, paf_mean),
-         paf_lower = pmin(0, paf_lower),
-         paf_upper = pmin(0, paf_upper))
-
+   mutate(paf_mean = pmax(0, paf_mean),
+           paf_lower = pmax(0, paf_lower),
+           paf_upper = pmax(0, paf_upper))
+#"hr_mean"                 "hr_lower"                "hr_upper"
+#"pop_weight_pm_exp"       "pop_weight_pm_exp_lower" "pop_weight_pm_exp_upper"
 #if (agr_by == "county") paf_di$rural_urban_class <- as.factor(666) # TODO change total burden
+# Remove specific columns using the subset function
+paf_di <- paf_di %>%
+  subset(select = -c(hr_mean, hr_lower, hr_upper, pop_weight_pm_exp, pop_weight_pm_exp_lower, pop_weight_pm_exp_upper))
 
 if (agr_by == "county") {
   total_burden <- total_burden %>%
@@ -241,7 +237,8 @@ paf_di <- paf_di %>%
 attr_burden_di <- left_join(
   total_burden,
   paf_di,
-  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause")#,
+  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause"),
+  multiple = "all"#,
   #relationship = "many-to-many" #paf_di %>% filter(method == "di_gee" & scenario == "real")
 )
 
