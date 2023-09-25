@@ -85,13 +85,13 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 
     pm_summ <- rbind(pm_summ_over25, pm_summ_over65)
 
-    pm_summ <- pm_summ %>%
-      group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
+    #pm_summ <- pm_summ %>%
+    #  group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
       # group_by(Year,Region, agr_by, Race, Hispanic.Origin,Gender.Code, scenario, Education) %>%
-      summarise(
-        mean = weighted.mean(pm, pop_size),
-        median = matrixStats::weightedMedian(pm, pop_size)
-      )
+    #  summarise(
+    #    mean = weighted.mean(pm, pop_size),
+    #    median = matrixStats::weightedMedian(pm, pop_size)
+    #  )
 
     pm_summ <- pm_summ %>%
       group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
@@ -100,8 +100,8 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
         pop_size = .$pop_size
         result = calculate_weighted_mean_ci(pm, pop_size)
         data.frame(mean = result$pop_weight_pm_exp,
-                   lower = result$lower,
-                   upper = result$upper)
+                   mean_lower = result$lower,
+                   mean_upper = result$upper)
       }) %>%
       ungroup()
 
