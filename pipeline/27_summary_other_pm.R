@@ -19,6 +19,10 @@ options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 options(scipen = 10000)
 
+suppressMessages({
+  pkgload::load_all()
+})
+
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
@@ -51,7 +55,7 @@ if (file.exists(pm_summDir)) {
 tic(paste("summarized pm data"))
 #agr_bys <- setdiff("STATEFP", "nation")
 agr_bys <- list.files(dem_agrDir)
-# agr_bys <- "nation" #TODO löschen
+ agr_bys <- "nation" #TODO löschen
 pm_summ <- lapply(agr_bys, function(agr_by) {
   tic(paste("summarized pm data by", agr_by))
   #years <- list.files(file.path(dem_agrDir, agr_by))
@@ -123,15 +127,20 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 #  summarise(mean = weighted.mean(pm, pop_size),
 #            median = matrixStats::weightedMedian(pm, pop_size))
 
-pm_summ <- pm_summ %>%
-  tidyr::pivot_longer(c(mean, median),
-    names_to = "pm_metric"
-  )
+#pm_summ <- pm_summ %>%
+#  tidyr::pivot_longer(c(mean, median),
+#    names_to = "pm_metric"
+#  )
 
 pm_summ <- pm_summ %>% filter(!is.na(Gender.Code)) # TODO
+pm_summ <- pm_summ %>%
+  mutate(pm_metric = "mean") %>%
+  rename(value = mean)
+
+
 ## --- find and replcase---
 pm_summ <- pm_summ %>% mutate_at(
-  setdiff(colnames(pm_summ), c("value")),
+  setdiff(colnames(pm_summ), c("value", "mean_lower", "mean_upper")),
   as.factor
 )
 

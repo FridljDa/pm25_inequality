@@ -23,9 +23,7 @@ calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) 
   pop_weight_pm_exp <- weighted.mean(pm, pop_size)
 
   # Check if pm has no variation or all bootstrap resampled means are identical
-  if (length(unique(pm)) == 1) {
-    lower <- upper <- pop_weight_pm_exp
-  }if (length(unique(pop_size)) == 1) {
+  if (length(unique(pm)) == 1 | length(unique(pop_size)) == 1) {
     lower <- upper <- pop_weight_pm_exp
   } else {
     # Define the statistic function for bootstrapping
