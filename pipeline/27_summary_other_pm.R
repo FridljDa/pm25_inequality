@@ -92,6 +92,20 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
         mean = weighted.mean(pm, pop_size),
         median = matrixStats::weightedMedian(pm, pop_size)
       )
+
+    pm_summ <- pm_summ %>%
+      group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
+      do({
+        pm = .$pm
+        pop_size = .$pop_size
+        result = calculate_weighted_mean_ci(pm, pop_size)
+        data.frame(mean = result$pop_weight_pm_exp,
+                   lower = result$lower,
+                   upper = result$upper)
+      }) %>%
+      ungroup()
+
+
     toc()
     return(pm_summ)
 

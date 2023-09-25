@@ -5,6 +5,7 @@
 #' @param pm A numeric vector representing the values for which the weighted mean is calculated.
 #' @param pop_size A numeric vector representing the weights for the weighted mean.
 #' @param conf_level The confidence level for the interval. Default is 0.95.
+#' @param R The number of bootstrap replicates. Default is 10.
 #' @return A list containing the weighted mean and its lower and upper confidence intervals.
 #' @importFrom boot boot
 #' @examples
@@ -13,73 +14,81 @@
 #' pop_size <- c(10, 20, 30, 40)
 #' result <- calculate_weighted_mean_ci(pm, pop_size)
 #' }
-calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 1000) {
-  # Load required package
-  library(boot)
+calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) {
 
   # Create a data frame from the vectors
   data <- data.frame(pm, pop_size)
 
-  # Define the statistic function for bootstrapping
-  weighted_mean_stat <- function(data, indices) {
-    d <- data[indices,]
-    return(weighted.mean(d$pm, d$pop_size))
-  }
-
-  # Perform bootstrapping
-  boot_obj <- boot(data = data, statistic = weighted_mean_stat, R = R)
-
-  # Calculate confidence intervals
-  ci <- boot.ci(boot.out = boot_obj, conf = conf_level, type = "norm")
-  lower <- ci$normal[2]
-  upper <- ci$normal[3]
-
   # Calculate weighted mean
   pop_weight_pm_exp <- weighted.mean(pm, pop_size)
 
-  return(list(pop_weight_pm_exp = pop_weight_pm_exp, lower = lower, upper = upper))
-}
+  # Check if pm has no variation or all bootstrap resampled means are identical
+  if (length(unique(pm)) == 1) {
+    lower <- upper <- pop_weight_pm_exp
+  } else {
+    # Define the statistic function for bootstrapping
+    weighted_mean_stat <- function(data, indices) {
+      d <- data[indices,]
+      return(weighted.mean(d$pm, d$pop_size))
+    }
 
-#---test---
-# Load required packages
-library(dplyr)
-library(boot)
+    # Perform bootstrapping
+    boot_obj <- boot::boot(data = data, statistic = weighted_mean_stat, R = R)
 
-# Define the calculate_weighted_mean_ci function
-calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95) {
-  data <- data.frame(pm, pop_size)
-  weighted_mean_stat <- function(data, indices) {
-    d <- data[indices,]
-    return(weighted.mean(d$pm, d$pop_size))
+    # Check if all bootstrap resampled means are identical
+    if (length(unique(boot_obj$t)) == 1) {
+      lower <- upper <- pop_weight_pm_exp
+    } else {
+      # Calculate confidence intervals
+      ci <- boot::boot.ci(boot.out = boot_obj, conf = conf_level, type = "norm")
+      lower <- ci$normal[2]
+      upper <- ci$normal[3]
+    }
   }
-  boot_obj <- boot(data = data, statistic = weighted_mean_stat, R = 1000)
-  ci <- boot.ci(boot.out = boot_obj, conf = conf_level, type = "norm")
-  lower <- ci$normal[4]
-  upper <- ci$normal[5]
-  pop_weight_pm_exp <- weighted.mean(pm, pop_size)
+
   return(list(pop_weight_pm_exp = pop_weight_pm_exp, lower = lower, upper = upper))
 }
 
-# Generate some example data
-set.seed(123)
-n <- 100
-paf_di <- data.frame(
-  group = sample(c("A", "B", "C"), n, replace = TRUE),
-  pm = runif(n, 0, 100),
-  pop_size = runif(n, 1, 50)
-)
 
-# Use dplyr to group and calculate weighted mean and confidence intervals
-result <- paf_di %>%
-  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
-  do({
-    pm = .$pm
-    pop_size = .$pop_size
-    result = calculate_weighted_mean_ci(pm, pop_size)
-    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp, lower = result$lower, upper = result$upper)
-  }) %>%
-  ungroup()
 
-# Show the result
-print(result)
+#' Estimate the Mean and Confidence Interval for the Product of Two Random Variables Using the Delta Method
+#'
+#' @param mean_x Mean of the first random variable X
+#' @param lb_x Lower bound of the confidence interval for X
+#' @param ub_x Upper bound of the confidence interval for X
+#' @param mean_y Mean of the second random variable Y
+#' @param lb_y Lower bound of the confidence interval for Y
+#' @param ub_y Upper bound of the confidence interval for Y
+#' @param alpha Significance level for the confidence interval (default is 0.05 for a 95% CI)
+#'
+#' @return A list containing the estimated mean, lower bound, and upper bound of the confidence interval for Z = X * Y
+#' @export
+#' @examples
+#' # Example: Estimate the mean and 95% CI for the product of X and Y
+#' # where X has a mean of 10 and 95% CI [8, 12]
+#' # and Y has a mean of 5 and 95% CI [4, 6]
+#' result <- delta_method_product(mean_x = 10, lb_x = 8, ub_x = 12, mean_y = 5, lb_y = 4, ub_y = 6)
+#' print(paste("Estimated mean of Z:", result$mean))
+#' print(paste("Lower bound of 95% CI for Z:", result$lb))
+#' print(paste("Upper bound of 95% CI for Z:", result$ub))
+delta_method_product <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05) {
+  # Calculate standard deviations from confidence intervals
+  z_alpha = qnorm(1 - alpha / 2)
+  sd_x = (ub_x - lb_x) / (2 * z_alpha)
+  sd_y = (ub_y - lb_y) / (2 * z_alpha)
 
+  # Estimate the mean of Z
+  mean_z = mean_x * mean_y
+
+  # Estimate the variance of Z using the Delta Method
+  var_z = (mean_y * sd_x)^2 + (mean_x * sd_y)^2
+
+  # Estimate the standard deviation of Z
+  sd_z = sqrt(var_z)
+
+  # Calculate the confidence interval for Z
+  lb_z = mean_z - z_alpha * sd_z
+  ub_z = mean_z + z_alpha * sd_z
+
+  return(list(mean = mean_z, lb = lb_z, ub = ub_z))
+}
