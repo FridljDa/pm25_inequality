@@ -55,7 +55,7 @@ if (file.exists(pm_summDir)) {
 tic(paste("summarized pm data"))
 #agr_bys <- setdiff("STATEFP", "nation")
 agr_bys <- list.files(dem_agrDir)
- agr_bys <- "nation" #TODO löschen
+# agr_bys <- "nation" #TODO löschen
 pm_summ <- lapply(agr_bys, function(agr_by) {
   tic(paste("summarized pm data by", agr_by))
   #years <- list.files(file.path(dem_agrDir, agr_by))
