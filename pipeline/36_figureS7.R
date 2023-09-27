@@ -64,16 +64,16 @@ attr_burd <- attr_burd %>%
   filter(agr_by == "nation" & method == methodI & Year >= 2001 & measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" &svi_bin == "All" &  rural_urban_class == "Large metro")
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" &svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &  rural_urban_class == "Large metro")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "Small-medium metro")
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "Small-medium metro")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "Non metro")
+attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "Non metro")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Large metro")
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "Large metro")
 attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel group factor
                              levels = c("High school graduate or lower",
                                         "Some college education but no 4-year college degree",
@@ -81,10 +81,10 @@ attr_burd4$Education <- factor(attr_burd4$Education,                 # Relevel g
 
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Education))
 
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Small-medium metro")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "Small-medium metro")
 g5 <- ggplot(attr_burd5, aes(x = Year, y = mean, color = Education))
 
-attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & rural_urban_class == "Non metro")
+attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "Non metro")
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = Education))
 
 ## --set range---
@@ -132,7 +132,7 @@ group.colors <- group.colors[1:9]
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     scale_colour_manual(

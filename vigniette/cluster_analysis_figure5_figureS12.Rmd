@@ -7,9 +7,9 @@ output: html_document
 
 ## Packages and Data
 ```{r}
-library(tidyverse)
+
 library(sf)
-library(mapview)
+#library(mapview)
 library(spdep)
 library(sp)
 library(purrr)

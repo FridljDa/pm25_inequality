@@ -7,7 +7,7 @@ output: html_document
 
 ## Packages and Data
 ```{r}
-library(tidyverse)
+
 library(sf)
 library(mapview)
 library(spdep)
@@ -112,8 +112,8 @@ map1
 
 
 ```{r}
-ggsave(filename = paste0("../data/16_figures/di_gee-real/map_diff_25.png"), bg = 'white', width = 15, height = 5, dpi = 300)
-ggsave(filename = paste0("../data/16_figures/di_gee-real/map_diff_25.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = paste0("../data/18_figures/di_gee-real/map_diff_25.png"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = paste0("../data/18_figures/di_gee-real/map_diff_25.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
 ```
 
 ### Diff 65
@@ -192,7 +192,7 @@ sf_data_65 %>%
 
 
 ```{r}
-ggsave(filename = paste0("../data/16_figures/di_gee-real/map_diff_65.png"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = paste0("../data/18_figures/di_gee-real/map_diff_65.png"), bg = 'white', width = 15, height = 5, dpi = 300)
 ```
 
 ## Spatial Data wrangling
@@ -282,7 +282,7 @@ map_cii_getis_d %>%
         text = element_text(size=16)) +
   theme_classic(base_family = "Helvetica")
 
-ggsave(filename = paste0("../data/16_figures/di_gee-real/map_clust_diff_25.png"), bg = 'white', width = 10, height = 5, dpi = 300)
+ggsave(filename = paste0("../data/18_figures/di_gee-real/map_clust_diff_25.png"), bg = 'white', width = 10, height = 5, dpi = 300)
 
 ```
 

@@ -32,10 +32,11 @@ scenarioI <- args[10]
 methodI <- args[11]
 min_ageI <- args[13]
 
+summaryDir <- "data/17_summary"
+figuresDir <- "data/18_figures"
+
 # TODO delete
 if (rlang::is_empty(args)) {
-  summaryDir <- "data/17_summary"
-  figuresDir <- "data/18_figures"
 
   min_ageI <- 25
   scenarioI <- "real"
@@ -112,7 +113,7 @@ group.colors <- get_group_colors()
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     scale_colour_manual(

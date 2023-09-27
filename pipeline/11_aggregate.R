@@ -14,10 +14,11 @@ library(dplyr)
 library(magrittr)
 library(data.table)
 library(testthat)
-#library(tidyverse)
+#
 library(readxl)
 library(stringr)
 library(tictoc)
+#require(assertthat)
 suppressMessages({pkgload::load_all()})
 
 options(dplyr.summarise.inform = FALSE)
@@ -195,39 +196,21 @@ if (agr_by != "county") {
     if (nrow(cens_agr) <= 0) {
       return(NULL)
     }
-    cens_agr_all <- cens_agr %>%
-      group_by(variable, scenario, pm) %>%
+
+    cens_agr <- add_custom_rows(cens_agr)
+
+    cens_agr <- cens_agr %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm) %>%
       summarise(pop_size = sum(pop_size)) %>%
-      mutate(rural_urban_class = "666", svi_bin = "666") %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4) %>%
       mutate(prop = pop_size / sum(pop_size))
-
-    cens_agr_rural_urban_class <- cens_agr %>%
-      filter(!is.na(rural_urban_class) & rural_urban_class != "Unknown") %>%
-      group_by(variable, rural_urban_class, scenario, pm) %>%
-      summarise(pop_size = sum(pop_size)) %>%
-      mutate(svi_bin = "666") %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
-      mutate(prop = pop_size / sum(pop_size))
-
-    cens_agr_svi <- cens_agr %>%
-      filter(!is.na(svi_bin) & svi_bin != "Unknown") %>%
-      group_by(variable, svi_bin, scenario, pm) %>%
-      summarise(pop_size = sum(pop_size)) %>%
-      mutate(rural_urban_class = "666") %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin) %>%
-      mutate(prop = pop_size / sum(pop_size))
-
-    cens_agr <- rbind(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
-    rm(cens_agr_all, cens_agr_rural_urban_class, cens_agr_svi)
-
-    # add proportions
 
     cens_agr_check <- cens_agr %>%
-      group_by(variable, rural_urban_class, svi_bin, scenario) %>%
+      group_by(variable, rural_urban_class, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, scenario) %>%
       summarise(sum_prop = sum(prop))
 
-    assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+    #assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+    stopifnot(all(abs(cens_agr_check$sum_prop - rep(1, nrow(cens_agr_check))) <= 0.01))
 
     # add region
     cens_agr[, agr_by] <- region

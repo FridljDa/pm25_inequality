@@ -12,7 +12,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 
-packages <- c("dplyr", "magrittr",  "sf", "tidyverse", "sp", "tictoc","rhdf5") #"tigris", "tmap", 
+packages <- c("dplyr", "magrittr",  "sf",  "sp", "tictoc","rhdf5") #"tigris", "tmap", 
 
 options(tidyverse.quiet = TRUE)
 options(tigris.quiet = TRUE)

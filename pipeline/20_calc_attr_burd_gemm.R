@@ -11,10 +11,10 @@
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tictoc", "truncnorm", "triangle",
+  "dplyr", "magrittr", "data.table", "testthat", "tictoc", "truncnorm",# "triangle",
   "matrixStats"
 )
-
+library(tidyr)
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 }
@@ -35,7 +35,11 @@ attr_burdenDir <- args[18]
 
 if (rlang::is_empty(args)) {
   year <- 2001
+<<<<<<< HEAD
+  agr_by <- "county"
+=======
   agr_by <- "nation"
+>>>>>>> b6376599a8945925bdd9e6a5cc3dda69814de51d
   source <- "nvss"
 
   tmpDir <-  "data/tmp"
@@ -44,6 +48,7 @@ if (rlang::is_empty(args)) {
   pafDir <- "data/07_gbd_paf"
   totalBurdenParsed2Dir <-"data/13_total_burden_rate"
   attr_burdenDir <- "data/14_attr_burd"
+
 }
 
 if (agr_by != "county") {

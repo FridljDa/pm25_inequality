@@ -69,7 +69,7 @@ attr_burd_methods <- attr_burd_methods %>%
 
 plot_attr_burd_methods <- ggplot(attr_burd_methods, aes(x = Year, y = CoV, color = method)) +
      labs(color='Concentration-response function (CRF)') +
-  geom_line(size = 1.5)
+  geom_line(linewidth = 1.5)
 plot_attr_burd_methods
 ```
 
@@ -108,7 +108,7 @@ attr_burd_di <- attr_burd_di %>%
 plot_attr_burd_di <- ggplot(data = attr_burd_di, mapping = aes(color = Ethnicity, x = pm, y = attributable_burden)) +
   ylab("Mortality per 100,000")+
    xlab("Annual average PM2.5 in μg/m^3") +
-  geom_line(size = 1.5)
+  geom_line(linewidth = 1.5)
 plot_attr_burd_di
 ```
 
@@ -155,7 +155,7 @@ attr_burd_scenario <- attr_burd_scenario %>%
   ungroup()
 
 plot_attr_burd_scenario <- ggplot(attr_burd_scenario, aes(x = Year, y = CoV, color = scenario)) +
-  geom_line(size = 1.5)+
+  geom_line(linewidth = 1.5)+
   labs(color='Scenario')
 plot_attr_burd_scenario
 ```

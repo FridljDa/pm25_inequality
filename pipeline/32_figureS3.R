@@ -38,7 +38,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 65
+  min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -79,6 +79,9 @@ pm_summ3$rural_urban_class <- factor(pm_summ3$rural_urban_class,                
 
 g3 <- ggplot(pm_summ3, aes(x = Year, y = value, color = rural_urban_class))
 
+pm_summ4 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & Year >= 2000)
+
+
 ## --set range---
 min1 <- min(c(pm_summ1$value, pm_summ2$value, pm_summ3$value))
 max1 <- max(c(pm_summ1$value, pm_summ2$value, pm_summ3$value))
@@ -116,7 +119,7 @@ names(group.colors) <- c(
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     scale_colour_manual(values = group.colors, limits = force) +
     theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +

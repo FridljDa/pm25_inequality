@@ -11,7 +11,7 @@
 # load packages, install if missing
 packages <- c(
   "data.table", "magrittr", "shiny", "ggplot2", "ggpubr", "scales", "ggrepel",
-  "dplyr", "ggExtra", "gridExtra", "grid",  "cowplot"#"tidyverse",
+  "dplyr", "ggExtra", "gridExtra", "grid",  "cowplot"
 )
 
 

@@ -63,7 +63,7 @@ attr_burd <- attr_burd %>%
 attr_burden_proportion_to_black <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            Region == "United States" & method == "di_gee" & measure3 == "value" & scenario == "real" &
-           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & rural_urban_class == "All") %>%
+           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All") %>%
   select(Year, Ethnicity, mean) %>%
   #mutate(ethnicity_african_american = ifelse(Ethnicity == "Black American",
   #       "Black")) %>%
@@ -114,7 +114,7 @@ group.colors <- group.colors[c(1:2,4:6)]
 
 plots <- lapply(plots, function(g) {
   g +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     #geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     scale_colour_manual(values=group.colors) +

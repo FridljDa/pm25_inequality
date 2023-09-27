@@ -1,7 +1,6 @@
 suppressMessages(library(dplyr, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(magrittr, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(data.table, warn.conflicts = FALSE, quietly = TRUE))
-# suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library(tictoc, warn.conflicts = FALSE, quietly = TRUE))
 
 options(dplyr.summarise.inform = FALSE)
@@ -15,9 +14,9 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   dataDir <- "data"
 
-  agr_by <- "nation"
+  agr_by <- "STATEFP"
   source <- "nvss"
-  year <- 2010
+  year <- 2016
 } else {
   year <- args[1]
   source <- "nvss"
@@ -89,7 +88,7 @@ anti_join <- diagnose_join_issues(df1 = total_burden,
                                   df2 = attributable_burden,
                                   join_cols = c(
                                     "Year", "Gender.Code", "Race", "Hispanic.Origin", "rural_urban_class","svi_bin",  "Education",
-                                    "source", "measure1", "measure2", agr_by, "min_age", "max_age"
+                                    "source", "measure1", "measure2", agr_by, "min_age", "max_age", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
                                   ))
 #if(nrow(anti_join) > 0){
 #  warning("diagnose_join_issues() in 24_proportions_attr_burd.R: total_burden, attributable_burden")
@@ -101,7 +100,8 @@ attr_total_burden <- inner_join(
   total_burden,
   by = c(
     "Year", "Gender.Code", "Race", "Hispanic.Origin", "svi_bin", "rural_urban_class", "Education",
-    "source", "measure1", "measure2", agr_by, "min_age", "max_age"
+    "source", "measure1", "measure2", agr_by, "min_age", "max_age",
+    "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
   )
 )
 

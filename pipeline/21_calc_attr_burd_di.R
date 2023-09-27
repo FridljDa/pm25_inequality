@@ -11,7 +11,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  #library(tidyverse)
+  #
   library(tictoc)
 })
 
@@ -135,11 +135,20 @@ paf_di <- inner_join_age_right_outer(pm_summ,
   hr,
   by = c("Race", "Hispanic.Origin")
 )
+
 paf_di <- paf_di %>%
   dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
   summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
   ungroup()
-
+#paf_di <- paf_di %>%
+#  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
+#  do({
+#    pm = .$pm
+#    pop_size = .$pop_size
+#    result = calculate_weighted_mean_ci(pm, pop_size)
+#    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp, lower = result$lower, upper = result$upper)
+#  }) %>%
+#  ungroup()
 
 rm(pm_summ, hr)
 paf_di <- paf_di %>%
@@ -183,6 +192,19 @@ if ("rural_urban_class" %in% names(paf_di)) {
 
 if ("svi_bin" %in% names(paf_di)) {
   paf_di <- paf_di %>% select(-svi_bin)
+}
+
+if ("svi_bin1" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin1)
+}
+if ("svi_bin2" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin2)
+}
+if ("svi_bin3" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin3)
+}
+if ("svi_bin4" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin4)
 }
 #paf_di
 ##---join---

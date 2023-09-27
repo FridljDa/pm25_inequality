@@ -53,6 +53,33 @@ rm(file_list)
 
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
+
+states <- file.path("data/tmp", "states.csv") %>%
+  read.csv()
+
+rindreplace1 <- data.frame(
+  agr_by = c("nation", rep("STATEFP", nrow(states))),
+  RegionFrom = c("us", states$STATEFP),
+  RegionTo = c("United States", states$NAME)
+)
+
+pm_summ2 <- pm_summ %>%
+  left_join(rindreplace1, by = c("Region" = "RegionFrom", "agr_by")) %>%
+  mutate(
+    Region = coalesce(RegionTo, Region),
+    RegionTo = NULL
+  )
+
+pm_summ2 <- replace_values(pm_summ, findreplace = rindreplace1)
+
+
+total_burden <- total_burden %>%
+  left_join(rindreplace1, by = c("Region" = "RegionFrom", "agr_by")) %>%
+  mutate(
+    Region = coalesce(RegionTo, Region),
+    RegionTo = NULL
+  )
+
 ### ----- read stuff----
 #TODO more granular
 pm_summ <- pm_summ %>%
@@ -63,7 +90,7 @@ pm_summ <- pm_summ %>%
   select(Year, Education, Ethnicity, rural_urban_class, value, Region)
 
 all_burden <- all_burden %>%
-  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter( measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            source == "National Vital Statistics System" & agr_by == "STATEFP")
 
 all_burden <- all_burden %>%

@@ -2,7 +2,7 @@ suppressMessages({
   library(dplyr)
   library(magrittr)
   library(data.table)
-  # library(tidyverse)
+  #
   library(tictoc)
 })
 
@@ -67,17 +67,47 @@ if(year <= 2008){
     filter(Education == "666")
 }
 
+## ----group out counties---
+
+if (agr_by == "STATEFP") {
+  total_burden <- total_burden %>%
+    mutate(
+      STATEFP = stringr::str_sub(county, 1, -4) %>%
+        as.integer() %>%
+        as.factor()
+    )
+  group_variables <- setdiff(
+    colnames(total_burden),
+    c("value", "county")
+  )
+} else if (agr_by == "nation") {
+  total_burden <- total_burden %>%
+    mutate(
+      nation = "us"
+    )
+  group_variables <- setdiff(colnames(total_burden), c("value", "county"))
+} else if (agr_by == "county") {
+  group_variables <- setdiff(colnames(total_burden), c("value"))
+}
+
+tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
+total_burden <- total_burden %>%
+  group_by_at(vars(all_of(c(group_variables)))) %>%
+  summarise(
+    value = sum(value)
+  ) %>%
+  ungroup()
+
+toc()
 #total_burden <- total_burden %>% sample_n(20)
 ## --sum up geographic levels from county----
 
 if (agr_by != "county") {
   cat("marginalised svi and rural_urban class info to total_burden -starting\n")
   tic("marginalised svi and rural_urban class info to total_burden")
-  total_burden <- rbind(
-    total_burden %>% mutate(rural_urban_class = as.factor(666)),
-    total_burden %>% mutate(svi_bin = as.factor(666)),
-    total_burden %>% mutate(svi_bin = as.factor(666), rural_urban_class = as.factor(666))
-  )
+
+  total_burden <- add_custom_rows(total_burden)
+
   total_burden <- total_burden %>%
     group_by_at(setdiff(
       colnames(total_burden),
@@ -139,40 +169,10 @@ if (agr_by != "county") {
 #filter out combination
 total_burden <- total_burden %>%
   filter(!(Education != "666" & Race != "All" &
-             (rural_urban_class != "666" | svi_bin != "666")))
+             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" | svi_bin2 != "666"
+              | svi_bin3 != "666" | svi_bin4 != "666")))
 
-## ----group out counties---
 
-if (agr_by == "STATEFP") {
-  total_burden <- total_burden %>%
-    mutate(
-      STATEFP = stringr::str_sub(county, 1, -4) %>%
-        as.integer() %>%
-        as.factor()
-    )
-  group_variables <- setdiff(
-    colnames(total_burden),
-    c("value", "county")
-  )
-} else if (agr_by == "nation") {
-  total_burden <- total_burden %>%
-    mutate(
-      nation = "us"
-    )
-  group_variables <- setdiff(colnames(total_burden), c("value", "county"))
-} else if (agr_by == "county") {
-  group_variables <- setdiff(colnames(total_burden), c("value"))
-}
-
-tic(paste("summed up county level estimates to ", agr_by, "in year ", year))
-total_burden <- total_burden %>%
-  group_by_at(vars(all_of(c(group_variables)))) %>%
-  summarise(
-    value = sum(value)
-  ) %>%
-  ungroup()
-
-toc()
 
 #------ age-standartised rates-------
 total_burden_absolute_number <- total_burden %>%
@@ -182,8 +182,7 @@ total_burden_absolute_number <- total_burden %>%
 tic("age standardised attributable burden")
 total_burden <- add_age_adjusted_rate(total_burden_absolute_number,
                                                year,
-                                               agr_by,
-                                               pop.summary.dir = "data/12_population_summary")
+                                               agr_by)
 
 
 toc()

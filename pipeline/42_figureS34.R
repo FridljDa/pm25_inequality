@@ -273,7 +273,7 @@ data <- rbind(
 
 #https://stackoverflow.com/questions/29357612/plot-labels-at-ends-of-lines
 g1 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
-  geom_line(size = 1.5) +
+  geom_line(linewidth = 1.5) +
   geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)+
   #geom_dl(aes(label = method), method = list(dl.combine("last.points")), cex = 0.8)
   #geom_text(aes(label = method), position = "dodge")
@@ -289,7 +289,7 @@ g1 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
 g1
 #
 g2 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
-  geom_line(size = 1.5) +
+  geom_line(linewidth = 1.5) +
   geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0.2, show.legend = FALSE)+
   annotate("text", x = 26, y = 123, label = "Burnett", size = 8, colour = hue_pal()(3)[1])+
   annotate("text", x = 26, y = 255, label = "EPA", size = 8, colour = hue_pal()(3)[2])+
@@ -304,7 +304,7 @@ ggsave(file.path(figuresDir, "figureS6.png"),plot = g2, dpi = 300, g2, height = 
 
 
 g3 <- ggplot(data, aes(x = pm, y = mean, color = method)) +
-  geom_line(size = 1.5) +
+  geom_line(linewidth = 1.5) +
   geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)+
   xlab("Annual average PM2.5 in μg/m^3") +
   ylab("Mortality from PM2.5 per 100,000 per year") +

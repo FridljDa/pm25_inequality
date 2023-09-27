@@ -14,7 +14,7 @@ library(dplyr)
 library(magrittr)
 library(data.table)
 library(ggplot2)
-library(tidyverse)
+
 
 options(bitmapType ="cairo")
 theme_set(theme_classic(base_family = "Helvetica"))
@@ -42,7 +42,7 @@ pm_summ1 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins
 
 ```{r}
 g1 <- ggplot(pm_summ1, aes(x = Year, y = value))+
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
   ylim(0,NA)+
   ylab(expression(paste("Mean PM2.5 exposure (", mu, g, "/", m^3,")", sep=""))) +
@@ -70,7 +70,7 @@ all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Or
 
 ```{r}
 g2 <- ggplot(all_burden, aes(x = Year, y = overall_value)) +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     ylab("Age-adjusted mortality\n per 100,000 from all causes")+
   theme(text = element_text(size=16))

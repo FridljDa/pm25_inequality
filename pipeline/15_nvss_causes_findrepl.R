@@ -7,10 +7,10 @@
 #*
 
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c("dplyr", "magrittr", "data.table", "testthat", "readxl", "tictoc") #"tidyverse",
+packages <- c("dplyr", "magrittr", "data.table", "testthat",  "readxl", "tictoc")
 
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))

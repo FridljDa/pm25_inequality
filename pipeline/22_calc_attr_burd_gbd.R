@@ -12,7 +12,6 @@ suppressMessages(library("dplyr", character.only = T, warn.conflicts = FALSE, qu
 suppressMessages(library("magrittr", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("data.table", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("testthat", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-#suppressMessages(library("tidyverse", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("tictoc", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("MALDIquant", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 

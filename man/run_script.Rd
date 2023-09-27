@@ -4,12 +4,12 @@
 \alias{run_script}
 \title{Run script based on system type}
 \usage{
-run_script(script, args = "")
+run_script(script, args = NULL)
 }
 \arguments{
 \item{script}{A string specifying the name/path of the script to be run.}
 
-\item{args}{A string specifying the arguments to be passed to the script. Default is "" (no arguments).}
+\item{args}{A string specifying the arguments to be passed to the script. Default is NULL (no arguments).}
 }
 \value{
 NULL. This function is mainly called for its side effects (running the script and printing the results).

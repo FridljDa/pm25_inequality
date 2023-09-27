@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c(
-  "dplyr", "magrittr", "censusapi", "stringr", "data.table", "tidyverse", "tictoc", "testthat" #"rlang", "cdcfluview"
+  "dplyr", "magrittr", "censusapi", "stringr", "data.table",  "tictoc", "testthat" #"rlang", "cdcfluview"
 )
 
 options(dplyr.summarise.inform = FALSE)

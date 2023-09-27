@@ -34,7 +34,11 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   if(agr_by != "county"){
     pop_summary2 <- pop_summary2 %>%
       filter(!(Education == 666 & rural_urban_class == 666) |
-               !(Education == 666 & svi_bin == 666)) %>%
+               !(Education == 666 & svi_bin == 666) |
+               !(Education == 666 & svi_bin1 == 666) |
+               !(Education == 666 & svi_bin2 == 666) |
+               !(Education == 666 & svi_bin3 == 666) |
+               !(Education == 666 & svi_bin4 == 666)) %>%
       filter(!(Education != 666 & Race != "All"))#rural_urban_class == 666 &
   }else{
     pop_summary2 <- pop_summary2 %>%
@@ -53,9 +57,26 @@ get_population_data <- function(agr_by, year, pop.summary.dir = "data/12_populat
   }
 
   #add svi_bin
-  if (!is.null(pop_summary1) & !"svi_bin" %in% names(pop_summary1)) pop_summary1 <- pop_summary1 %>% mutate(svi_bin = "666")
-  if (!is.null(pop_summary2) &!"svi_bin" %in% names(pop_summary2)) pop_summary2 <- pop_summary2 %>% mutate(svi_bin = "666")
-  if (!is.null(pop_summary3) &!"svi_bin" %in% names(pop_summary3)) pop_summary3 <- pop_summary3 %>% mutate(svi_bin = "666")
+  pop_summary1 <- add_column_if_not_exists(pop_summary1, "svi_bin")
+  pop_summary2 <- add_column_if_not_exists(pop_summary2, "svi_bin")
+  pop_summary3 <- add_column_if_not_exists(pop_summary3, "svi_bin")
+
+  pop_summary1 <- add_column_if_not_exists(pop_summary1, "svi_bin1")
+  pop_summary2 <- add_column_if_not_exists(pop_summary2, "svi_bin1")
+  pop_summary3 <- add_column_if_not_exists(pop_summary3, "svi_bin1")
+
+  pop_summary1 <- add_column_if_not_exists(pop_summary1, "svi_bin2")
+  pop_summary2 <- add_column_if_not_exists(pop_summary2, "svi_bin2")
+  pop_summary3 <- add_column_if_not_exists(pop_summary3, "svi_bin2")
+
+  pop_summary1 <- add_column_if_not_exists(pop_summary1, "svi_bin3")
+  pop_summary2 <- add_column_if_not_exists(pop_summary2, "svi_bin3")
+  pop_summary3 <- add_column_if_not_exists(pop_summary3, "svi_bin3")
+
+  pop_summary1 <- add_column_if_not_exists(pop_summary1, "svi_bin4")
+  pop_summary2 <- add_column_if_not_exists(pop_summary2, "svi_bin4")
+  pop_summary3 <- add_column_if_not_exists(pop_summary3, "svi_bin4")
+
 
   pop_summary <- rbind(pop_summary1, pop_summary2, pop_summary3) %>% distinct
 
@@ -193,4 +214,19 @@ has_overlaps <- function(df) {
   overlaps <- any(df$max_age >= df$next_min, na.rm = TRUE)
 
   return(overlaps)
+}
+
+#' Add a column to a data frame if it doesn't exist
+#'
+#' This function takes a data frame and a column name as arguments.
+#' If the column doesn't exist in the data frame, it adds the column with a default value of "666".
+#'
+#' @param df A data frame to which the column will be added.
+#' @param col_name The name of the column to add.
+#' @return A data frame with the new column added if it didn't exist.
+add_column_if_not_exists <- function(df, col_name) {
+  if (!is.null(df) & !col_name %in% names(df)) {
+    df <- df %>% dplyr::mutate(!!col_name := "666")
+  }
+  return(df)
 }

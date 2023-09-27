@@ -41,8 +41,10 @@ states <- file.path(tmpDir, "states.csv") %>%
 tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
-
+agr_bys <- "nation"
 ## --- read and bind attr burden----
+cat("row-bind attr_burden-start")
+tic("row-bind attr_burden")
 attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
   attr_burden <- lapply(files, function(file) read_data(file.path(propOfAttrBurdDir, agr_by, file)))
@@ -63,6 +65,7 @@ attr_burden <- lapply(agr_bys, function(agr_by) {
   }
   return(attr_burden)
 })
+toc()
 attr_burden <- attr_burden %>%
   rbindlist(use.names = TRUE, fill = TRUE) %>%
   as.data.frame()
@@ -71,7 +74,10 @@ if (nrow(attr_burden) == 0) {
   stop(paste("attr_burd still missing in year", year, "in 25_summary_attr_total_burd.R"))
 }
 ## --- read and bind all burden----
+cat("row-bind total_burden-start")
+tic("row-bind total_burden")
 agr_bys <- list.files(summaryHigherTotalDir)
+agr_bys <- "nation"
 # Main operation
 total_burden <- map_dfr(agr_bys, function(agr_by) {
   files <- list.files(file.path(summaryHigherTotalDir, agr_by))
@@ -91,6 +97,7 @@ total_burden <- map_dfr(agr_bys, function(agr_by) {
   return(total_burden)
 }) %>%
   as.data.frame()
+toc()
 
 # Optionally, remove rows where all columns have NAs or are empty
 # total_burden <- total_burden %>% filter(!complete.cases(sapply(., is.na)))
@@ -136,52 +143,6 @@ attr_burden <- attr_burden %>%
     RegionTo = NULL
   )
 
-attr_burden <- attr_burden %>%
-  mutate(Education = forcats::fct_recode(Education,
-    "High school graduate or lower" = "lower",
-    "Some college education but no 4-year college degree" = "middle",
-    "4-year college graduate or higher" = "higher",
-    "666" = "666"
-  ))
-
-total_burden <- total_burden %>%
-  mutate(Education = forcats::fct_recode(Education,
-    "High school graduate or lower" = "lower",
-    "Some college education but no 4-year college degree" = "middle",
-    "4-year college graduate or higher" = "higher",
-    "666" = "666"
-  ))
-
-attr_burden <- attr_burden %>%
-  mutate(Gender.Code = forcats::fct_recode(Gender.Code, "All genders" = "A"))
-total_burden <- total_burden %>%
-  mutate(Gender.Code = forcats::fct_recode(Gender.Code, "All genders" = "A"))
-
-total_burden <- total_burden %>%
-  mutate(source = forcats::fct_recode(source,
-    "National Vital Statistics System" = "nvss"
-  ))
-attr_burden <- attr_burden %>%
-  mutate(source = forcats::fct_recode(source,
-    "National Vital Statistics System" = "nvss"
-  ))
-
-# rindreplace5 <- setNames(c("Years of Life Lost (YLL)", "Deaths"), c("YLL","Deaths"))
-# total_burden$measure1 <- sapply(total_burden$measure1 , function(x) rindreplace5[[x]])
-# attr_burden$measure1 <- sapply(attr_burden$measure1 , function(x) rindreplace5[[x]])
-
-attr_burden <- attr_burden %>%
-  mutate(measure2 = forcats::fct_recode(measure2,
-    # "crude rate per 100,000" = "crude rate",
-    "age-adjusted rate per 100,000" = "age-adjusted rate",
-    # "absolute number" = "absolute number"
-  ))
-total_burden <- total_burden %>%
-  mutate(measure2 = forcats::fct_recode(measure2,
-    # "crude rate per 100,000" = "crude rate",
-    "age-adjusted rate per 100,000" = "age-adjusted rate",
-    # "absolute number" = "absolute number"
-  ))
 
 total_burden <- total_burden %>%
   unite("Ethnicity", Race, Hispanic.Origin, sep = ", ") %>%
@@ -190,60 +151,17 @@ attr_burden <- attr_burden %>%
   unite("Ethnicity", Race, Hispanic.Origin, sep = ", ") %>%
   mutate(Ethnicity = as.factor(Ethnicity))
 
-rindreplace7 <- list(
-  "Black American" = "Black or African American, All Origins",
-  "American Indian or Alaska Native" = "American Indian or Alaska Native, All Origins",
-  "Asian or Pacific Islander" = "Asian or Pacific Islander, All Origins",
-  "Hispanic or Latino White" = "White, Hispanic or Latino",
-  "NH White" = "White, Not Hispanic or Latino",
-  "White" = "White, All Origins",
-  "All, All Origins" = "All, All Origins"
-)
-levels(total_burden$Ethnicity) <- rindreplace7
-levels(attr_burden$Ethnicity) <- rindreplace7
+findreplace <- read.csv("data/final_findreplace.csv")
 
-total_burden <- total_burden %>%
-  mutate(
-    rural_urban_class = as.factor(rural_urban_class),
-    rural_urban_class = forcats::fct_recode(rural_urban_class,
-      "Large metro" = "1",
-      "Small-medium metro" = "2",
-      "Non metro" = "3",
-      "All" = "666"
-    )
-  )
-attr_burden <- attr_burden %>%
-  mutate(
-    rural_urban_class = as.factor(rural_urban_class),
-    rural_urban_class = forcats::fct_recode(rural_urban_class,
-      "Large metro" = "1",
-      "Small-medium metro" = "2",
-      "Non metro" = "3",
-      "All" = "666"
-    )
-  )
-attr_burden <- attr_burden %>%
-  mutate(
-    svi_bin = as.factor(svi_bin),
-    svi_bin = forcats::fct_recode(svi_bin,
-      "high svi" = "1",
-      "middle svi" = "2",
-      "low svi" = "3",
-      "All" = "666"
-    )
-  )
-total_burden <- total_burden %>%
-  mutate(
-    svi_bin = as.factor(svi_bin),
-    svi_bin = forcats::fct_recode(svi_bin,
-      "high svi" = "1",
-      "middle svi" = "2",
-      "low svi" = "3",
-      "All" = "666"
-    )
-  )
-# rm(rindreplace1, rindreplace2, rindreplace3, rindreplace4, rindreplace6, rindreplace7, rindreplace8)
+cat("total_burden findreplace-start")
+tic("total_burden findreplace")
+total_burden <- total_burden %>% replace_values(findreplace)
+toc()
 
+cat("attr_burden findreplace-start")
+tic("attr_burden findreplace")
+attr_burden <- attr_burden %>% replace_values(findreplace)
+toc()
 
 ## --- test final---
 total_burden <- total_burden %>% filter(!is.na(rural_urban_class)) # TODO

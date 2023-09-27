@@ -9,7 +9,7 @@ library(data.table)
 library(dplyr)
 library(magrittr)
 library(scales)
-#library(tidyr)
+# library(tidyr)
 
 options(scipen = 10000)
 ```
@@ -20,11 +20,11 @@ tracDir <- "../data/02_tracts"
 exp_tracDir <- "../data/03_exp_tracts"
 censDir <- "../data/05_demog"
 cens_agrDir <- "../data/06_dem.agr/nation"
-summaryDir <- "../data/15_summary"
+summaryDir <- "../data/17_summary"
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burden <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burden <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
 rm(file_list)
 
 all_burden <- fread(file.path(summaryDir, "all_burd.csv"))
@@ -35,20 +35,22 @@ pop_summary <- fread(file.path(summaryDir, "pop_summary.csv"))
 # Mortality counts
 
 ```{r}
-#total_burden_nvss_2016 <- read_csv("data/09_total_burden_parsed/nation/nvss/total_burden_nvss_2016.csv")
+# total_burden_nvss_2016 <- read_csv("data/09_total_burden_parsed/nation/nvss/total_burden_nvss_2016.csv")
 
-total_burden_nvss <- lapply(list.files("../data/09_total_burden_parsed/nation/nvss/"),
-                            function(path){
-                              total_burden_nvss_i <- fread(file.path("../data/09_total_burden_parsed/nation/nvss",path))
-                              total_burden_nvss_i <- total_burden_nvss_i %>%
-  filter(Race == "All"& Hispanic.Origin == "All Origins" & rural_urban_class == 666 & label_cause == "all-cause" &
-           Education == "666") %>%
-  group_by(Year) %>%
-  summarise(Deaths = sum(Deaths))
-                            })
+total_burden_nvss <- lapply(
+  list.files("../data/09_total_burden_parsed/nation/nvss/"),
+  function(path) {
+    total_burden_nvss_i <- fread(file.path("../data/09_total_burden_parsed/nation/nvss", path))
+    total_burden_nvss_i <- total_burden_nvss_i %>%
+      filter(Race == "All" & Hispanic.Origin == "All Origins" & rural_urban_class == 666 & label_cause == "all-cause" &
+        Education == "666") %>%
+      group_by(Year) %>%
+      summarise(Deaths = sum(Deaths))
+  }
+)
 
 total_burden_nvss <- total_burden_nvss %>% rbindlist(use.names = T)
-total_burden_nvss %>% filter(Year %in% c(1990,2016))
+total_burden_nvss %>% filter(Year %in% c(1990, 2016))
 ```
 
 ```{r}
@@ -89,7 +91,7 @@ overall population exposed to an annual mean PM2.5 concentration above 12µg/m3
 ## what part of population affected
 cens_meta_1990 <- fread(file.path(censDir, "meta", paste0("cens_meta_", "1990", ".csv")))
 
-cens_agr_1990 <- fread(file.path(cens_agrDir, "1990", paste0("cens_agr_", "1990", "_us.csv"))) %>% filter(scenario == "real") 
+cens_agr_1990 <- fread(file.path(cens_agrDir, "1990", paste0("cens_agr_", "1990", "_us.csv"))) %>% filter(scenario == "real")
 
 cens_agr_1990 <- left_join(cens_agr_1990, cens_meta_1990, by = "variable")
 
@@ -103,11 +105,11 @@ pop_exposed_over_12 <- rbind(cens_agr_1990, cens_agr_2016) %>%
   as.data.frame() %>%
   group_by(Year, Race, Hispanic.Origin, pm) %>%
   dplyr::summarize(pop_size = sum(pop_size)) %>%
-  filter(Year %in% c(1990,2016) & Race == "All" & Hispanic.Origin == "All Origins") %>%
+  filter(Year %in% c(1990, 2016) & Race == "All" & Hispanic.Origin == "All Origins") %>%
   group_by(Year, Race, Hispanic.Origin) %>%
   mutate(prop = pop_size / sum(pop_size)) %>%
   ungroup() %>%
-  mutate(above = pm > 12) 
+  mutate(above = pm > 12)
 
 pop_exposed_over_12 <- pop_exposed_over_12 %>%
   group_by(Year, Race, Hispanic.Origin, above) %>%
@@ -124,6 +126,8 @@ pm_summ %>%
   mutate(value = round(value, 2)) %>%
   select(value, everything())
 ```
+
+
 # PM2.5-attributable mortality at the national level in 2016:
 age-adjusted deaths per 100,000 were attributable to PM2.5 in 2016
 ```{r}
@@ -136,7 +140,7 @@ attr_burden %>%
     mean = round(mean, 1),
     lower = round(lower, 1),
     upper = round(upper, 1)
-  ) %>% 
+  ) %>%
   select(Year, mean, lower, upper, Education, Ethnicity, rural_urban_class)
 ```
 
@@ -144,16 +148,16 @@ attr_burden %>%
 attr_burden_2016 <- attr_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     Region == "United States" &
-    Year %in% c(2016) & method == "di_gee" & measure3 == "value" & scenario == "real" ) %>%
+    Year %in% c(2016) & method == "di_gee" & measure3 == "value" & scenario == "real") %>%
   select(Ethnicity, Education, rural_urban_class, mean, Year) %>%
-  mutate(mean = round(mean, 1)) 
+  mutate(mean = round(mean, 1))
 
 attr_burden_2016_overall <- attr_burden_2016[attr_burden_2016$Education == 666 & attr_burden_2016$Ethnicity == "All, All Origins" & attr_burden_2016$rural_urban_class == "All", "mean"]
 attr_burden_2016_overall <- unlist(attr_burden_2016_overall)
 attr_burden_2016_overall
 
-attr_burden_2016 %>% 
-  split(attr_burden_2016$mean <= attr_burden_2016_overall) 
+attr_burden_2016 %>%
+  split(attr_burden_2016$mean <= attr_burden_2016_overall)
 ```
 
 # Time trends in PM2.5-attributable mortality at the national level:
@@ -168,7 +172,7 @@ attr_burden %>%
     mean = round(mean, 1),
     lower = round(lower, 1),
     upper = round(upper, 1)
-  ) %>% 
+  ) %>%
   select(Year, mean, lower, upper, Education, Ethnicity, rural_urban_class)
 ```
 We observed this steep downward trend for all studied subpopulations, with absolute differences between these groups narrowing considerably over the study period
@@ -190,10 +194,11 @@ attr_burden_absolute_difference_within_group <- attr_burden %>%
   group_by(Year, group) %>%
   summarise(min = min(mean), max = max(mean)) %>%
   mutate(dif = max - min) %>%
-  as.data.frame() 
-ggplot(attr_burden_absolute_difference_within_group, aes(x = Year, y = dif, color = group))+
+  as.data.frame()
+ggplot(attr_burden_absolute_difference_within_group, aes(x = Year, y = dif, color = group)) +
   geom_line()
 ```
+
 Black or African Americans have seen an estimated 85.7% reduction in the PM2.5-attributable age-adjusted mortality rate from 1990 to 2016
 
 ```{r}
@@ -204,8 +209,10 @@ attr_burden %>%
     Education == 666 & Ethnicity == "Black American" & rural_urban_class == "All") %>%
   select(Year, Ethnicity, mean) %>%
   tidyr::pivot_wider(names_from = Year, values_from = mean) %>%
-  mutate(reduction = 1-`2016`/`1990`,
-         reduction = scales::label_percent(0.1)(reduction))
+  mutate(
+    reduction = 1 - `2016` / `1990`,
+    reduction = scales::label_percent(0.1)(reduction)
+  )
 ```
  
 
@@ -237,9 +244,10 @@ TODO We found that this also tends to be the case within states in the US.
 In all states studied, Black or African Americans had higher or equal PM2.5-attributable mortality in 2016 than the NH White population.
 ```{r}
 ## count states, where whites less affected
-attr_burden %>% filter(Ethnicity %in% c("White, Not Hispanic or Latino", "Black American") &
-  Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & Region != "United States" &
-  Year == 2016 & method == "di_gee" & measure3 == "value") %>%
+attr_burden %>%
+  filter(Ethnicity %in% c("White, Not Hispanic or Latino", "Black American") &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & Region != "United States" &
+    Year == 2016 & method == "di_gee" & measure3 == "value") %>%
   group_by(Year, Region, scenario) %>%
   slice(which.max(mean)) %>%
   group_by(scenario, Ethnicity) %>%
@@ -253,7 +261,7 @@ TODO For rurality, in 44 states, large metro areas had a higher or equal PM2.5-a
 
 At the county level, iIn 82.7% of the counties for which data were available, Black or African Americans had higher PM2.5-attributable mortality than the NH White population (Fig. S4, Panel B) for the mean value across the period 2000 toin 2016.
 ```{r}
-attr_burdenDir <-  here::here("data/14_attr_burd")  
+attr_burdenDir <- here::here("data/14_attr_burd")
 agr_bys <- "county"
 attr_burd_county <- lapply(agr_bys, function(agr_by) {
   sources <- list.files(file.path(attr_burdenDir, agr_by))
@@ -261,7 +269,7 @@ attr_burd_county <- lapply(agr_bys, function(agr_by) {
     files <- list.files(file.path(attr_burdenDir, agr_by, source))
     attr_burden <- lapply(files, function(file) fread(file.path(attr_burdenDir, agr_by, source, file))) %>% rbindlist(use.names = TRUE)
   }) %>% rbindlist(use.names = TRUE)
-  
+
   return(attr_burden)
 }) %>%
   rbindlist(use.names = TRUE) %>%
@@ -269,23 +277,26 @@ attr_burd_county <- lapply(agr_bys, function(agr_by) {
 
 attr_burd_county_sub <- attr_burd_county %>%
   filter(
-    method == "di_gee" & Year %in% 2000:2016 & measure2 == "age-adjusted rate"&
-      Education == 666 & scenario == "real" 
+    method == "di_gee" & Year %in% 2000:2016 & measure2 == "age-adjusted rate" &
+      Education == 666 & scenario == "real"
   )
 
 attr_burd_county_sub <- attr_burd_county_sub %>%
-  unite("Ethnicity", Race, Hispanic.Origin, sep = ", ") 
+  unite("Ethnicity", Race, Hispanic.Origin, sep = ", ")
 
-attr_burd_county_sub <- attr_burd_county_sub %>% 
-  mutate(Ethnicity = as.factor(Ethnicity),
-       Ethnicity = forcats::fct_recode(Ethnicity,
-"Black American" = "Black or African American, All Origins",
-  "NH White" = "White, Not Hispanic or Latino"))
+attr_burd_county_sub <- attr_burd_county_sub %>%
+  mutate(
+    Ethnicity = as.factor(Ethnicity),
+    Ethnicity = forcats::fct_recode(Ethnicity,
+      "Black American" = "Black or African American, All Origins",
+      "NH White" = "White, Not Hispanic or Latino"
+    )
+  )
 
 attr_burd_county_sub <- attr_burd_county_sub %>%
   filter(Ethnicity %in% c("Black American", "NH White"))
 
-#attr_burd_county_sub <- attr_burd_county_sub %>%
+# attr_burd_county_sub <- attr_burd_county_sub %>%
 #  group_by(Year, county, Ethnicity) %>%
 #  filter(n()>1)
 attr_burd_county_sub <- attr_burd_county_sub %>%
@@ -303,19 +314,19 @@ attr_burd_county_sub <- attr_burd_county_sub %>%
   mutate(difference = mean[Ethnicity == "Black American"] - mean[Ethnicity == "NH White"]) %>%
   ungroup()
 
-scales::label_percent(0.1)(mean(attr_burd_county_sub$difference >0))
+scales::label_percent(0.1)(mean(attr_burd_county_sub$difference > 0))
 ```
 
 
 ## Comparison to CRFs that do not provide race-ethnicity-specific estimates
 mplementing this stylized scenario leads to substantially lower variation by race-ethnicity (Fig. S5a), with only x.x% of the difference in mortality to Black or African Americans being attributable to PM2.5 in each year from 2000 to 2015
 ```{r}
-attr_burd  %>%
+attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-           attr == "attributable" &
-           source == "National Vital Statistics System" & scenario == "real") %>% 
-  filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
-                                   & method %in% c("di_gee_white")) %>%
+    attr == "attributable" &
+    source == "National Vital Statistics System" & scenario == "real") %>%
+  filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All" &
+    method %in% c("di_gee_white")) %>%
   filter(Year >= 2000 & Ethnicity == "NH White") %>%
   select(Year, mean)
 ```
@@ -331,7 +342,7 @@ pop_summary %>%
     source2 == "Official Bridged-Race Population Estimates") %>%
   group_by(Year) %>%
   mutate(
-    prop = scales::label_percent(0.1)(Population / sum(Population)) 
+    prop = scales::label_percent(0.1)(Population / sum(Population))
   ) %>%
   select(Year, Ethnicity, prop)
 ```
@@ -341,9 +352,9 @@ pop_summary %>%
   filter(Region == "United States" & Gender.Code == "All genders" & Education != 666 & rural_urban_class == "All" & Year %in% c(2009, 2016) & Ethnicity == "All, All Origins") %>%
   group_by(Year) %>%
   mutate(
-    prop = scales::label_percent(0.1)(Population / sum(Population)) 
-  ) %>% 
-  select(Year, prop, Education) 
+    prop = scales::label_percent(0.1)(Population / sum(Population))
+  ) %>%
+  select(Year, prop, Education)
 ```
 ## Ascertaining rurality:
 ```{r}
@@ -351,8 +362,8 @@ pop_summary %>%
   filter(Region == "United States" & Gender.Code == "All genders" & Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year %in% c(2000, 2016)) %>%
   group_by(Year) %>%
   mutate(
-    prop = scales::label_percent(0.1)(Population / sum(Population)) 
-  ) %>% 
+    prop = scales::label_percent(0.1)(Population / sum(Population))
+  ) %>%
   select(Year, rural_urban_class, prop)
 ```
 
@@ -385,10 +396,123 @@ pm_summ <- pm_summ %>% filter(Year >= 2000 & Ethnicity != "White")
 pm_summ %>%
   group_by(Ethnicity) %>%
   summarise(value = mean(value) %>%
-              round(digits = 2), .groups = "drop") %>%
+    round(digits = 2), .groups = "drop") %>%
   arrange(desc(value))
 ```
 
 
+ 
+## Analysis by education and rural-ruban class
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education != 666 &
+    rural_urban_class == "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Year %in% c(2016) # 2009,
+  & method == "di_gee" & measure3 == "value" &
+    scenario == "real") %>%
+  transmute(
+    Year, Education,
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) # %>%
+# ggplot(aes(x = Year, y= mean, color = Education)) +
+# geom_line()
+```
+
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education == 666 &
+    rural_urban_class != "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    # Year %in% c(2016) & #2009,
+    method == "di_gee" & measure3 == "value" &
+    scenario == "real") %>%
+  transmute(
+    Year, rural_urban_class,
+    mean = round(mean, 1),
+    lower = round(lower, 1),
+    upper = round(upper, 1)
+  ) %>%
+  ggplot(aes(x = Year, y = mean, color = rural_urban_class)) +
+  geom_line()
+```
+```{r}
+attr_burden %>%
+  filter(Region == "United States" & svi_bin == "All" & Ethnicity == "All, All Origins" & Education == 666 &
+    rural_urban_class != "All" & min_age == 25 &
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+    Year %in% c(1990, 2016) & # 2009,
+    method == "di_gee" & measure3 == "value" &
+    scenario == "real") %>%
+  group_by(Year) %>%
+  summarize(
+    max_abs_diff = max(mean) - min(mean),
+    rel_diff = max(mean) / min(mean),
+    .groups = "drop"
+  ) %>%
+  transmute(
+    Year, # rural_urban_class,
+    max_abs_diff = round(max_abs_diff, 2),
+    rel_diff = round(rel_diff, 2)
+  )
+# %>%
+# ggplot(aes(x = Year, y= mean, color = rural_urban_class)) +
+# geom_line()
+```
+
+## split filter
+```{r}
+# Filter and prepare data
+attr_burd_filtered_dfs <- attr_burden %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" &
+    attr == "attributable" &
+    source == "National Vital Statistics System" & scenario == "real" &
+    agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
+    measure3 == "value")
 
 
+attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd_filtered_dfs)
+
+attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
+
+# Filter names to include only those with '*'
+attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[grep("\\*", attr_burd_filtered_dfs_names)]
+attr_burd_filtered_dfs <- attr_burd_filtered_dfs[attr_burd_filtered_dfs_names]
+
+attr_burd_filtered_dfs_test <- lapply(seq_along(attr_burd_filtered_dfs), function(i) {
+  attr_burd_prop_filtered_dfs_names_i <- attr_burd_filtered_dfs_names[i]
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs[[i]]
+
+  split_color_var <- strsplit(attr_burd_prop_filtered_dfs_names_i, "\\*")
+  split_color_var <- unlist(split_color_var)
+
+  color.column <- split_color_var[[1]]
+  split.column <- split_color_var[[2]]
+
+  attr_burd_filtered_dfs_i %>%
+    group_by(across(c(split.column, "Year"))) %>%
+    mutate(n = n()) %>%
+    ungroup() %>%
+    group_by(across(c(split.column, "Year", "n"))) %>%
+    summarise(
+      CoV = sqrt(var(mean, na.rm = TRUE)) / mean(mean, na.rm = TRUE),
+      max_abs_diff = max(mean, na.rm = TRUE) - min(mean, na.rm = TRUE),
+      rel_diff = max(mean, na.rm = TRUE) / min(mean, na.rm = TRUE),
+      average = mean(mean, na.rm = TRUE),
+      over = list(unique(.data[[color.column]][mean >= average]))
+    )
+})
+names(attr_burd_filtered_dfs_test) <- names(attr_burd_filtered_dfs)
+```
+
+
+```{r}
+lapply(attr_burd_filtered_dfs_test, function(x) {
+  x <- x %>%
+    filter(Year == 2016) %>%
+    pull(over)
+  "High school graduate or lower" %in% x | "Black American" %in% x
+})
+```

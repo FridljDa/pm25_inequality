@@ -84,7 +84,7 @@ group.colors <- group.colors[c(1,2,4,5,6)]
 
 ```{r}
  g <- ggplot(attr_burd_contrast, aes(x = Year, y = contrast_value, color = Ethnicity))+
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     xlab("Year") +
     scale_colour_manual(values=group.colors) +
     theme(legend.title = element_blank()) +
@@ -98,7 +98,7 @@ g
 ```{r}
 scenarioI <- "real"
 methodI <- "di_gee"
-figuresDir <- here::here("data/16_figures") 
+figuresDir <- here::here("data/18_figures") 
 
 <<<<<<< HEAD
 ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS14.png"), g, height = 6, width = 8)

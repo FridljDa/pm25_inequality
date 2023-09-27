@@ -54,7 +54,7 @@ Census user key needs to specified in line [here](https://github.com/FridljDa/PM
 * data/13_total_burden_parsed2 TODO mortality rates based on data/08_total_burden and data/12_population_summary
 * data/14_attr_burden TODO based on data/06_dem.agr, data/13_total_burden_parsed2, 
 * data/15_summary high-level summary of TODO
-* data/16_figures TODO
+* data/18_figures TODO
 * data/tmp
 ### Necessary starting data folder structure to reproduce
 
@@ -126,7 +126,7 @@ R packages required for replications are:
 
 Users can run the following one-off command to install the most recent versions of these packages:
 ```
-install.packages(c("vctrs", "bit64", "cdcfluview", "censusapi", "data.table", "dplyr", "ggplot2", "magrittr", "matrixStats", "MALDIquant", "RCurl", "readxl", "triangle", "sf", "sp", "stringr", "testthat", "tictoc", "truncnorm", "tidyverse", "viridis", "hrbrthemes", "rlang", "stats", "xlsx", "ggpubr", "ggExtra", "tigris", "tmap", "BiocManager"), dependencies = T)
+install.packages(c("vctrs", "bit64", "cdcfluview", "censusapi", "data.table", "dplyr", "ggplot2", "magrittr", "matrixStats", "MALDIquant", "RCurl", "readxl", "triangle", "sf", "sp", "stringr", "testthat", "tictoc", "truncnorm",  "viridis", "hrbrthemes", "rlang", "stats", "xlsx", "ggpubr", "ggExtra", "tigris", "tmap", "BiocManager"), dependencies = T)
 BiocManager::install("rhdf5")
 ```
 

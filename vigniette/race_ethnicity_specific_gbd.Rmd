@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(magrittr)
 library(data.table)
-library(tidyverse)
+
 
 options(bitmapType ="cairo")
 theme_set(theme_classic(base_family = "Helvetica"))
@@ -24,7 +24,7 @@ scenarioI <- "real"
 methodI <- "di_gee"
 
 summaryDir <- here::here("data/15_summary") 
-figuresDir <- here::here("data/16_figures") 
+figuresDir <- here::here("data/18_figures") 
 ```
 
 ## Calculate within county PM2.5 variation by population
