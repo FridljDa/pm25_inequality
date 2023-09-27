@@ -93,6 +93,49 @@ delta_method_product <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha =
   return(list(mean = mean_z, lb = lb_z, ub = ub_z))
 }
 
+#' Estimate the Mean and Confidence Interval for the Quotient of Two Random Variables Using the Delta Method
+#'
+#' @param mean_x Mean of the first random variable X
+#' @param lb_x Lower bound of the confidence interval for X
+#' @param ub_x Upper bound of the confidence interval for X
+#' @param mean_y Mean of the second random variable Y
+#' @param lb_y Lower bound of the confidence interval for Y
+#' @param ub_y Upper bound of the confidence interval for Y
+#' @param alpha Significance level for the confidence interval (default is 0.05 for a 95% CI)
+#'
+#' @return A list containing the estimated mean, lower bound, and upper bound of the confidence interval for Z = X / Y
+#' @export
+#' @examples
+#' # Example: Estimate the mean and 95% CI for the quotient of X and Y
+#' # where X has a mean of 10 and 95% CI [8, 12]
+#' # and Y has a mean of 5 and 95% CI [4, 6]
+#' result <- delta_method_quotient(mean_x = 10, lb_x = 8, ub_x = 12, mean_y = 5, lb_y = 4, ub_y = 6)
+#' print(paste("Estimated mean of Z:", result$mean))
+#' print(paste("Lower bound of 95% CI for Z:", result$lb))
+#' print(paste("Upper bound of 95% CI for Z:", result$ub))
+delta_method_quotient <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05) {
+  # Calculate standard deviations from confidence intervals
+  z_alpha = qnorm(1 - alpha / 2)
+  sd_x = (ub_x - lb_x) / (2 * z_alpha)
+  sd_y = (ub_y - lb_y) / (2 * z_alpha)
+
+  # Estimate the mean of Z
+  mean_z = mean_x / mean_y
+
+  # Estimate the variance of Z using the Delta Method
+  var_z = ((sd_x / mean_y)^2) + ((mean_x * sd_y / (mean_y^2))^2)
+
+  # Estimate the standard deviation of Z
+  sd_z = sqrt(var_z)
+
+  # Calculate the confidence interval for Z
+  lb_z = mean_z - z_alpha * sd_z
+  ub_z = mean_z + z_alpha * sd_z
+
+  return(list(mean = mean_z, lb = lb_z, ub = ub_z))
+}
+
+
 #' Estimate the Mean and Confidence Interval for the Sum of Two Random Variables Using the Delta Method
 #'
 #' @param mean_x Mean of the first random variable X

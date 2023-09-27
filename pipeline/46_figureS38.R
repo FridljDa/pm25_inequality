@@ -151,8 +151,14 @@ plots <- lapply(attr_burd_prop_filtered_dfs_names, function(attr_burd_prop_filte
 
   group.colors <- get_group_colors(attr_burd_prop_i)
   group.colors <- group.colors[names(group.colors) %in% unique(attr_burd_prop_i[[color.column]])]
-  legend_plot <- get_legend_custom(group.colors)
-  #browser()
+
+  if(color.column == "Education"){
+    ncol <- 2
+  }else{
+    ncol <- 3
+  }
+
+  legend_plot <- get_legend_custom(group.colors, ncol = ncol)
 
   combined_plot <- create_combined_plot(
     plots = plots,

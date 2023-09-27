@@ -9,6 +9,7 @@ library(data.table)
 library(dplyr)
 library(magrittr)
 library(scales)
+library(ggplot2)
 # library(tidyr)
 
 options(scipen = 10000)
@@ -21,6 +22,7 @@ exp_tracDir <- "../data/03_exp_tracts"
 censDir <- "../data/05_demog"
 cens_agrDir <- "../data/06_dem.agr/nation"
 summaryDir <- "../data/17_summary"
+#summaryDir <- "/Volumes/DanielDrive/PM2.5-attributable-mortality-analysis-private_042023/data/17_summary"
 
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
@@ -30,7 +32,7 @@ rm(file_list)
 all_burden <- fread(file.path(summaryDir, "all_burd.csv"))
 pm_summ <- fread(file.path(summaryDir, "pm_summary.csv"))
 pm_summ <- pm_summ %>% filter(scenario == "real")
-pop_summary <- fread(file.path(summaryDir, "pop_summary.csv"))
+#pop_summary <- fread(file.path(summaryDir, "pop_summary.csv"))
 ```
 # Mortality counts
 
@@ -121,10 +123,25 @@ pop_exposed_over_12
 population-weighted mean PM2.5 exposure in the overall study population 
 ```{r}
 pm_summ %>%
+  filter(Ethnicity != "All, All Origins" & Region == "United States" & Year >= 2000 & Year <= 2016 &
+    Education == 666 & rural_urban_class == "All" & pm_metric == "mean" & svi_bin == "666"& svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666" & min_age == 25) %>% 
+  group_by(Ethnicity) %>%
+  summarise(value = round(mean(value), 2),
+         mean_lower = round(mean(mean_lower), 2),
+         mean_upper = round(mean(mean_upper), 2)
+         ) 
+```
+
+
+```{r}
+pm_summ %>%
   filter(Ethnicity == "All, All Origins" & Region == "United States" & Year %in% c(1990, 2016) &
-    Education == 666 & rural_urban_class == "All" & pm_metric == "mean") %>%
-  mutate(value = round(value, 2)) %>%
-  select(value, everything())
+    Education == 666 & rural_urban_class == "All" & pm_metric == "mean" & svi_bin == "666"& svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666" & min_age == 25) %>%
+  mutate(value = round(value, 2),
+         mean_lower = round(mean_lower, 2),
+         mean_upper = round(mean_upper, 2)
+         ) %>%
+  select(value, mean_lower, mean_upper, Year, everything())
 ```
 
 
@@ -132,9 +149,10 @@ pm_summ %>%
 age-adjusted deaths per 100,000 were attributable to PM2.5 in 2016
 ```{r}
 attr_burden %>%
-  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All") %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
     Region == "United States" &
-    Year %in% c(2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
+    Year %in% c(1990, 2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
     Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All") %>%
   mutate(
     mean = round(mean, 1),
@@ -202,17 +220,21 @@ ggplot(attr_burden_absolute_difference_within_group, aes(x = Year, y = dif, colo
 Black or African Americans have seen an estimated 85.7% reduction in the PM2.5-attributable age-adjusted mortality rate from 1990 to 2016
 
 ```{r}
-attr_burden %>%
-  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
-    Region == "United States" &
+attr_burden_temp <- attr_burden %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All") %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
+    Region == "United States" & #TODO 1990 not 1992
     Year %in% c(1990, 2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
     Education == 666 & Ethnicity == "Black American" & rural_urban_class == "All") %>%
-  select(Year, Ethnicity, mean) %>%
-  tidyr::pivot_wider(names_from = Year, values_from = mean) %>%
-  mutate(
-    reduction = 1 - `2016` / `1990`,
-    reduction = scales::label_percent(0.1)(reduction)
-  )
+  select(Year, Ethnicity, mean, lower, upper) #%>%
+  #rowwise() %>%
+
+
+attach(attr_burden_temp)
+temp <- delta_method_quotient(mean[Year == 2016], lower[Year == 2016], upper[Year == 2016], mean[Year == 1990], lower[Year == 1990], upper[Year == 1990], alpha = 0.05)
+temp <- unlist(temp)
+temp <- 1-temp
+100*temp
 ```
  
 
@@ -336,16 +358,18 @@ attr_burd %>%
 
 ##  Ascertaining race-ethnicity:
 ```{r study_population}
+#
 pop_summary %>%
   filter(Region == "United States" & Gender.Code == "All genders" & Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" &
     Year %in% c(1990, 2016) &
-    source2 == "Official Bridged-Race Population Estimates") %>%
+    source2 == "Official Bridged-Race Population Estimates" & svi_bin == "666"& svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666") %>%
   group_by(Year) %>%
   mutate(
     prop = scales::label_percent(0.1)(Population / sum(Population))
   ) %>%
   select(Year, Ethnicity, prop)
 ```
+
 ## Ascertaining educational attainment:
 ```{r}
 pop_summary %>%
@@ -356,6 +380,7 @@ pop_summary %>%
   ) %>%
   select(Year, prop, Education)
 ```
+
 ## Ascertaining rurality:
 ```{r}
 pop_summary %>%

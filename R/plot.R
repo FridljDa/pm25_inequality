@@ -64,14 +64,12 @@ get_group_colors <- function(df = NULL) {
 }
 
 
-get_legend_custom <- function(group.colors){
+get_legend_custom <- function(group.colors, ncol = 3){
   # https://stackoverflow.com/questions/27803710/ggplot2-divide-legend-into-two-columns-each-with-its-own-title
   toy_data <- tibble(
     x = seq_along(group.colors),
     labels = names(group.colors)
   )
-
-  ncol = 3
 
   toy_data$labels <- factor(toy_data$labels, levels = names(group.colors))
   toy_plot <- ggplot(toy_data, aes(x, x, color = labels)) +
