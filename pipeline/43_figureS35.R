@@ -63,16 +63,16 @@ attr_burd <- attr_burd %>%
   filter(agr_by == "nation" & method == methodI & Year >= 2001 & measure3 == "value")
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "high svi")
+attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "Resilient SVI")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "middle svi")
+attr_burd2 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "Moderate SVI")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "low svi")
+attr_burd3 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "Vulnerable SVI")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 
-attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "high svi")
+attr_burd4 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "Resilient SVI")
 attr_burd4$Education <- factor(attr_burd4$Education, # Relevel group factor
   levels = c(
     "High school graduate or lower",
@@ -83,10 +83,10 @@ attr_burd4$Education <- factor(attr_burd4$Education, # Relevel group factor
 
 g4 <- ggplot(attr_burd4, aes(x = Year, y = mean, color = Education))
 
-attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "middle svi")
+attr_burd5 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "Moderate SVI")
 g5 <- ggplot(attr_burd5, aes(x = Year, y = mean, color = Education))
 
-attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "low svi")
+attr_burd6 <- attr_burd %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & svi_bin == "Vulnerable SVI")
 g6 <- ggplot(attr_burd6, aes(x = Year, y = mean, color = Education))
 
 ## --set range---
@@ -164,15 +164,15 @@ t1 <- textGrob("Age-adjusted mortality rate per 100,000", rot = 90, gp = gpar(fo
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("high SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Resilient SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("middle SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Moderate SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("low SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Vulnerable SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(

@@ -25,7 +25,7 @@ args <- commandArgs(trailingOnly = T)
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2002
+  year <- 2011
   agr_by <- "county"
   source <- "nvss"
 
@@ -33,8 +33,6 @@ if (rlang::is_empty(args)) {
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  #totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  #
   attr_burdenDir <- "data/14_attr_burd"
 } else {
   year <- args[1]
@@ -55,14 +53,16 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  quit()
+  #quit() #TODO
 }
 
 
 tic(paste("calculated attr burden with di et al", year, agr_by, source))
 #----read some data-----
-total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
+total_burden <- paste0("data/09_total_burden_parsed/county/nvss/total_burden_nvss_", year, ".csv") %>%
   read_data()
+#total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
+#  read_data()
 
 if("Deaths" %in% colnames(total_burden)) total_burden <- total_burden %>% rename(value = Deaths)
 
@@ -136,40 +136,60 @@ paf_di <- inner_join_age_right_outer(pm_summ,
   by = c("Race", "Hispanic.Origin")
 )
 
-paf_di <- paf_di %>%
-  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
-  summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
-  ungroup()
 #paf_di <- paf_di %>%
 #  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
-#  do({
-#    pm = .$pm
-#    pop_size = .$pop_size
-#    result = calculate_weighted_mean_ci(pm, pop_size)
-#    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp, lower = result$lower, upper = result$upper)
-#  }) %>%
+#  summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
 #  ungroup()
-
-rm(pm_summ, hr)
+#paf_di <- paf_di[1:200, ]
 paf_di <- paf_di %>%
-  mutate(
-    # PAF = 1-1/HR #TODO
-    paf_mean = case_when(
-      pop_weight_pm_exp < 5 ~ 0,
-      pop_weight_pm_exp >= 5 ~ (pop_weight_pm_exp - 5) * (hr_mean - 1) / 10
-    ),
-    paf_lower = case_when(
-      pop_weight_pm_exp < 5 ~ 0,
-      pop_weight_pm_exp >= 5 ~ (pop_weight_pm_exp - 5) * (hr_lower - 1) / 10
-    ),
-    paf_upper = case_when(
-      pop_weight_pm_exp < 5 ~ 0,
-      pop_weight_pm_exp >= 5 ~ (pop_weight_pm_exp - 5) * (hr_upper - 1) / 10
-    ),
-    pop_weight_pm_exp = NULL, hr_upper = NULL, hr_mean = NULL, hr_lower = NULL
-  )
+  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
+  do({
+    pm = .$pm
+    pop_size = .$pop_size
+    result = calculate_weighted_mean_ci(pm, pop_size)
+    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp,
+               pop_weight_pm_exp_lower = result$lower,
+               pop_weight_pm_exp_upper = result$upper)
+  }) %>%
+  ungroup()
 
+#TODO
+#colnames(paf_di)
+#[1] "Year"                    "county"                  "Race"                    "Hispanic.Origin"
+#[5] "Gender.Code"             "Education"               "rural_urban_class"       "scenario"
+#[9] "method"                  "label_cause"             "hr_mean"                 "hr_lower"
+#[13] "hr_upper"                "min_age"                 "max_age"                 "pop_weight_pm_exp"
+#[17] "pop_weight_pm_exp_lower" "pop_weight_pm_exp_upper"
+rm(pm_summ, hr)
+# Assuming delta_method_product is a function defined somewhere in your code
+#browser()
+
+paf_di <- paf_di %>%
+  rowwise() %>%
+  do({
+    mean_x = .$pop_weight_pm_exp - 5
+    lb_x = .$pop_weight_pm_exp_lower - 5
+    ub_x = .$pop_weight_pm_exp_upper - 5
+
+    mean_y = .$hr_mean - 1
+    lb_y = .$hr_lower - 1
+    ub_y = .$hr_upper - 1
+
+    result = delta_method_product(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
+
+    data.frame(., paf_mean = result$mean, paf_lower = result$lb, paf_upper = result$ub)
+  })
+
+paf_di <- paf_di %>%
+   mutate(paf_mean = pmax(0, paf_mean),
+           paf_lower = pmax(0, paf_lower),
+           paf_upper = pmax(0, paf_upper))
+#"hr_mean"                 "hr_lower"                "hr_upper"
+#"pop_weight_pm_exp"       "pop_weight_pm_exp_lower" "pop_weight_pm_exp_upper"
 #if (agr_by == "county") paf_di$rural_urban_class <- as.factor(666) # TODO change total burden
+# Remove specific columns using the subset function
+paf_di <- paf_di %>%
+  subset(select = -c(hr_mean, hr_lower, hr_upper, pop_weight_pm_exp, pop_weight_pm_exp_lower, pop_weight_pm_exp_upper))
 
 if (agr_by == "county") {
   total_burden <- total_burden %>%
@@ -215,7 +235,8 @@ paf_di <- paf_di %>%
 attr_burden_di <- left_join(
   total_burden,
   paf_di,
-  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause")#,
+  by = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause"),
+  multiple = "all"#,
   #relationship = "many-to-many" #paf_di %>% filter(method == "di_gee" & scenario == "real")
 )
 

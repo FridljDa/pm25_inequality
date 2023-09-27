@@ -116,6 +116,8 @@ attr_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_d
   return(attr_plot_i)
 })
 
+#ggarrange(plotlist = attr_plots)
+
 all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
   all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
 

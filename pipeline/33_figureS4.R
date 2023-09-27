@@ -38,7 +38,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 65
+  min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -111,7 +111,7 @@ g2 <- g2 + ylim(min1, max1)
 g3 <- g3 + ylim(min1, max1)
 g4 <- g4 + ylim(min1, max1)
 
-plots <- list(g1, g2, g3, g4)
+plots <- list(g1, g2, g3) #, g4
 rm(min1, max1)
 rm(
   all_burden1, all_burden2, all_burden3,
@@ -154,6 +154,17 @@ lay <- matrix(
   byrow = TRUE
 )
 
+lay <- matrix(
+  c(
+    5, NA, 6, NA, 7,
+    NA, NA, NA, NA, NA,
+    1, NA, 2, NA, 3,
+    9, NA, 10, NA, 11
+  ),
+  nrow = 4,
+  byrow = TRUE
+)
+
 
 t1 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
@@ -175,7 +186,7 @@ t4 <- grobTree(
   textGrob("Social Vulnerability Index", gp = gpar(fontsize = 10, fontface = "bold"))
 )
 
-gs <- append(plots, list(t1, t2, t3, t4))
+gs <- append(plots, list(t1, t2, t3)) #, t4
 gs <- append(gs, legend_plots)
 # gs <- lapply(1:9, function(ii) grobTree(rectGrob(gp = gpar(fill = ii, alpha = 0.5)), textGrob(ii)))
 
@@ -185,7 +196,7 @@ figure_hight <- 1
 
 g_combined <- grid.arrange(
   grobs = gs,
-  widths = c(figure_width, blank_space, figure_width, blank_space, figure_width, blank_space, figure_width),
+  widths = c(figure_width, blank_space, figure_width, blank_space, figure_width), #, blank_space, figure_width
   heights = c(0.1, blank_space, figure_hight, 1),
   layout_matrix = lay
 )

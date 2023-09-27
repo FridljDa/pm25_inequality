@@ -14,7 +14,7 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   dataDir <- "data"
 
-  agr_by <- "STATEFP"
+  agr_by <- "nation"
   source <- "nvss"
   year <- 2016
 } else {
@@ -100,8 +100,8 @@ attr_total_burden <- inner_join(
   total_burden,
   by = c(
     "Year", "Gender.Code", "Race", "Hispanic.Origin", "svi_bin", "rural_urban_class", "Education",
-    "source", "measure1", "measure2", agr_by, "min_age", "max_age",
-    "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
+    "source", "measure1", "measure2", agr_by, "min_age", "max_age"
+    #, "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
   )
 )
 
@@ -131,7 +131,32 @@ if(nrow(attr_total_burden_prop_of_difference) == 0){
   warning(paste("1: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }
 
-attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference%>%
+#delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
+# Your existing data frame manipulation
+test <- attr_total_burden_prop_of_difference %>%
+  mutate(
+    mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+    lower_black = lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+    upper_black = upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+    overall_total_burden_black =  overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
+  ) %>%
+  rowwise() %>%
+  mutate(delta_result = list(delta_method_sum(mean, lower, upper, - mean_black, - lower_black, - upper_black))) %>%
+  select(-mean, -lower, -upper,-mean_black, -lower_black, -upper_black) %>%
+  unnest_wider(delta_result) %>%
+  rename(lower = lb, upper = ub) %>%
+  mutate(
+    lower = lower/(overall_total_burden-overall_total_burden_black),
+    mean = mean/(overall_total_burden-overall_total_burden_black),
+    upper = upper/(overall_total_burden-overall_total_burden_black),
+    overall_total_burden = NULL,
+    overall_total_burden_black = NULL,
+    measure3 = "proportion of disparity to Black or African American attributable"
+  )
+
+attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
+  #mutate(mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+  #       overall_total_burden_black = )
   mutate(
     mean = 100 * (mean - mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
       (overall_total_burden - overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]),

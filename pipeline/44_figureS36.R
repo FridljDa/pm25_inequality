@@ -74,26 +74,26 @@ all_burd <- all_burd %>%
     Ethnicity != "All, All Origins" & rural_urban_class == "All" & Education == 666)
 
 ## -- figure 3, attributable burden---
-attr_burd1 <- attr_burd %>% filter(svi_bin == "high svi" &
+attr_burd1 <- attr_burd %>% filter(svi_bin == "Resilient SVI" &
   Ethnicity != "All, All Origins")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 g1 <- g1 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
-attr_burd2 <- attr_burd %>% filter(svi_bin == "middle svi" & Ethnicity != "All, All Origins")
+attr_burd2 <- attr_burd %>% filter(svi_bin == "Moderate SVI" & Ethnicity != "All, All Origins")
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Ethnicity))
 g2 <- g2 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
-attr_burd3 <- attr_burd %>% filter(svi_bin == "low svi" & Ethnicity != "All, All Origins")
+attr_burd3 <- attr_burd %>% filter(svi_bin == "Vulnerable SVI" & Ethnicity != "All, All Origins")
 g3 <- ggplot(attr_burd3, aes(x = Year, y = mean, color = Ethnicity))
 g3 <- g3 + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
 
-all_burd4 <- all_burd %>% filter(svi_bin == "high svi" & Ethnicity != "All, All Origins")
+all_burd4 <- all_burd %>% filter(svi_bin == "Resilient SVI" & Ethnicity != "All, All Origins")
 g4 <- ggplot(all_burd4, aes(x = Year, y = value, color = Ethnicity))
 
-all_burd5 <- all_burd %>% filter(svi_bin == "middle svi" & Ethnicity != "All, All Origins")
+all_burd5 <- all_burd %>% filter(svi_bin == "Moderate SVI" & Ethnicity != "All, All Origins")
 g5 <- ggplot(all_burd5, aes(x = Year, y = value, color = Ethnicity))
 
-all_burd6 <- all_burd %>% filter(svi_bin == "low svi" & Ethnicity != "All, All Origins")
+all_burd6 <- all_burd %>% filter(svi_bin == "Vulnerable SVI" & Ethnicity != "All, All Origins")
 g6 <- ggplot(all_burd6, aes(x = Year, y = value, color = Ethnicity))
 
 
@@ -199,11 +199,11 @@ t2 <- textGrob("", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("high SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Resilient SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("middle SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0.5)
+  textGrob("Moderate SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0.5)
 ) # "Some college education but no 4-year college degree"
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),

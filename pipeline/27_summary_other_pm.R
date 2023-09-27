@@ -19,6 +19,10 @@ options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 options(scipen = 10000)
 
+suppressMessages({
+  pkgload::load_all()
+})
+
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
@@ -85,13 +89,27 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 
     pm_summ <- rbind(pm_summ_over25, pm_summ_over65)
 
+    #pm_summ <- pm_summ %>%
+    #  group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
+      # group_by(Year,Region, agr_by, Race, Hispanic.Origin,Gender.Code, scenario, Education) %>%
+    #  summarise(
+    #    mean = weighted.mean(pm, pop_size),
+    #    median = matrixStats::weightedMedian(pm, pop_size)
+    #  )
+
     pm_summ <- pm_summ %>%
       group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
-      # group_by(Year,Region, agr_by, Race, Hispanic.Origin,Gender.Code, scenario, Education) %>%
-      summarise(
-        mean = weighted.mean(pm, pop_size),
-        median = matrixStats::weightedMedian(pm, pop_size)
-      )
+      do({
+        pm = .$pm
+        pop_size = .$pop_size
+        result = calculate_weighted_mean_ci(pm, pop_size)
+        data.frame(mean = result$pop_weight_pm_exp,
+                   mean_lower = result$lower,
+                   mean_upper = result$upper)
+      }) %>%
+      ungroup()
+
+
     toc()
     return(pm_summ)
 
@@ -109,15 +127,20 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 #  summarise(mean = weighted.mean(pm, pop_size),
 #            median = matrixStats::weightedMedian(pm, pop_size))
 
-pm_summ <- pm_summ %>%
-  tidyr::pivot_longer(c(mean, median),
-    names_to = "pm_metric"
-  )
+#pm_summ <- pm_summ %>%
+#  tidyr::pivot_longer(c(mean, median),
+#    names_to = "pm_metric"
+#  )
 
 pm_summ <- pm_summ %>% filter(!is.na(Gender.Code)) # TODO
+pm_summ <- pm_summ %>%
+  mutate(pm_metric = "mean") %>%
+  rename(value = mean)
+
+
 ## --- find and replcase---
 pm_summ <- pm_summ %>% mutate_at(
-  setdiff(colnames(pm_summ), c("value")),
+  setdiff(colnames(pm_summ), c("value", "mean_lower", "mean_upper")),
   as.factor
 )
 

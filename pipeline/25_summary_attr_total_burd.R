@@ -41,7 +41,7 @@ states <- file.path(tmpDir, "states.csv") %>%
 tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
-agr_bys <- "nation"
+#agr_bys <- "nation"
 ## --- read and bind attr burden----
 cat("row-bind attr_burden-start")
 tic("row-bind attr_burden")
