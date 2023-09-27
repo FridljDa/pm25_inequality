@@ -52,9 +52,9 @@ findreplace_rural_urban_class <- tribble(
 
 findreplace_svi_bin <- tribble(
   ~replacecolumns, ~from, ~to,
-  "svi_bin", "1", "High SVI",
-  "svi_bin", "2", "Middle SVI",
-  "svi_bin", "3", "Low SVI",
+  "svi_bin", "1", "Resilient SVI",
+  "svi_bin", "2", "Moderate SVI",
+  "svi_bin", "3", "Vulnerable SVI",
   "svi_bin", "666", "All"
 )
 

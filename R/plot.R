@@ -33,9 +33,9 @@ get_group_colors <- function(df = NULL) {
     "Non metro",
     "Large metro",
     "Small-medium metro",
-    "high SVI",
-    "middle SVI",
-    "low SVI",
+    "Resilient SVI",
+    "Moderate SVI",
+    "Vulnerable SVI",
 
     "High SES",
     "Middle SES",
