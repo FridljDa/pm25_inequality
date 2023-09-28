@@ -33,6 +33,7 @@ get_group_colors <- function(df = NULL) {
     "Non metro",
     "Large metro",
     "Small-medium metro",
+
     "Resilient SVI",
     "Moderate SVI",
     "Vulnerable SVI",
