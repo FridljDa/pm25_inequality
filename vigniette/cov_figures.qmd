@@ -14,6 +14,12 @@ library(scales)
 library(ggplot2)
 library(here)
 library(stringr)
+
+library(ggplot2)
+library(dplyr)
+library(RColorBrewer)
+library(ggpubr)
+
 devtools::load_all()
 theme_set(theme_classic(base_family = "Helvetica"))
 ```
@@ -39,7 +45,7 @@ attr_burden <- attr_burden %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" &
     attr == "attributable" &
     source == "National Vital Statistics System" & scenario == "real" &
-    agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == 25 &
+    agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == min_ageI &
     measure3 == "value")
 attr_burden <- attr_burden %>% select(-"...1")
 ```
@@ -148,6 +154,7 @@ names(attr_burd_filtered_dfs_star_sum) <- names(attr_burd_filtered_dfs_star)
 
 ```{r}
 attr_burd_filtered_dfs_names_star_ethn <- attr_burd_filtered_dfs_names_star[grep("Ethnicity", names(attr_burd_filtered_dfs_star_sum))]
+attr_burd_filtered_dfs_names_star_ethn <- attr_burd_filtered_dfs_names_star_ethn[-grep("MS", names(attr_burd_filtered_dfs_star_sum))]
 
 attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtered_dfs_names_star_ethn), function(i) {
   attr_burd_filtered_dfs_names_star_ethn_i <- attr_burd_filtered_dfs_names_star_ethn[i]
@@ -176,7 +183,7 @@ combined_plot
 
 ```{r}
 ggsave(
-  filename = here("data/18_figures/di_gee-real-25/figure_cov_ethnicity.png"),
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_ethnicity.png")),
   combined_plot
 )
 ```
@@ -212,7 +219,7 @@ combined_plot
 
 ```{r}
 ggsave(
-  filename = here("data/18_figures/di_gee-real-25/figure_cov_education.png"),
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_education.png")),
   combined_plot
 )
 ```
@@ -274,7 +281,58 @@ g
 
 ```{r}
 ggsave(
-  filename = here("data/18_figures/di_gee-real-25/figureS8.png"),
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.png")),
+  combined_plot, height = 6, width = 8
+)
+```
+
+```{r}
+attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
+  filter(cat != "All")
+# Split the data frame by 'new_factor'
+list_of_dfs <- split(attr_burd_filtered_df_year, attr_burd_filtered_df_year$new_factor)
+
+# Create a list to hold ggplot objects
+list_of_plots <- list()
+
+# Get a list of all available Brewer palettes
+all_palettes <- rownames(brewer.pal.info)
+
+# Automatically generate a list of color palettes
+num_palettes <- length(list_of_dfs)
+color_palettes <- lapply(1:num_palettes, function(i) {
+  brewer.pal(min(8, max(table(attr_burd_filtered_df_year$cat))), all_palettes[i])
+})
+
+max_y_lim <- max(attr_burd_filtered_df_year$CoV)
+
+# Loop through the list of data frames to create individual ggplots
+for(i in seq_along(list_of_dfs)) {
+  factor_level <- names(list_of_dfs)[i]
+  g <- ggplot(list_of_dfs[[i]], aes(x = Year, y = CoV, color = cat)) +
+    geom_line(linewidth = 1.5) +
+    xlab("Year") +
+    guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+    theme(legend.title = element_blank()) +
+    ylab("")+
+    ylim(0, max_y_lim) +
+    theme(legend.position = "bottom") +
+    theme(text = element_text(size = 14.5)) +
+    scale_color_manual(values = color_palettes[[i]]) +
+    xlim(1990, 2016)
+  
+  list_of_plots[[i]] <- g
+}
+list_of_plots[[1]] <- list_of_plots[[1]] + ylab("Coefficient of Variation (CoV)") 
+
+# Combine the individual ggplots into one plot using ggarrange
+combined_plot <- do.call(ggarrange, c(list_of_plots, ncol = num_palettes))
+print(combined_plot)
+```
+
+```{r}
+ggsave(
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.png")),
   combined_plot, height = 6, width = 8
 )
 ```

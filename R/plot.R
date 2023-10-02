@@ -283,11 +283,12 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
 #' Update y-axis limits for a list of ggplot objects
 #'
 #' This function takes a list of ggplot objects and sets the y-axis limits
-#' to be the same for all plots, based on the maximum value in either the 'upper', 'value', or a specified column.
+#' to be the same for all plots, based on the maximum and minimum value in either the 'upper', 'value', or a specified column.
 #' Throws an error if neither column is present.
 #'
 #' @param ggplot_list A list of ggplot objects.
 #' @param column The name of the column to use for setting the y-axis limits. Defaults to NULL.
+#' @param use_actual_min Boolean flag to use the actual minimum value for y-axis lower limit. Defaults to FALSE.
 #' @return A list of ggplot objects with updated y-axis limits.
 #' @examples
 #' g1 <- ggplot(data.frame(x = 1:10, upper = rnorm(10)), aes(x, upper)) + geom_line()
@@ -295,33 +296,39 @@ create_combined_plot <- function(plots, legend_plot, row_annotations, column_ann
 #' g3 <- ggplot(data.frame(x = 1:10, upper = rnorm(10)), aes(x, upper)) + geom_line()
 #' ggplot_list <- list(g1, g2, g3)
 #' updated_ggplot_list <- update_ylim(ggplot_list)
-update_ylim <- function(ggplot_list, column = NULL) {
-  # Initialize an empty vector to store maximum values
+update_ylim <- function(ggplot_list, column = NULL, use_actual_min = FALSE) {
+  # Initialize empty vectors to store maximum and minimum values
   max_values <- c()
+  min_values <- c()
 
-  # Loop through each ggplot object to find the maximum value
+  # Loop through each ggplot object to find the maximum and minimum value
   for (g in ggplot_list) {
     if (!is.null(column) && column %in% names(g$data)) {
       max_values <- c(max_values, max(g$data[[column]], na.rm = TRUE))
+      min_values <- c(min_values, min(g$data[[column]], na.rm = TRUE))
     } else if ("upper" %in% names(g$data)) {
       max_values <- c(max_values, max(g$data$upper, na.rm = TRUE))
+      min_values <- c(min_values, min(g$data$upper, na.rm = TRUE))
     } else if ("value" %in% names(g$data)) {
       max_values <- c(max_values, max(g$data$value, na.rm = TRUE))
+      min_values <- c(min_values, min(g$data$value, na.rm = TRUE))
     } else {
       stop("Error: Neither 'upper' nor 'value' column found in ggplot data.")
     }
   }
 
-  # Calculate the overall maximum value
+  # Calculate the overall maximum and minimum value
   max1 <- max(max_values, na.rm = TRUE)
+  min1 <- ifelse(use_actual_min, min(min_values, na.rm = TRUE), 0)
 
   suppressMessages({
     # Update y-axis limits for each ggplot
-    updated_ggplot_list <- lapply(ggplot_list, function(g) g + ylim(0, max1))
+    updated_ggplot_list <- lapply(ggplot_list, function(g) g + ylim(min1, max1))
   })
 
   return(updated_ggplot_list)
 }
+
 
 
 #' Plot Combined Data for attr_burd and all_burd

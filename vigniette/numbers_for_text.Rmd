@@ -182,6 +182,7 @@ attr_burden_2016 %>%
 ## overall population
 ```{r}
 attr_burden %>%
+  filter(svi_bin == "All") %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     Region == "United States" &
     Year %in% c(1990, 2016) & method == "di_gee" & measure3 == "value" & scenario == "real" &
@@ -412,7 +413,7 @@ pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == "real")
 
 ## -- figure 3, attributable burden---
-pm_summ <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All")
+pm_summ <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666& svi_bin3 == 666& svi_bin4 == 666)
 
 pm_summ <- pm_summ %>% filter(Year >= 2000 & Ethnicity != "White")
 ```
@@ -425,6 +426,68 @@ pm_summ %>%
   arrange(desc(value))
 ```
 
+```{r}
+pm_summ %>%
+  filter(Year %in% c(2000, 2016)) %>%
+  filter(Ethnicity %in% c("NH White", "Black American")) %>% 
+  select(Ethnicity, Year, value, mean_lower, mean_upper) %>%
+  mutate(value = value  %>% round(digits = 2),
+         mean_lower = mean_lower %>% round(digits = 2),
+         mean_upper = mean_upper  %>% round(digits = 2))
+```
+
+```{r}
+library(dplyr)
+
+# Your data
+pm_summ <- data.frame(
+  Ethnicity = c("Black American", "NH White", "Black American", "NH White"),
+  Year = c(2000, 2000, 2016, 2016),
+  value = c(14.31, 12.14, 7.95, 7.01),
+  mean_lower = c(14.18, 12.10, 7.83, 6.92),
+  mean_upper = c(14.42, 12.27, 8.02, 7.10)
+)
+
+# Filter and mutate
+filtered_data <- pm_summ %>%
+  filter(Year %in% c(2000, 2016)) %>%
+  filter(Ethnicity %in% c("NH White", "Black American")) %>% 
+  select(Ethnicity, Year, value, mean_lower, mean_upper) %>%
+  mutate(value = round(value, 2),
+         mean_lower = round(mean_lower, 2),
+         mean_upper = round(mean_upper, 2))
+
+# Calculate disparities
+disparities <- filtered_data %>%
+  group_by(Year) %>%
+  summarize(
+    black_value = value[Ethnicity == "Black American"],
+    white_value = value[Ethnicity == "NH White"],
+    black_lb = mean_lower[Ethnicity == "Black American"],
+    white_lb = mean_lower[Ethnicity == "NH White"],
+    black_ub = mean_upper[Ethnicity == "Black American"],
+    white_ub = mean_upper[Ethnicity == "NH White"]
+  ) %>%
+  rowwise() %>%
+  mutate(
+    disparity = list(
+      delta_method_sum(
+        mean_x = black_value,
+        lb_x = black_lb,
+        ub_x = black_ub,
+        mean_y = -white_value,  # Negative for disparity
+        lb_y = -white_ub,  # Reverse bounds
+        ub_y = -white_lb   # Reverse bounds
+      )
+    )
+  ) %>%
+  unnest_wider(disparity)
+
+disparities <- disparities %>%
+  mutate(across(c(mean, lb, ub), round, 2)) %>%
+        select(Year, mean, lb, ub)
+print(disparities)
+```
 
  
 ## Analysis by education and rural-ruban class

@@ -36,7 +36,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 25
+  min_ageI <- 65
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -58,30 +58,15 @@ attr_burd <- attr_burd %>%
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == scenarioI)
 
-## -- figure 3, attributable burden---
-#TODO method di_gee/burnett
-attr_burden_proportion_to_black <- attr_burd %>%
+attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            Region == "United States" & method == "di_gee" & measure3 == "value" & scenario == "real" &
-           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All") %>%
-  select(Year, Ethnicity, mean) %>%
-  #mutate(ethnicity_african_american = ifelse(Ethnicity == "Black American",
-  #       "Black")) %>%
-  tidyr::pivot_wider(names_from = Ethnicity, values_from = mean)
+           Education == 666 & Ethnicity != "All, All Origins" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & rural_urban_class == "All") #%>%
+  #select(Year, Ethnicity, mean)
 
-attr_burden_proportion_to_black <-attr_burden_proportion_to_black%>%
-  mutate(across(`American Indian or Alaska Native`:`NH White`,
-                # ~ scales::label_percent(0.1)(1-.x / `Black American`)
-                ~ 1-.x / `Black American`
-  )
-  )  %>%
-  tidyr::pivot_longer(
-    !Year,
-    names_to = "Ethnicity",
-    values_to = "proportion_to_black" # starts_with("proportion_to_african")
-  ) %>%
-  filter(!(Ethnicity %in% c("Hispanic or Latino White", "NH White") & Year < 2000)) %>%
-  filter(!(Ethnicity == "White"& Year > 2000) ) %>%
+attr_burden_proportion_to_black <- attr_burd %>%
+  group_by(Year) %>%
+  mutate(proportion_to_black = 1-mean/mean[Ethnicity == "Black American"]) %>%
   filter(Ethnicity != "Black American")
 
 g <- ggplot(attr_burden_proportion_to_black, aes(x = Year, y = proportion_to_black, color = Ethnicity)) +
@@ -160,7 +145,7 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 
-ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI), "figureS6.png"), dpi = 300, g_combined, height = 4, width = 8)
+ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS6.png"), dpi = 300, g_combined, height = 4, width = 8)
 ##numbers for capation
 attr_burden_proportion_to_black %>%
   group_by(Ethnicity) %>%

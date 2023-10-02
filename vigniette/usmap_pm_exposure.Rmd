@@ -1,0 +1,184 @@
+---
+title: "PM2.5 and R/E mortality in the US"
+author: "Gabriel Carrasco-Escobar"
+date: "Created: 10/24/2022"
+output: html_document
+---
+
+## Packages and Data
+```{r}
+# Load required libraries
+library(sf)
+#library(mapview)
+#library(spdep)
+#library(sp)
+library(purrr)
+#library(leaflet)
+#library(RColorBrewer)
+library(fipio)
+#library(tigris)
+#library(dataPreparation)
+library(readr)
+library(ggplot2)
+
+library(tidyr)
+library(dplyr)
+
+library(ggplot2)
+library(sf)
+library(dplyr)
+#Sys.setenv(PROJ_LIB = "/usr/local/Cellar/proj/9.3.0/share/proj")
+
+
+devtools::load_all()
+```
+```{r}
+scenarioI <- "real"
+  methodI <- "di_gee"
+  min_ageI <- 25
+```
+
+```{r}
+findreplace <- read.csv(here::here("data/final_findreplace.csv"))
+```
+
+```{r}
+cens_meta_2016 <- read_csv(here::here("data/05_demog/meta/cens_meta_2016.csv"))
+
+# List all CSV files in the directory
+csv_files_2016 <- list.files(path = here::here("data/06_dem.agr/county/2016"), full.names = TRUE)
+  
+# Read each CSV file into a list of data frames
+list_of_dfs_2016 <- lapply(csv_files_2016, read.csv())
+  
+# Row-bind all data frames into a single data frame
+exposure_pm_2016 <- dplyr::bind_rows(list_of_dfs_2016)
+
+exposure_pm_2016 <- exposure_pm_2016 %>%
+  left_join(cens_meta_2016, by = "variable")
+```
+```{r}
+cens_meta_1990 <- read_csv(here::here("data/05_demog/meta/cens_meta_1990.csv"))
+
+# List all CSV files in the directory
+csv_files_1990 <- list.files(path = here::here("data/06_dem.agr/county/1990"), full.names = TRUE)
+  
+# Read each CSV file into a list of data frames
+list_of_dfs_1990 <- lapply(csv_files_1990, read_data)
+  
+# Row-bind all data frames into a single data frame
+exposure_pm_1990 <- dplyr::bind_rows(list_of_dfs_1990)
+
+exposure_pm_1990 <- exposure_pm_1990 %>%
+  left_join(cens_meta_1990, by = "variable")
+```
+
+```{r}
+#exposure_pm <- rbind(exposure_pm_1990, exposure_pm_2016)
+exposure_pm <- exposure_pm_2016
+```
+
+```{r}
+exposure_pm <- exposure_pm %>%
+  unite("Ethnicity", Race, Hispanic.Origin, sep = ", ") %>%
+  mutate(Ethnicity = as.factor(Ethnicity))
+rindreplace <- list(
+  "Black American" = "Black or African American, All Origins",
+  "American Indian or Alaska Native" = "American Indian or Alaska Native, All Origins",
+  "Asian or Pacific Islander" = "Asian or Pacific Islander, All Origins",
+  "Hispanic or Latino White" = "White, Hispanic or Latino",
+  "NH White" = "White, Not Hispanic or Latino",
+  "White" = "White, All Origins",
+  "All, All Origins" = "All, All Origins"
+)
+levels(exposure_pm$Ethnicity) <- rindreplace
+```
+
+```{r}
+exposure_pm <- exposure_pm %>%
+  filter(Ethnicity != "All, All Origins") %>%
+  filter(scenario == "real" & Education == 666 &
+           min_age >= min_ageI) %>%
+  filter(!(state %in% c(2, 15)))
+```
+
+```{r, eval = FALSE}
+exposure_pm <- exposure_pm %>% replace_values(findreplace)
+```
+
+
+filter for contiguous US
+
+```{r}
+exposure_pm <- exposure_pm %>% 
+     group_by(state, county, Ethnicity, Education, Year) %>%
+      #group_by_at(vars(all_of(setdiff(colnames(exposure_pm), c("variable", "pop_size", "prop", "pm"))))) %>%
+      summarise(mean = weighted.mean(pm, pop_size))
+head(exposure_pm)
+```
+
+
+```{r}
+exposure_pm_map <- exposure_pm %>%
+  #select(state, county, mean) %>%
+  mutate(meta = fips_metadata(as.character(county),
+                              geometry = T))%>%
+  unnest(cols = c(meta)) %>% #cols = ""
+  st_as_sf() %>%
+  st_cast("POLYGON")  
+```
+
+
+```{r}
+# Load necessary libraries
+exposure_pm_plot_2016 <- exposure_pm_map %>%  # Assuming exposure_pm_map is your data
+  filter(Year == 2016 & !(state %in% c(2, 15))) %>%
+  ggplot() +
+  geom_sf(aes(fill = mean)) +
+  scale_fill_distiller(palette = "RdYlBu", direction = -1) +
+  labs(fill = "Population-weighted mean PM2.5 exposure levels in 2016") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  facet_wrap(vars(Ethnicity)) +
+  theme_minimal() +
+  theme(legend.position = "bottom")  # Moved this line after theme_minimal()
+
+# Save the plot with increased dimensions
+ggsave("figure_us_map_pm_2016.png", 
+       plot = exposure_pm_plot_2016, 
+       dpi = 300, 
+       height = 8,  # Increased height
+       width = 12)  # Increased width
+
+
+# Save the plot
+ggsave(filename = file.path(here::here("data/18_figures"), paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_us_map_pm_2016.png"), 
+       plot = exposure_pm_plot_2016,  # Fixed plot argument
+       dpi = 300, 
+       height = 6, 
+       width = 9)
+
+# Display the plot
+exposure_pm_plot_2016
+```
+
+```{r}
+exposure_pm_plot_1990 <- exposure_pm_map %>%
+  filter(Year == 2016 & !(state %in% c(2, 15))) %>%
+  #filter(Ethnicity == "Black or African American" ) %>% #"All"
+  ggplot() +
+  geom_sf(aes(fill = mean)) +
+  scale_fill_distiller(palette = "RdYlBu", direction = -1) +
+  labs(fill = "Population-weighted mean PM2.5 exposure levels in 2016") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  facet_wrap(vars(Ethnicity)) +
+  theme(legend.position = "bottom") +
+  theme_minimal() 
+  
+ggsave(file.path(here::here( "data/18_figures"), paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_us_map_pm_2016.png"), 
+       dpi = 300, exposure_pm_plot_2016, height = 6, width = 9)
+
+exposure_pm_plot_2016
+```
+

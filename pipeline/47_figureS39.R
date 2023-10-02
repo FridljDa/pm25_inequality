@@ -18,6 +18,7 @@ packages <- c(
 
 # Load required packages
 library(purrr)
+library(patchwork)
 
 for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
@@ -48,7 +49,7 @@ min_ageI <- args[13]
 if (rlang::is_empty(args)) {
   scenarioI <- "real"
   methodI <- "di_gee"
-  min_ageI <- 25
+  min_ageI <- 65
 
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
@@ -91,6 +92,16 @@ all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            source == "National Vital Statistics System" & agr_by == "nation" )
 
+# Define the replacement list
+replacement_list <- list(
+  SES = "svi_bin1",
+  HCD = "svi_bin2",
+  MS = "svi_bin3",
+  HT = "svi_bin4",
+  SVI = "svi_bin",
+  Rurality = "rural_urban_class"
+)
+
 # Generate filtered data frames
 attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd)
 all_burd_filtered_dfs <- generate_filtered_dfs(all_burd)
@@ -121,6 +132,13 @@ attr_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_d
 all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
   all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
 
+  title <- attr_burd_filtered_dfs_names_i
+  # Loop through the list and replace each value with its corresponding key
+  for (key in names(replacement_list)) {
+    value <- replacement_list[[key]]
+    title <- str_replace_all(title, fixed(value), key)
+  }
+
   all_plot_i <- plot_df(all_burd_i, color.column = attr_burd_filtered_dfs_names_i,
                       remove_legend = FALSE)
 
@@ -128,3 +146,38 @@ all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_df
          dpi = 300, all_plot_i, height = 9, width = 8)
   return(all_plot_i)
 })
+
+all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+  all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
+
+  title <- attr_burd_filtered_dfs_names_i
+  # Loop through the list and replace each value with its corresponding key
+  for (key in names(replacement_list)) {
+    value <- replacement_list[[key]]
+    title <- str_replace_all(title, fixed(value), key)
+  }
+
+  all_plot_i <- all_burd_i %>%
+    ggplot(aes(x = Year, y = value, color = !!sym(attr_burd_filtered_dfs_names_i))) +
+    geom_line(linewidth = 1.5) +
+    xlab("Year") +
+    scale_colour_manual(values = get_group_colors(attr_burd_filtered_dfs_names_i), limits = force) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +
+    guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+    ggtitle(title)+
+    theme(legend.position = "bottom", axis.title.y = element_blank())
+
+  return(all_plot_i)
+})
+
+all_plots <- update_ylim(all_plots, use_actual_min = TRUE)
+
+# Combine plots
+combined_plot <- all_plots[[1]] + all_plots[[2]] + all_plots[[3]] + all_plots[[4]]  +
+  all_plots[[5]]  +  all_plots[[6]] + all_plots[[7]]+#  +
+  plot_layout(ncol = 3)
+
+# Show combined plot
+combined_plot
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS4.png"),
+       dpi = 300, combined_plot, height = 11, width = 8)
