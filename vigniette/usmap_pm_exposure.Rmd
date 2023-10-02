@@ -49,7 +49,7 @@ cens_meta_2016 <- read_csv(here::here("data/05_demog/meta/cens_meta_2016.csv"))
 csv_files_2016 <- list.files(path = here::here("data/06_dem.agr/county/2016"), full.names = TRUE)
   
 # Read each CSV file into a list of data frames
-list_of_dfs_2016 <- lapply(csv_files_2016, read.csv())
+list_of_dfs_2016 <- lapply(csv_files_2016, read.csv)
   
 # Row-bind all data frames into a single data frame
 exposure_pm_2016 <- dplyr::bind_rows(list_of_dfs_2016)
@@ -74,7 +74,8 @@ exposure_pm_1990 <- exposure_pm_1990 %>%
 ```
 
 ```{r}
-#exposure_pm <- rbind(exposure_pm_1990, exposure_pm_2016)
+#exposure_pm <- rbind(exposure_pm_1990 %>% mutate(Year = 1990), 
+#                     exposure_pm_2016  %>% mutate(Year = 2016))
 exposure_pm <- exposure_pm_2016
 ```
 
@@ -162,23 +163,35 @@ ggsave(filename = file.path(here::here("data/18_figures"), paste0(methodI, "-", 
 exposure_pm_plot_2016
 ```
 
-```{r}
-exposure_pm_plot_1990 <- exposure_pm_map %>%
-  filter(Year == 2016 & !(state %in% c(2, 15))) %>%
-  #filter(Ethnicity == "Black or African American" ) %>% #"All"
+```{r, eval = FALSE}
+# Load necessary libraries
+exposure_pm_plot_1990 <- exposure_pm_map %>%  # Assuming exposure_pm_map is your data
+  filter(Year == 1990 & !(state %in% c(2, 15))) %>%
   ggplot() +
   geom_sf(aes(fill = mean)) +
   scale_fill_distiller(palette = "RdYlBu", direction = -1) +
-  labs(fill = "Population-weighted mean PM2.5 exposure levels in 2016") +
+  labs(fill = "Population-weighted mean PM2.5 exposure levels in 1990") +
   xlab("Longitude") +
   ylab("Latitude") +
   facet_wrap(vars(Ethnicity)) +
-  theme(legend.position = "bottom") +
-  theme_minimal() 
-  
-ggsave(file.path(here::here( "data/18_figures"), paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_us_map_pm_2016.png"), 
-       dpi = 300, exposure_pm_plot_2016, height = 6, width = 9)
+  theme_minimal() +
+  theme(legend.position = "bottom")  # Moved this line after theme_minimal()
 
-exposure_pm_plot_2016
+# Save the plot with increased dimensions
+ggsave("figure_us_map_pm_1990.png", 
+       plot = exposure_pm_plot_1990, 
+       dpi = 300, 
+       height = 8,  # Increased height
+       width = 12)  # Increased width
+
+# Save the plot
+ggsave(filename = file.path(here::here("data/18_figures"), paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_us_map_pm_1990.png"), 
+       plot = exposure_pm_plot_1990,  # Fixed plot argument
+       dpi = 300, 
+       height = 6, 
+       width = 9)
+
+# Display the plot
+exposure_pm_plot_1990
 ```
 
