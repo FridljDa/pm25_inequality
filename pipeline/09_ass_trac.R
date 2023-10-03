@@ -27,8 +27,6 @@ args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
   agr_by <- "county"
   year <- 2016
-
-  year <- 2016
   tmpDir <- "data/tmp"
   expDir <- "data/01_exposure"
   tracDir <- "data/02_tracts"
