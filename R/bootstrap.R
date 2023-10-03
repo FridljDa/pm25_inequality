@@ -177,3 +177,53 @@ delta_method_sum <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.0
 
   return(list(mean = mean_z, lb = lb_z, ub = ub_z))
 }
+
+#' Calculate Mean and 95% Confidence Interval
+#'
+#' This function takes a numeric vector and calculates the mean, lower, and upper
+#' estimates of the 95% confidence interval for the mean.
+#'
+#' @param x A numeric vector for which the mean and 95% CI are to be calculated.
+#'
+#' @return A data frame containing the mean, lower, and upper estimates of the 95% CI.
+#'
+#' @examples
+#' calculate_mean_and_ci(c(1, 2, 3, 4, 5))
+calculate_mean_and_ci <- function(x) {
+  # Check if the input is a numeric vector
+  if (!is.numeric(x)) {
+    stop("Input must be a numeric vector.")
+  }
+
+  # Calculate the mean
+  mean_val <- mean(x)
+
+  # Calculate the standard deviation
+  sd_val <- sd(x)
+
+  # Calculate the sample size (n)
+  n <- length(x)
+
+  # Calculate the standard error of the mean
+  se_val <- sd_val / sqrt(n)
+
+  # Calculate the Z-value for a 95% confidence interval
+  z_value <- 1.96
+
+  # Calculate the margin of error
+  margin_of_error <- z_value * se_val
+
+  # Calculate the lower and upper bounds of the 95% confidence interval
+  lower_bound <- mean_val - margin_of_error
+  upper_bound <- mean_val + margin_of_error
+
+  # Create a data frame to store these values
+  confidence_interval_df <- data.frame(
+    mean = mean_val,
+    lower_95 = lower_bound,
+    upper_95 = upper_bound
+  )
+
+  return(confidence_interval_df)
+}
+

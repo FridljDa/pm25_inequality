@@ -95,6 +95,18 @@ for (i in seq_len(nrow(states))) {
 
   exp_tracData <- fread(exp_tracDataDir) %>% mutate(GEO_ID = as.character(GEO_ID))
 
+  # Check if 'pm_lower' column exists
+  if (!"pm_lower" %in% names(exp_tracData)) {
+    exp_tracData <- exp_tracData %>%
+      mutate(pm_lower = pm)
+  }
+
+  # Check if 'pm_upper' column exists
+  if (!"pm_upper" %in% names(exp_tracData)) {
+    exp_tracData <- exp_tracData %>%
+      mutate(pm_upper = pm)
+  }
+
   # stylized scenarios
   exp_tracData <- exp_tracData %>% mutate(scenario = "real")
   if (agr_by == "nation") {
@@ -102,11 +114,15 @@ for (i in seq_len(nrow(states))) {
       exp_tracData,
       exp_tracData %>% mutate(
         scenario = "NAAQS",
-        pm = pmin(pm, 12)
+        pm = pmin(pm, 12),
+        pm_upper = pmin(pm_upper, 12),
+        pm_lower = pmin(pm_lower, 12)
       ),
       exp_tracData %>% mutate(
         scenario = "WHO",
-        pm = pmin(pm, 10)
+        pm = pmin(pm, 10),
+        pm_upper = pmin(pm_upper, 10),
+        pm_lower = pmin(pm_lower, 10)
       ) # ,
       # exp_tracData %>% mutate(scenario = "future threshold",
       #                        pm = pmin(pm, 8))
@@ -136,7 +152,7 @@ for (i in seq_len(nrow(states))) {
     by = "GEO_ID",
     multiple = "all" # matching multiple because of multiple scenarios
   ) %>%
-    group_by(state, county, variable, scenario, pm) %>%
+    group_by(state, county, variable, scenario, pm, pm_lower, pm_upper) %>%
     # calculate number of persons of exposed to particulare level of exposure,
     # in particulare county by sex, age group, ethinicity, hispanic origin
     summarise(pop_size = sum(pop_size)) %>%
@@ -165,8 +181,10 @@ for (i in seq_len(nrow(states))) {
 
 ## ------ calculate not county -----
 # if agr_by != "county", aggregate data from above according to agr_by
+if (agr_by == "county") {
+  quit()
+}
 
-if (agr_by != "county") {
   regions <- states[, agr_by] %>% unique()
 
   for (region in regions) {
@@ -200,7 +218,7 @@ if (agr_by != "county") {
     cens_agr <- add_custom_rows(cens_agr)
 
     cens_agr <- cens_agr %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm) %>%
+      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm, pm_lower, pm_upper) %>%
       summarise(pop_size = sum(pop_size)) %>%
       group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4) %>%
       mutate(prop = pop_size / sum(pop_size))
@@ -220,4 +238,4 @@ if (agr_by != "county") {
 
     toc()
   }
-}
+

@@ -65,140 +65,10 @@ exp_tracDir <- file.path(exp_tracDir, toString(year))
 dir.create(exp_tracDir, recursive = T, showWarnings = F)
 
 
-pm_assignment <- function(geometry) {
-  if (length(geometry) == 0) {
-    return(NA)
-  }
-  # get enclosing box, make sure in range of exposure data
-  bbox <- st_bbox(geometry)
-  long_min <- bbox$xmin %>%
-    max(., long_vec[1])
-  lat_min <- bbox$ymin %>%
-    max(., lat_vec[1])
-  long_max <- bbox$xmax %>%
-    min(., long_vec[length(long_vec)])
-  lat_max <- bbox$ymax %>%
-    min(., lat_vec[length(lat_vec)])
-
-  # estimate corresponding grid in pm exposure data
-  long_row_min <- -1 + ((long_min - long_vec[1]) / m_max_long) %>%
-    floor()
-  lat_row_min <- -1 + ((lat_min - lat_vec[1]) / m_max_lat) %>%
-    floor()
-  long_row_max <- 1 + ((long_max - long_vec[1]) / m_min_long) %>%
-    ceiling()
-  lat_row_max <- 1 + ((lat_max - lat_vec[1]) / m_min_lat) %>%
-    ceiling()
-
-  if (is.na(long_row_min)) browser()
-  if (is.na(long_row_max)) browser()
-  long_subset <- long_vec[long_row_min:long_row_max]
-  lat_subset <- lat_vec[lat_row_min:lat_row_max]
-  pm_subset <- exp_data[long_row_min:long_row_max, lat_row_min:lat_row_max]
-
-  # estimates, where to look for the pm data for this particular tract to improve run time
-  points_subset <- data.frame(
-    lat = rep(lat_subset, times = length(long_subset)),
-    lng = rep(long_subset, each = length(lat_subset)),
-    pm = as.vector(t(pm_subset))
-  )
-
-  browser()
-  points_subset <- points_subset %>%
-    st_as_sf(.,
-             coords = c("lng", "lat"),
-             crs = 4326,
-             agr = "constant"
-    )
-  points_subset <- st_set_crs(points_subset, 4326)
-
-  st_crs(points_subset)
-
-  # Set CRS for points_subset if it's missing
-  #if (is.na(st_crs(points_subset))) {
-  #  st_crs(points_subset) <- 4326  # Replace with the correct CRS if different
-  #}
-
-  # Set CRS for geometry if it's missing
-  #if (is.na(st_crs(geometry))) {
-  #  st_crs(geometry) <- 4326  # Replace with the correct CRS if different
-  #}
-
-  # Check CRS of both geometries
-  crs_points_subset <- st_crs(points_subset)
-  crs_geometry <- st_crs(geometry)
-
-
-  # Transform CRS of points_subset to match that of geometry, if they are different
-  if (crs_points_subset != crs_geometry) {
-    points_subset <- st_transform(points_subset, crs_geometry)
-  }
-
-  # Now perform the st_within operation
-  suppressMessages(points_in_tract <- points_subset[geometry, , op = st_within])
-
-  # if there are points inside of the tract, the tract is assigned the mean of pm of those points
-  # if there are none, the pm of the closest point
-
-  tract_centroid <- geometry %>% st_centroid()
-  tract_centroid <- data.frame(
-    longitude = tract_centroid[1],
-    latitude = tract_centroid[2]
-  ) %>%
-    st_as_sf(
-      coords = c("longitude", "latitude"),
-      crs = st_crs(points_subset),
-      agr = "constant"
-    )
-
-  # Your existing code to get the top 10 pm values
-  top_10_pm <- points_subset %>%
-    mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
-    arrange(distance) %>%
-    slice_head(n = 10) %>%
-    pull(pm)
-
-  #the way the data is stored, we need to rescale it
-  top_10_pm <- top_10_pm %>%
-    prod(0.01) %>%
-    round(digits = 2)
-
-  # Closest pm value (the first in the sorted list)
-  pm_value <- top_10_pm[1]
-
-  # Calculate the mean of the top 10 pm values
-  mean_val <- mean(top_10_pm)
-
-  # Calculate the standard deviation of the top 10 pm values
-  sd_val <- sd(top_10_pm)
-
-  # Calculate the sample size (n)
-  n <- length(top_10_pm)
-
-  # Calculate the standard error of the mean
-  se_val <- sd_val / sqrt(n)
-
-  # Calculate the Z-value for a 95% confidence interval
-  z_value <- 1.96
-
-  # Calculate the margin of error
-  margin_of_error <- z_value * se_val
-
-  # Calculate the lower and upper bounds of the 95% confidence interval
-  pm_lower_value <- mean_val - margin_of_error
-  pm_upper_value <- mean_val + margin_of_error
-
-  # Return the closest pm value and the 95% CI bounds
-  return(list(pm = pm_value, pm_lower = pm_lower_value, pm_upper = pm_upper_value))
-
-  # return(pm)
-}
-
-
 ## -----------------calculation---------------
 tic(paste("Assigned pm exposure to each tract for year", toString(year), "for all states"))
 apply(states, 1, function(state) {
-  state <- states[1,]
+  #state <- states[1,]
   STUSPS <- state["STUSPS"]
   name <- state["NAME"]
 
@@ -218,12 +88,108 @@ apply(states, 1, function(state) {
   tracts <- tracts %>% filter(sapply(tracts$geometry, length) > 0)
 
   tic(paste("Assigned pm exposure to each tract for year", toString(year), "in", name))
+  library(purrr)
+
+  pm_df <- map_dfr(tracts$geometry, function(geometry) {
+    if(length(geometry) == 0) return(NA)
+    # get enclosing box, make sure in range of exposure data
+    bbox <- st_bbox(geometry)
+    long_min <- bbox$xmin %>%
+      max(., long_vec[1])
+    lat_min <- bbox$ymin %>%
+      max(., lat_vec[1])
+    long_max <- bbox$xmax %>%
+      min(., long_vec[length(long_vec)])
+    lat_max <- bbox$ymax %>%
+      min(., lat_vec[length(lat_vec)])
+
+    # estimate corresponding grid in pm exposure data
+    long_row_min <- -1 + ((long_min - long_vec[1]) / m_max_long) %>%
+      floor()
+    lat_row_min <- -1 + ((lat_min - lat_vec[1]) / m_max_lat) %>%
+      floor()
+    long_row_max <- 1 + ((long_max - long_vec[1]) / m_min_long) %>%
+      ceiling()
+    lat_row_max <- 1 + ((lat_max - lat_vec[1]) / m_min_lat) %>%
+      ceiling()
+
+    if(is.na(long_row_min)) browser()
+    if(is.na(long_row_max)) browser()
+    long_subset <- long_vec[long_row_min:long_row_max]
+    lat_subset <- lat_vec[lat_row_min:lat_row_max]
+    pm_subset <- exp_data[long_row_min:long_row_max, lat_row_min:lat_row_max]
+
+    # estimates, where to look for the pm data for this particular tract to improve run time
+    points_subset <- data.frame(
+      lat = rep(lat_subset, times = length(long_subset)),
+      lng = rep(long_subset, each = length(lat_subset)),
+      pm = as.vector(t(pm_subset))
+    ) %>%
+      st_as_sf(.,
+               coords = c("lng", "lat"),
+               crs = 4326,
+               agr = "constant"
+      )
+
+    # subset points, which are inside of the tract
+    # if there are points inside of the tract, the tract is assigned the mean of pm of those points
+    # if there are none, the pm of the closest point
+
+    tract_centroid <- geometry %>% st_centroid()
+    tract_centroid <- data.frame(
+      longitude = tract_centroid[1],
+      latitude = tract_centroid[2]
+    ) %>%
+      st_as_sf(
+        coords = c("longitude", "latitude"),
+        crs = st_crs(points_subset),
+        agr = "constant"
+      )
+
+    # Your existing code to get the top 10 pm values
+    top_10_pm <- points_subset %>%
+      mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
+      arrange(distance) %>%
+      slice_head(n = 100) %>%
+      pull(pm)
+
+    top_10_pm <- top_10_pm * 0.01
+    #top_10_pm <- top_10_pm %>%
+    #  prod(0.01) %>%
+    #  round(digits = 2)
+
+    # Closest pm value (the first in the sorted list)
+    pm_value <- top_10_pm[1]
+
+    # Calculate the mean of the top 10 pm values
+    mean_val <- mean(top_10_pm)
+
+    # Calculate the standard deviation of the top 10 pm values
+    sd_val <- sd(top_10_pm)
+
+    # Calculate the sample size (n)
+    n <- length(top_10_pm)
+
+    # Calculate the standard error of the mean
+    se_val <- sd_val / sqrt(n)
+
+    # Calculate the Z-value for a 95% confidence interval
+    z_value <- 1.96
+
+    # Calculate the margin of error
+    margin_of_error <- z_value * se_val
+
+    # Calculate the lower and upper bounds of the 95% confidence interval
+    pm_lower_value <- mean_val - margin_of_error
+    pm_upper_value <- mean_val + margin_of_error
+
+    # Return the closest pm value and the 95% CI bounds
+    return(list(pm = pm_value, pm_lower = pm_lower_value, pm_upper = pm_upper_value))
+  })
+
+  tracts <- bind_cols(tracts, pm_df)
+
   # estimate pm exposure for each tract
-  tracts <- tracts %>%
-    rowwise() %>%
-    mutate(pm_result = list(pm_assignment(geometry))) %>%
-    ungroup() %>%
-    unnest(cols = pm_result)
   toc()
 
   ## --------------plot-----------
@@ -231,7 +197,6 @@ apply(states, 1, function(state) {
   if (FALSE) {
     tm <- tm_shape(tracts) +
       tm_polygons("pm", alpha = 0.6)
-    #+tm_format("NLD",title=paste("Particulate Matter Exposure for",year,"in",name)) #TODO
 
     filepathExpTrac_plot <- paste0("exp_trac_", toString(year), "_", STUSPS, ".html") %>% # png/html möglich
       file.path(exp_tracDir, .)
@@ -243,7 +208,7 @@ apply(states, 1, function(state) {
 
   tracts <- tracts %>%
     as.data.frame() %>%
-    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper")) #TODO
+    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper"))
 
 
   write.csv(tracts, exp_tracDirX, row.names = FALSE)
