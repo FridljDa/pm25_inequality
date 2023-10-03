@@ -12,7 +12,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 
-packages <- c("dplyr", "magrittr",  "sf",  "sp", "tictoc","rhdf5") #"tigris", "tmap", 
+packages <- c("dplyr", "magrittr",  "sf",  "sp", "tictoc","rhdf5") #"tigris", "tmap",
 
 options(tidyverse.quiet = TRUE)
 options(tigris.quiet = TRUE)
@@ -61,7 +61,7 @@ tic(paste("Assigned pm exposure to each tract for year", toString(year), "for al
 apply(states, 1, function(state) {
   STUSPS <- state["STUSPS"]
   name <- state["NAME"]
-  
+
   exp_tracDirX <- paste0("exp_trac_", toString(year), "_", STUSPS, ".csv") %>%
     file.path(exp_tracDir, .)
 
@@ -74,9 +74,9 @@ apply(states, 1, function(state) {
   tracts <- paste0("tracts_", toString(year), "_", STUSPS, ".rds") %>%
     file.path(tracDir, toString(year), .) %>%
     readRDS(.)
-  
+
   tracts <- tracts %>% filter(sapply(tracts$geometry, length) >0)
-  
+
   tic(paste("Assigned pm exposure to each tract for year", toString(year), "in", name))
   # estimate pm exposure for each tract
   tracts$pm <- sapply(tracts$geometry, function(geometry) {
@@ -91,7 +91,7 @@ apply(states, 1, function(state) {
       min(., long_vec[length(long_vec)])
     lat_max <- bbox$ymax %>%
       min(., lat_vec[length(lat_vec)])
-    
+
     # estimate corresponding grid in pm exposure data
     long_row_min <- -1 + ((long_min - long_vec[1]) / m_max_long) %>%
       floor()
@@ -101,7 +101,7 @@ apply(states, 1, function(state) {
       ceiling()
     lat_row_max <- 1 + ((lat_max - lat_vec[1]) / m_min_lat) %>%
       ceiling()
-    
+
     if(is.na(long_row_min)) browser()
     if(is.na(long_row_max)) browser()
     long_subset <- long_vec[long_row_min:long_row_max]
@@ -139,13 +139,13 @@ apply(states, 1, function(state) {
           crs = st_crs(points_subset),
           agr = "constant"
         )
-      
+
       pm <- st_distance(x = points_subset, y = tract_centroid) %>%
         which.min() %>%
         points_subset[., ] %>%
         pull(pm)
     }
-    
+
     pm <- pm %>%
       round %>%
       prod(0.01)
@@ -167,12 +167,12 @@ apply(states, 1, function(state) {
   }
 
   ## -----save as csv--------
-  
+
   tracts <- tracts %>%
     as.data.frame() %>%
-    dplyr::select(c("GEO_ID", "pm"))  
+    dplyr::select(c("GEO_ID", "pm"))
 
-  
+
   write.csv(tracts, exp_tracDirX, row.names = FALSE)
 })
 toc()
