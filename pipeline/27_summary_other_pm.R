@@ -41,6 +41,7 @@ summaryDir <- args[7]
   summaryDir <- "data/17_summary"
 #}
 
+findreplace <- read.csv("data/final_findreplace.csv")
 
 states <- file.path(tmpDir, "states.csv") %>%
   read.csv() %>%
@@ -186,6 +187,12 @@ rindreplace8 <- list("Large metro" = 1, "Small-medium metro" = 2, "Non metro" = 
 levels(pm_summ$rural_urban_class) <- rindreplace8
 
 cat("written pm_summ to", pm_summDir, "\n")
+
+cat("total_burden findreplace-start")
+tic("total_burden findreplace")
+pm_summ <- pm_summ %>% replace_values(findreplace)
+toc()
+
 fwrite(pm_summ, pm_summDir)
 rm(rindreplace1, rindreplace2, rindreplace3, rindreplace7, rindreplace8)
 toc()
