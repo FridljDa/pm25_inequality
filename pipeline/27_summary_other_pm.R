@@ -98,6 +98,7 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
     #    median = matrixStats::weightedMedian(pm, pop_size)
     #  )
 
+    #TODO move up
     pm_summ <- pm_summ %>%
       group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
       do({

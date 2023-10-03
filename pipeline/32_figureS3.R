@@ -16,6 +16,14 @@ packages <- c(
   "gridExtra", "grid", "lattice"
 )
 
+# Load patchwork package
+# Load the stringr package
+library(stringr)
+library(patchwork)
+suppressMessages({
+  pkgload::load_all()
+})
+
 for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -38,7 +46,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 25
+  min_ageI <- 65
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -48,6 +56,7 @@ file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
 pm_summ <- fread(file.path(summaryDir, "pm_summary.csv"))
 pm_summ <- pm_summ %>% filter(min_age == min_ageI)
 rm(file_list)
+findreplace <- read.csv("data/final_findreplace.csv")
 
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
@@ -57,128 +66,66 @@ pm_summ <- pm_summ %>%
 
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == scenarioI)
+pm_summ <- pm_summ %>%
+  replace_values(findreplace) %>%
+  filter(across(everything(), ~ . != "Unknown"))
+filtered_pm_summ <- generate_filtered_dfs(pm_summ)
 
-## -- figure 3, attributable burden---
-pm_summ1 <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All")
-
-g1 <- ggplot(pm_summ1, aes(x = Year, y = value, color = Ethnicity))
-
-pm_summ2 <- pm_summ %>% filter(Education != 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All")
-pm_summ2$Education <- factor(pm_summ2$Education,                 # Relevel group factor
-                             levels = c("High school graduate or lower",
-                                        "Some college education but no 4-year college degree",
-                                        "4-year college graduate or higher"))
-
-g2 <- ggplot(pm_summ2, aes(x = Year, y = value, color = Education))
-
-pm_summ3 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class != "All" & Year >= 2000)
-pm_summ3$rural_urban_class <- factor(pm_summ3$rural_urban_class,                 # Relevel group factor
-                                       levels = c("Large metro",
-                                                  "Small-medium metro",
-                                                  "Non metro"))
-
-g3 <- ggplot(pm_summ3, aes(x = Year, y = value, color = rural_urban_class))
-
-pm_summ4 <- pm_summ %>% filter(Education == 666 & Ethnicity == "All, All Origins" & rural_urban_class == "All" & Year >= 2000)
+filtered_pm_summ <- filtered_pm_summ[!grepl("\\*", names(filtered_pm_summ))]
+filtered_pm_summ <- filtered_pm_summ[names(filtered_pm_summ) != c("All")]
+filtered_pm_summ_names <- names(filtered_pm_summ)
 
 
-## --set range---
-min1 <- min(c(pm_summ1$value, pm_summ2$value, pm_summ3$value))
-max1 <- max(c(pm_summ1$value, pm_summ2$value, pm_summ3$value))
 
-g1 <- g1 + ylim(0, max1)
-g2 <- g2 + ylim(0, max1)
-g3 <- g3 + ylim(0, max1)
-
-plots <- list(g1, g2, g3)
-rm(min1, max1)
-rm(
-  #pm_summ1, pm_summ2, pm_summ3,
-  g1, g2, g3
-)
-#----formatting------
-group.colors <- c(
-  RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6, 8:10, 12)],
-  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2]
-)
-group.colors[c(12, 2)] <- group.colors[c(2, 12)]
-names(group.colors) <- c(
-  "NH White",
-  "Hispanic or Latino White",
-  "Black American",
-  "White",
-  "Asian or Pacific Islander",
-  "American Indian or Alaska Native",
-  "High school graduate or lower",
-  "Some college education but no 4-year college degree",
-  "4-year college graduate or higher",
-  "Non metro",
-  "Large metro",
-  "Small-medium metro"
+# Define the replacement list
+replacement_list <- list(
+  SES = "svi_bin1",
+  HCD = "svi_bin2",
+  MS = "svi_bin3",
+  HT = "svi_bin4",
+  SVI = "svi_bin",
+  Rurality = "rural_urban_class"
 )
 
-plots <- lapply(plots, function(g) {
-  g +
+# Create plots
+plots <- lapply(filtered_pm_summ_names, function(filtered_pm_summ_names_i) {
+  filtered_pm_summ_i <- filtered_pm_summ[[filtered_pm_summ_names_i]]
+
+  title <- filtered_pm_summ_names_i
+  # Loop through the list and replace each value with its corresponding key
+  for (key in names(replacement_list)) {
+    value <- replacement_list[[key]]
+    title <- str_replace_all(title, fixed(value), key)
+  }
+
+  #filtered_pm_summ_names_i
+  plot_i <- filtered_pm_summ_i %>%
+    ggplot(aes(x = Year, y = value, color = !!sym(filtered_pm_summ_names_i))) +
     geom_line(linewidth = 1.5) +
     xlab("Year") +
-    scale_colour_manual(values = group.colors, limits = force) +
+    scale_colour_manual(values = get_group_colors(filtered_pm_summ_i), limits = force) +
     theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +
-    guides(color = guide_legend(ncol = 1, byrow = TRUE))
+    guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+    ggtitle(title)+
+    theme(legend.position = "bottom", axis.title.y = element_blank()) #+
+   # scale_y_continuous(
+  #    labels = scales::number_format(suffix = expression(" " * mu * "g/m"^3))
+  #  )
+
+  return(plot_i)
 })
 
-legend_plots <- lapply(plots, function(g) {
-  g %>%
-    get_legend() %>%
-    as_ggplot()
-})
+plots <- update_ylim(plots, use_actual_min = TRUE)
 
-plots <- lapply(plots, function(g) {
-  g +
-    theme(legend.position = "none", axis.title.y = element_blank())
-})
+# Combine plots
+combined_plot <- plots[[1]] + plots[[2]] + plots[[3]] + plots[[4]]  +
+  plots[[5]]  + plots[[7]]+ plots[[6]]+#  +
+  plot_layout(ncol = 3)
 
-## --- arrange plots----
-lay <- rbind(
-  c(NA, 4,  NA, 5, NA, 6),
-  c(NA, NA, NA, NA, NA, NA),
-  c(10, 1,  NA, 2, NA, 3),
-  c(NA, 7,  NA, 8, NA, 9)
-)
+# Show combined plot
+combined_plot
 
-t1 <- grobTree(
-  rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Race-ethnicity", gp = gpar(fontsize = 10, fontface = "bold"))
-)
-
-t2 <- grobTree(
-  rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Education", gp = gpar(fontsize = 10, fontface = "bold"))
-)
-
-t3 <- grobTree(
-  rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Rurality", gp = gpar(fontsize = 10, fontface = "bold"))
-)
-
-t4 <- textGrob(expression(paste("Mean PM2.5 exposure (", mu, g, "/", m^3,")", sep="")),
-           gp = gpar(fontsize = 10, fontface = "bold"),
-           rot = 90)
-
-gs <- append(plots, list(t1, t2, t3))
-gs <- append(gs, legend_plots)
-gs <- append(gs, list(t4))
-
-blank_space <- 0.05
-figure_width <- 1.3
-figure_hight <- 1
-
-g_combined <- grid.arrange(
-  grobs = gs,
-  widths = c(0.25, figure_width, blank_space, figure_width, blank_space, figure_width),
-  heights = c(0.1, blank_space, figure_hight, 1),
-  layout_matrix = lay
-)
-as_ggplot(g_combined)
 
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS3.png"), dpi = 300, g_combined, height = 4, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figureS3.png"),
+       dpi = 300, combined_plot, height = 11, width = 8)

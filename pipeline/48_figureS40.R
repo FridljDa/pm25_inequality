@@ -132,6 +132,8 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
     full_join(data, by = c(color.column, "Year"), multiple = "all") %>%
     mutate(diff = mean.x - mean.y,
            rel_diff = (mean.x - mean.y)/mean.x) %>%
+    filter(!grepl("Moderate|Vulnerable", split.column.x)) %>%
+    filter(!grepl("Moderate|Resilient", split.column.y)) %>%
     filter(!grepl("Middle|High", split.column.y)) %>%
     filter(!grepl("Middle|Low", split.column.x)) %>%
     filter(!grepl("Small-medium|Large", split.column.x)) %>%
@@ -176,7 +178,7 @@ g_rel_educ <- pairwise_differences_educ %>%
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_percent()) +
   scale_colour_manual(values = get_group_colors(pairwise_differences_educ)) +
-  guides(color = guide_legend(ncol = 3, byrow = TRUE))+
+  guides(color = guide_legend(ncol = 2, byrow = TRUE))+
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5)  # Add dashed line at y = 0
 
 ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),

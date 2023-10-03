@@ -1,0 +1,91 @@
+#-------------------Header------------------------------------------------
+# Author: Daniel Fridljand
+# Date: 05/02/2021
+# Purpose: plot data
+#
+#***************************************************************************
+
+#------------------SET-UP--------------------------------------------------
+# clear memory
+# rm(list = ls(all = TRUE))
+
+# load packages, install if missing
+packages <- c(
+  "data.table", "magrittr", "shiny", "ggplot2", "ggpubr", "scales", "grid", "cowplot",
+  "dplyr", "stringr", "tidyr",
+  "gridExtra", "grid", "lattice", "ggsci"
+)
+
+# Load required packages
+library(purrr)
+
+for (p in packages) {
+  if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
+  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
+}
+
+# Load package with pkgload
+suppressMessages({
+  pkgload::load_all()
+})
+
+# Set some options
+options(dplyr.summarise.inform = FALSE)
+options(scipen = 10000)
+
+# Pass in arguments
+args <- commandArgs(trailingOnly = T)
+
+# Extract arguments
+summaryDir <- args[7]
+figuresDir <- args[8]
+scenarioI <- args[10]
+methodI <- args[11]
+min_ageI <- args[13]
+
+# TODO delete
+# Set default values if arguments are empty
+if (rlang::is_empty(args)) {
+  scenarioI <- "real"
+  methodI <- "di_gee"
+  min_ageI <- 25
+
+  summaryDir <- "data/17_summary"
+  figuresDir <- "data/18_figures"
+}
+
+# List files in summaryDir
+file_list <- list.files(summaryDir)
+
+# Filter files with specific names
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+
+# Create file paths
+file_list <- file.path(summaryDir, file_list)
+
+# Read data from file_list into a list and combine into a single data table
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
+
+# Filter data tables based on 'min_ageI'
+attr_burd <- attr_burd %>% filter(min_age == min_ageI)
+
+# Set plot theme and options
+theme_set(theme_classic(base_family = "Helvetica"))
+options(bitmapType = "cairo")
+
+# dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
+
+# Filter and prepare data
+attr_burd <- attr_burd %>%
+  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+           attr == "attributable"  &
+           source == "National Vital Statistics System" & scenario == scenarioI &
+           agr_by == "nation" & method == methodI & measure3 == "value")
+
+
+# Generate filtered data frames
+attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd)
+attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
+attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-grep("\\*", attr_burd_filtered_dfs_names)]
+#attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-(attr_burd_filtered_dfs_names == "All")]

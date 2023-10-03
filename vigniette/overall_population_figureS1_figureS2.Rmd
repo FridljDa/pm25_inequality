@@ -69,7 +69,7 @@ all_burden <- all_burden %>% filter(Education == 666 & Ethnicity == "All, All Or
 ```
 
 ```{r}
-g2 <- ggplot(all_burden, aes(x = Year, y = overall_value)) +
+g2 <- ggplot(all_burden, aes(x = Year, y = value)) +
     geom_line(linewidth = 1.5) +
     xlab("Year") +
     ylab("Age-adjusted mortality\n per 100,000 from all causes")+

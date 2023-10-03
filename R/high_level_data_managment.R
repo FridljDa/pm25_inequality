@@ -363,11 +363,18 @@ generate_filtered_dfs <- function(df) {
                     if (edu == 666) quote(Education == 666) else quote(Education != 666),
                     if (eth == "All, All Origins") quote(Ethnicity == "All, All Origins") else quote(Ethnicity != "All, All Origins"),
                     if (ruc == "All") quote(rural_urban_class == "All") else quote(rural_urban_class != "All"),
+
                     if (svi == "All") quote(svi_bin == "All") else quote(svi_bin != "All"),
                     if (svi1 == "All") quote(svi_bin1 == "All") else quote(svi_bin1 != "All"),
                     if (svi2 == "All") quote(svi_bin2 == "All") else quote(svi_bin2 != "All"),
                     if (svi3 == "All") quote(svi_bin3 == "All") else quote(svi_bin3 != "All"),
                     if (svi4 == "All") quote(svi_bin4 == "All") else quote(svi_bin4 != "All")
+
+                    #if (svi == "All") quote(svi_bin == 666) else quote(svi_bin != 666),
+                    #if (svi1 == "All") quote(svi_bin1 == 666) else quote(svi_bin1 != 666),
+                    #if (svi2 == "All") quote(svi_bin2 == 666) else quote(svi_bin2 != 666),
+                    #if (svi3 == "All") quote(svi_bin3 == 666) else quote(svi_bin3 != 666),
+                    #if (svi4 == "All") quote(svi_bin4 == 666) else quote(svi_bin4 != 666)
                   )
 
                   # Filter dataframe based on conditions
