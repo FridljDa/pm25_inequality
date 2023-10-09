@@ -92,6 +92,17 @@ figure_scripts_list <- grep("figure", script_vector, value = TRUE)
 no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 
 #------ running scripts of data pipeline--------
+#[1] "pipeline/01_mrbrt_rr.R"
+#[2] "pipeline/02_download_meta.R"
+#[3] "pipeline/03_meta_cross.R"
+#[4] "pipeline/04_download_cens.R"
+#[5] "pipeline/05_read1990.R"
+#[6] "pipeline/06_cross_walk.R"
+#[7] "pipeline/07_interp.R"
+#[8] "pipeline/08_download_other.R" #c(9,10,11)
+#[9] "pipeline/09_ass_trac.R"
+#[10] "pipeline/10_ass_trac_AKHI.R"
+#[11] "pipeline/11_aggregate.R"
 #[18] "pipeline/17_popsum_educ.R"
 #[20] "pipeline/19_add_rate_totburd.R"
 #[22] "pipeline/21_calc_attr_burd_di.R"
@@ -99,21 +110,14 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 #[25] "pipeline/24_proportions_attr_burd.R"
 #[26] "pipeline/24_sum_higher_geog_level_age_adjust_total_burden.R"
 #[27] "pipeline/25_summary_attr_total_burd.R"
-no_figure_scripts_list <- no_figure_scripts_list_full[c(20, 22, 24, 25, 26, 27)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+no_figure_scripts_list <- no_figure_scripts_list_full[c(9,10,11)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 #24, 25, 27
-
+#
 years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
-#years <- c(2011, 2009:2007, 2005:2001)
-#years <- c(1999:1990)
-#years <- c(2014:2016)
-years <- 2009:2016
-#years <- c(2003:2001, 1999:1990)
-years <- 2010
-#years <- c(2004, 2007:2009)
-#years <- 1997:2000
-agr_bys <- c("county", "nation") #, "county" "county",
-#years <- 2006
+
+agr_bys <- c("county", "nation", "STATEFP") #, "county" "county",
+#years <- 2016
 # years <- 1998 #,1990,1991
 source <- "nvss"
 for (agr_by in agr_bys) {
