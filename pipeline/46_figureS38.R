@@ -35,15 +35,6 @@ options(scipen = 10000)
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
-
-# Extract arguments
-summaryDir <- args[7]
-figuresDir <- args[8]
-scenarioI <- args[10]
-methodI <- args[11]
-min_ageI <- args[13]
-
-# TODO delete
 # Set default values if arguments are empty
 if (rlang::is_empty(args)) {
   scenarioI <- "real"
@@ -52,6 +43,14 @@ if (rlang::is_empty(args)) {
 
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
+}else{
+
+  # Extract arguments
+  summaryDir <- args[7]
+  figuresDir <- args[8]
+  scenarioI <- args[10]
+  methodI <- args[11]
+  min_ageI <- args[13]
 }
 
 # List files in summaryDir
@@ -95,6 +94,9 @@ all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & agr_by == "nation")
 
+attr_burd <- attr_burd %>% filter(Year > 1990)
+all_burd <- all_burd %>% filter(Year > 1990)
+attr_burd_prop <- attr_burd_prop %>% filter(Year > 1990)
 ### get distinct---
 #all_burd <- all_burd %>% distinct()
 #attr_burd <- attr_burd %>% distinct()

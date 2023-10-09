@@ -71,10 +71,11 @@ options(bitmapType = "cairo")
 
 # theme_set(theme_bw( base_family = "Helvetica"))
 dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI)), recursive = T, showWarnings = F)
-# attr_burd <-  attr_burd %>% filter (Year <= 2000)
+attr_burd <-  attr_burd %>% filter (Year > 1990)
+
 ### ----- read stuff----
 attr_burd <- attr_burd %>%
-  filter(Gender.Code == "All genders")
+  filter(Gender.Code == "All genders" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All")
 
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
@@ -104,7 +105,7 @@ attr_burd2$Education <- factor(attr_burd2$Education, # Relevel group factor
 g2 <- ggplot(attr_burd2, aes(x = Year, y = mean, color = Education))
 
 
-attr_burd3 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "All"# & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All"
+attr_burd3 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "All"
                                    & Education == 666 & Ethnicity == "All, All Origins" & measure3 == "value" &
   rural_urban_class != "All" ) #& Year >= 2000
 attr_burd3$rural_urban_class <- factor(attr_burd3$rural_urban_class, # Relevel group factor

@@ -8,29 +8,36 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-
-packages <- c("dplyr", "magrittr",  "sf",  "sp", "tictoc","rhdf5") #"tigris", "tmap",
+library(dplyr)
+library(magrittr)
+library(sf)
+library(sp)
+library(tictoc)
+library(rhdf5)
 
 options(tidyverse.quiet = TRUE)
-options(tigris.quiet = TRUE)
-options(tigris_use_cache = FALSE)
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE))
-}
-
-
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
-year <- args[1]
-tmpDir <- args[3]
-expDir <- args[4]
-tracDir <- args[5]
-exp_tracDir <- args[7]
 
+if (rlang::is_empty(args)) {
+  agr_by <- "county"
+  year <- 2016
+  tmpDir <- "data/tmp"
+  expDir <- "data/01_exposure"
+  tracDir <- "data/02_tracts"
+  exp_tracDir <- "data/03_exp_tracts"
+
+} else {
+  year <- args[1]
+  tmpDir <- args[3]
+  expDir <- args[4]
+  tracDir <- args[5]
+  exp_tracDir <- args[7]
+}
 
 ## ---------------load data---------------
 
@@ -56,9 +63,11 @@ states <- file.path(tmpDir, "states.csv") %>%
 exp_tracDir <- file.path(exp_tracDir, toString(year))
 dir.create(exp_tracDir, recursive = T, showWarnings = F)
 
+
 ## -----------------calculation---------------
 tic(paste("Assigned pm exposure to each tract for year", toString(year), "for all states"))
 apply(states, 1, function(state) {
+  #state <- states[1,]
   STUSPS <- state["STUSPS"]
   name <- state["NAME"]
 
@@ -75,11 +84,16 @@ apply(states, 1, function(state) {
     file.path(tracDir, toString(year), .) %>%
     readRDS(.)
 
+<<<<<<< HEAD
   tracts <- tracts %>% filter(sapply(tracts$geometry, length) >0)
+=======
+  tracts <- tracts %>% filter(sapply(tracts$geometry, length) > 0)
+>>>>>>> bootstrap2
 
   tic(paste("Assigned pm exposure to each tract for year", toString(year), "in", name))
-  # estimate pm exposure for each tract
-  tracts$pm <- sapply(tracts$geometry, function(geometry) {
+  library(purrr)
+
+  pm_df <- map_dfr(tracts$geometry, function(geometry) {
     if(length(geometry) == 0) return(NA)
     # get enclosing box, make sure in range of exposure data
     bbox <- st_bbox(geometry)
@@ -115,16 +129,15 @@ apply(states, 1, function(state) {
       pm = as.vector(t(pm_subset))
     ) %>%
       st_as_sf(.,
-        coords = c("lng", "lat"),
-        crs = 4326,
-        agr = "constant"
+               coords = c("lng", "lat"),
+               crs = 4326,
+               agr = "constant"
       )
 
     # subset points, which are inside of the tract
-    suppressMessages(points_in_tract <- points_subset[geometry, , op = st_within])
-
     # if there are points inside of the tract, the tract is assigned the mean of pm of those points
     # if there are none, the pm of the closest point
+<<<<<<< HEAD
     if (nrow(points_in_tract) > 0) {
       pm <- points_in_tract$pm %>%
         mean(., na.rm = TRUE)
@@ -150,7 +163,66 @@ apply(states, 1, function(state) {
       round %>%
       prod(0.01)
     return(pm)
+=======
+
+    tract_centroid <- geometry %>% st_centroid()
+    tract_centroid <- data.frame(
+      longitude = tract_centroid[1],
+      latitude = tract_centroid[2]
+    ) %>%
+      st_as_sf(
+        coords = c("longitude", "latitude"),
+        crs = st_crs(points_subset),
+        agr = "constant"
+      )
+
+    # Your existing code to get the top 10 pm values
+    top_10_pm <- points_subset %>%
+      mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
+      arrange(distance) %>%
+      slice_head(n = 50) %>%
+      pull(pm)
+
+    top_10_pm <- top_10_pm * 0.01
+    #top_10_pm <- top_10_pm %>%
+    #  prod(0.01) %>%
+    #  round(digits = 2)
+
+    # Closest pm value (the first in the sorted list)
+    pm_value <- top_10_pm[1]
+
+    # Calculate the mean of the top 10 pm values
+    mean_val <- mean(top_10_pm)
+
+    # Calculate the standard deviation of the top 10 pm values
+    sd_val <- sd(top_10_pm)
+
+    # Calculate the sample size (n)
+    n <- length(top_10_pm)
+
+    # Calculate the standard error of the mean
+    se_val <- sd_val / sqrt(n)
+
+    # Calculate the Z-value for a 95% confidence interval
+    z_value <- 1.96
+
+    # Calculate the margin of error
+    margin_of_error <- z_value * se_val
+
+    # Calculate the lower and upper bounds of the 95% confidence interval
+    pm_lower_value <- mean_val - margin_of_error
+    pm_upper_value <- mean_val + margin_of_error
+
+    pm_lower_value <- min(pm_lower_value, pm_value)
+    pm_upper_value <- max(pm_upper_value, pm_value)
+    # Return the closest pm value and the 95% CI bounds
+    return(list(pm = pm_value, pm_lower = pm_lower_value, pm_upper = pm_upper_value))
+>>>>>>> bootstrap2
   })
+
+  tracts <- bind_cols(tracts, pm_df)
+
+  # estimate pm exposure for each tract
   toc()
 
   ## --------------plot-----------
@@ -158,7 +230,6 @@ apply(states, 1, function(state) {
   if (FALSE) {
     tm <- tm_shape(tracts) +
       tm_polygons("pm", alpha = 0.6)
-    #+tm_format("NLD",title=paste("Particulate Matter Exposure for",year,"in",name)) #TODO
 
     filepathExpTrac_plot <- paste0("exp_trac_", toString(year), "_", STUSPS, ".html") %>% # png/html möglich
       file.path(exp_tracDir, .)
@@ -170,10 +241,14 @@ apply(states, 1, function(state) {
 
   tracts <- tracts %>%
     as.data.frame() %>%
+<<<<<<< HEAD
     dplyr::select(c("GEO_ID", "pm"))
+=======
+    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper"))
+>>>>>>> bootstrap2
 
 
   write.csv(tracts, exp_tracDirX, row.names = FALSE)
 })
 toc()
-""
+

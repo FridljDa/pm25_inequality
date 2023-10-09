@@ -14,6 +14,7 @@
 #' pop_size <- c(10, 20, 30, 40)
 #' result <- calculate_weighted_mean_ci(pm, pop_size)
 #' }
+#pm, pm_lower, pm_upper, pop_size, conf_level = 0.95, R = 10
 calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) {
 
   # Create a data frame from the vectors
@@ -47,6 +48,41 @@ calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) 
   }
 
   return(list(pop_weight_pm_exp = pop_weight_pm_exp, lower = lower, upper = upper))
+}
+
+#' Estimate Point Estimate and Confidence Interval of Weighted Average Using Delta Method
+#'
+#' @param pm A numeric vector of point estimates for the random variable X.
+#' @param pm_lower A numeric vector of lower bounds of the confidence interval for X.
+#' @param pm_upper A numeric vector of upper bounds of the confidence interval for X.
+#' @param pop_size A numeric vector of population sizes.
+#' @return A list containing the point estimate and confidence interval of the weighted average.
+#' @examples
+#' pm <- c(0.2, 0.3, 0.4)
+#' pm_lower <- c(0.1, 0.2, 0.3)
+#' pm_upper <- c(0.3, 0.4, 0.5)
+#' pop_size <- c(100, 200, 300)
+#' delta_method_weighted_avg(pm, pm_lower, pm_upper, pop_size)
+delta_method_weighted_avg <- function(pm, pm_lower, pm_upper, pop_size) {
+  # Check if the lengths of all vectors are the same
+  if (length(pm) != length(pm_lower) || length(pm) != length(pm_upper) || length(pm) != length(pop_size)) {
+    stop("All input vectors must have the same length.")
+  }
+
+  # Calculate the weighted average point estimate
+  total_pop_size <- sum(pop_size)
+  weights <- pop_size / total_pop_size
+  weighted_avg <- sum(weights * pm)
+
+  # Calculate the standard error using the delta method
+  se <- sqrt(sum(weights^2 * ((pm_upper - pm_lower) / (2 * 1.96))^2))
+
+  # Calculate the confidence interval
+  ci_lower <- weighted_avg - 1.96 * se
+  ci_upper <- weighted_avg + 1.96 * se
+
+  # Return the results
+  return(list(point_estimate = weighted_avg, ci_lower = ci_lower, ci_upper = ci_upper))
 }
 
 
@@ -177,3 +213,53 @@ delta_method_sum <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.0
 
   return(list(mean = mean_z, lb = lb_z, ub = ub_z))
 }
+
+#' Calculate Mean and 95% Confidence Interval
+#'
+#' This function takes a numeric vector and calculates the mean, lower, and upper
+#' estimates of the 95% confidence interval for the mean.
+#'
+#' @param x A numeric vector for which the mean and 95% CI are to be calculated.
+#'
+#' @return A data frame containing the mean, lower, and upper estimates of the 95% CI.
+#'
+#' @examples
+#' calculate_mean_and_ci(c(1, 2, 3, 4, 5))
+calculate_mean_and_ci <- function(x) {
+  # Check if the input is a numeric vector
+  if (!is.numeric(x)) {
+    stop("Input must be a numeric vector.")
+  }
+
+  # Calculate the mean
+  mean_val <- mean(x)
+
+  # Calculate the standard deviation
+  sd_val <- sd(x)
+
+  # Calculate the sample size (n)
+  n <- length(x)
+
+  # Calculate the standard error of the mean
+  se_val <- sd_val / sqrt(n)
+
+  # Calculate the Z-value for a 95% confidence interval
+  z_value <- 1.96
+
+  # Calculate the margin of error
+  margin_of_error <- z_value * se_val
+
+  # Calculate the lower and upper bounds of the 95% confidence interval
+  lower_bound <- mean_val - margin_of_error
+  upper_bound <- mean_val + margin_of_error
+
+  # Create a data frame to store these values
+  confidence_interval_df <- data.frame(
+    mean = mean_val,
+    lower_95 = lower_bound,
+    upper_95 = upper_bound
+  )
+
+  return(confidence_interval_df)
+}
+
