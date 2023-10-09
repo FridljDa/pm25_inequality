@@ -11,7 +11,7 @@ rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 
-packages <- c("data.table", "plyr", "magrittr", "testthat", "tigris", "sf",  "sp", "tmap", "tictoc", "units")
+packages <- c("data.table", "plyr", "magrittr", "testthat", "tigris", "sf",  "sp", "tictoc", "units")
 
 options(tidyverse.quiet = TRUE)
 options(tigris.quiet = TRUE)
@@ -19,16 +19,28 @@ options(tigris_use_cache = FALSE)
 for (p in packages) {
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE))
 }
+library(dplyr)
+
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
-year <- args[1]
-tmpDir <- args[3]
-expDir <- args[4]
-tracDir <- args[5]
-exp_tracDir <- args[7]
+if (rlang::is_empty(args)) {
+  agr_by <- "county"
+  year <- 2016
+  tmpDir <- "data/tmp"
+  expDir <- "data/01_exposure"
+  tracDir <- "data/02_tracts"
+  exp_tracDir <- "data/03_exp_tracts"
+
+} else {
+  year <- args[1]
+  tmpDir <- args[3]
+  expDir <- args[4]
+  tracDir <- args[5]
+  exp_tracDir <- args[7]
+}
 
 expDir <- file.path(expDir, "epa")
 dir.create(expDir, recursive = T, showWarnings = F)
@@ -44,7 +56,7 @@ exposure_locationsDir <- file.path(tmpDir, "epa_locations.csv")
 # load states, so we can loop over them
 states <- file.path(tmpDir, "states.csv") %>%
   read.csv() %>%
-  filter(STUSPS %in% c("AK", "HI"))
+  dplyr::filter(STUSPS %in% c("AK", "HI"))
 
 
 ##### ------------assign measurement location to tracts--------
@@ -61,16 +73,16 @@ apply(states, 1, function(state) {
   tic(paste("assigned measurement location to all tracts in", name, "in", toString(year)))
   # read exposure
   exposure_locations <- file.path(expDir, paste0("annual_conc_by_monitor_", toString(year), ".csv")) %>%
-    read.csv() 
+    read.csv()
 
   if(year %in% 1990:1996){
     exposure_locations <- exposure_locations %>%
       filter(
-        grepl('PM2.5',Parameter.Name) & 
+        grepl('PM2.5',Parameter.Name) &
         #Parameter.Name %in% c("OC PM2.5 LC TOR" , "OC3 PM2.5 LC", "EC1 PM2.5 LC", "EC PM2.5 LC TOR", "OC2 PM2.5 LC", "Acceptable PM2.5 AQI & Speciation Mass")
           State.Code %in% c("02","15") #&
          #   Parameter.Name == "Acceptable PM2.5 AQI & Speciation Mass"
-         ) 
+         )
   }else if(year >= 1997){
     exposure_locations <- exposure_locations %>%
       filter(
@@ -80,7 +92,7 @@ apply(states, 1, function(state) {
         Event.Type %in% c("No Events", "Events Excluded")
       )
   }
-  
+
   if(nrow(exposure_locations) == 0){
     print(paste("no exposure data for PM2.5 in Alaska and Hawaii for year",year,"available"))
     quit()
@@ -123,7 +135,9 @@ apply(states, 1, function(state) {
       tract_centroid <- data.frame(
         longitude = tract_centroid[1],
         latitude = tract_centroid[2]
-      ) %>%
+      )
+
+      tract_centroid <- tract_centroid %>%
         st_as_sf(
           coords = c("longitude", "latitude"),
           crs = st_crs(exposure_locations),
@@ -135,7 +149,7 @@ apply(states, 1, function(state) {
       exposure_locations$dist <- st_distance(x = exposure_locations, y = tract_centroid) %>%
         set_units(1, "km")
 
-      closest_measurement <- exposure_locations[which.min(exposure_locations$dist), ] 
+      closest_measurement <- exposure_locations[which.min(exposure_locations$dist), ]
 
       df <- data.frame(
         GEO_ID = row$GEO_ID,
@@ -163,7 +177,7 @@ apply(states, 1, function(state) {
 
   exp_tracDirX <- file.path(exp_tracDir, paste0("exp_trac_", toString(year), "_", STUSPS, ".csv"))
 
-  # quit execution, if already calculated 
+  # quit execution, if already calculated
    if (file.exists(exp_tracDirX)) {
     return()
    }
@@ -173,15 +187,15 @@ apply(states, 1, function(state) {
     read.csv() %>%
     mutate(Location.State.Code = Location.State.Code %>% as.character() %>% str_pad(width = 2, pad = "0"))
 
-  exposureDir <- file.path(expDir, paste0("annual_conc_by_monitor_", toString(year), ".csv")) 
-  
+  exposureDir <- file.path(expDir, paste0("annual_conc_by_monitor_", toString(year), ".csv"))
+
   if(!file.exists(exposureDir)) return()
-  
+
   exposure<-  read.csv(exposureDir) %>%
     mutate(State.Code = State.Code %>% as.character() %>% str_pad(width = 2, pad = "0"))
 
   if(year %in% 1990:1996){
-    exposure <- exposure %>% filter(Parameter.Name == "Acceptable PM2.5 AQI & Speciation Mass") 
+    exposure <- exposure %>% filter(Parameter.Name == "Acceptable PM2.5 AQI & Speciation Mass")
   }else if(year >= 1997){
     exposure <- exposure %>%
       filter(
@@ -191,7 +205,7 @@ apply(states, 1, function(state) {
         Event.Type %in% c("No Events", "Events Excluded")
       )
   }
-  
+
   tract_exposure <- left_join(tracts_locations, exposure,
     by = c(
       "Location.State.Code" = "State.Code",

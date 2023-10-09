@@ -18,8 +18,10 @@ library(testthat)
 library(readxl)
 library(stringr)
 library(tictoc)
-#require(assertthat)
-suppressMessages({pkgload::load_all()})
+# require(assertthat)
+suppressMessages({
+  pkgload::load_all()
+})
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -28,8 +30,8 @@ options(dplyr.join.inform = FALSE)
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  year <- 2001
-  agr_by <- "nation"
+  year <- 2016
+  agr_by <- "county"
 
   dataDir <- "data"
   tmpDir <- "data/tmp"
@@ -185,57 +187,56 @@ if (agr_by == "county") {
   quit()
 }
 
-  regions <- states[, agr_by] %>% unique()
+regions <- states[, agr_by] %>% unique()
 
-  for (region in regions) {
-    cens_agrDirX <- paste0("cens_agr_", toString(year), "_", region, ".csv") %>%
-      file.path(cens_agrDir, .)
+for (region in regions) {
+  cens_agrDirX <- paste0("cens_agr_", toString(year), "_", region, ".csv") %>%
+    file.path(cens_agrDir, .)
 
-    if (file.exists(cens_agrDirX)) {
-      next
-    }
-    # if (!file.exists(cens_agrDirX)) {
-    tic(paste("Aggregated Census data in", agr_by, region, "in year", year, "by pm"))
-    statesX <- states[states[, agr_by] == region, "STUSPS"]
+  if (file.exists(cens_agrDirX)) {
+    next
+  }
+  # if (!file.exists(cens_agrDirX)) {
+  tic(paste("Aggregated Census data in", agr_by, region, "in year", year, "by pm"))
+  statesX <- states[states[, agr_by] == region, "STUSPS"]
 
-    # rbind all states from this region
-    cens_agr <- lapply(statesX, function(STUSPS) {
-      cens_agrDir <- file.path(cens_agrDirC, paste0("cens_agr_", toString(year), "_", STUSPS, ".csv"))
-      if (!file.exists(cens_agrDir) & year < 2000 & STUSPS %in% c("AK", "HI")) { #
-        return(NULL)
-      } else {
-        return(read_data(cens_agrDir))
-      }
-    }) %>%
-      rbindlist() %>%
-      as.data.frame()
-
-    # cens_agr$rural_urban_class <- NULL
-    if (nrow(cens_agr) <= 0) {
+  # rbind all states from this region
+  cens_agr <- lapply(statesX, function(STUSPS) {
+    cens_agrDir <- file.path(cens_agrDirC, paste0("cens_agr_", toString(year), "_", STUSPS, ".csv"))
+    if (!file.exists(cens_agrDir) & year < 2000 & STUSPS %in% c("AK", "HI")) { #
       return(NULL)
+    } else {
+      return(read_data(cens_agrDir))
     }
+  }) %>%
+    rbindlist() %>%
+    as.data.frame()
 
-    cens_agr <- add_custom_rows(cens_agr)
-
-    cens_agr <- cens_agr %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm, pm_lower, pm_upper) %>%
-      summarise(pop_size = sum(pop_size)) %>%
-      group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4) %>%
-      mutate(prop = pop_size / sum(pop_size))
-
-    cens_agr_check <- cens_agr %>%
-      group_by(variable, rural_urban_class, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, scenario) %>%
-      summarise(sum_prop = sum(prop))
-
-    #assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
-    stopifnot(all(abs(cens_agr_check$sum_prop - rep(1, nrow(cens_agr_check))) <= 0.01))
-
-    # add region
-    cens_agr[, agr_by] <- region
-
-    write.csv(cens_agr, cens_agrDirX, row.names = FALSE)
-
-
-    toc()
+  # cens_agr$rural_urban_class <- NULL
+  if (nrow(cens_agr) <= 0) {
+    return(NULL)
   }
 
+  cens_agr <- add_custom_rows(cens_agr)
+
+  cens_agr <- cens_agr %>%
+    group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, pm, pm_lower, pm_upper) %>%
+    summarise(pop_size = sum(pop_size)) %>%
+    group_by(variable, rural_urban_class, scenario, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4) %>%
+    mutate(prop = pop_size / sum(pop_size))
+
+  cens_agr_check <- cens_agr %>%
+    group_by(variable, rural_urban_class, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, scenario) %>%
+    summarise(sum_prop = sum(prop))
+
+  # assertthat::are_equal(cens_agr_check$sum_prop, rep(1, nrow(cens_agr_check)), tol = 0.01)
+  stopifnot(all(abs(cens_agr_check$sum_prop - rep(1, nrow(cens_agr_check))) <= 0.01))
+
+  # add region
+  cens_agr[, agr_by] <- region
+
+  write.csv(cens_agr, cens_agrDirX, row.names = FALSE)
+
+
+  toc()
+}

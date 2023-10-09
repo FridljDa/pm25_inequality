@@ -150,7 +150,7 @@ apply(states, 1, function(state) {
     top_10_pm <- points_subset %>%
       mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
       arrange(distance) %>%
-      slice_head(n = 100) %>%
+      slice_head(n = 50) %>%
       pull(pm)
 
     top_10_pm <- top_10_pm * 0.01
@@ -183,6 +183,8 @@ apply(states, 1, function(state) {
     pm_lower_value <- mean_val - margin_of_error
     pm_upper_value <- mean_val + margin_of_error
 
+    pm_lower_value <- min(pm_lower_value, pm_value)
+    pm_upper_value <- max(pm_upper_value, pm_value)
     # Return the closest pm value and the 95% CI bounds
     return(list(pm = pm_value, pm_lower = pm_lower_value, pm_upper = pm_upper_value))
   })
