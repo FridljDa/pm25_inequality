@@ -41,6 +41,7 @@ if (rlang::is_empty(args)) {
   dem_agrDir <- args[9]
   agr_by <- args[10]
   source <- args[14]
+
   totalBurdenParsed2Dir <- args[17]
   attr_burdenDir <- args[18]
 }
@@ -53,7 +54,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  #quit() #TODO
+  quit() #TODO
 }
 
 
@@ -147,9 +148,9 @@ paf_di <- inner_join_age_right_outer(pm_summ,
 #paf_di <- paf_di[1:200, ]
 # Assuming delta_method_weighted_avg function is already defined
 
-paf_di <- paf_di %>%
-  ungroup() %>%
-  sample_n(2000)
+#paf_di <- paf_di %>% #TODO
+#  ungroup() %>%
+#  sample_n(2000)
 
 paf_di <- paf_di %>%
   dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pm_lower", "pm_upper", "pop_size"))))) %>%

@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+# rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 
