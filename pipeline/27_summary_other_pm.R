@@ -10,6 +10,7 @@
 
 # load packages, install if missing
 library(tidyr)
+library(dplyr)
 packages <- c("dplyr", "magrittr", "data.table", "testthat", "tictoc", "stats", "matrixStats")
 
 for (p in packages) {
@@ -100,17 +101,18 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 
     #TODO move up
     pm_summ <- pm_summ %>%
-      group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm"))))) %>%
+      dplyr::group_by_at(vars(all_of(setdiff(colnames(pm_summ), c("variable", "pop_size", "prop", "pm", "pm_lower", "pm_upper"))))) %>%
       do({
         pm = .$pm
+        pm_lower = .$pm_lower
+        pm_upper = .$pm_upper
         pop_size = .$pop_size
-        result = calculate_weighted_mean_ci(pm, pop_size)
-        data.frame(mean = result$pop_weight_pm_exp,
-                   mean_lower = result$lower,
-                   mean_upper = result$upper)
+        result = delta_method_weighted_avg(pm, pm_lower, pm_upper, pop_size)
+        data.frame(pop_weight_pm_exp = result$point_estimate,
+                   pop_weight_pm_exp_lower = result$ci_lower,
+                   pop_weight_pm_exp_upper = result$ci_upper)
       }) %>%
       ungroup()
-
 
     toc()
     return(pm_summ)

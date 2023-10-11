@@ -14,6 +14,7 @@
 #' pop_size <- c(10, 20, 30, 40)
 #' result <- calculate_weighted_mean_ci(pm, pop_size)
 #' }
+#pm, pm_lower, pm_upper, pop_size, conf_level = 0.95, R = 10
 calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) {
 
   # Create a data frame from the vectors
@@ -47,6 +48,41 @@ calculate_weighted_mean_ci <- function(pm, pop_size, conf_level = 0.95, R = 10) 
   }
 
   return(list(pop_weight_pm_exp = pop_weight_pm_exp, lower = lower, upper = upper))
+}
+
+#' Estimate Point Estimate and Confidence Interval of Weighted Average Using Delta Method
+#'
+#' @param pm A numeric vector of point estimates for the random variable X.
+#' @param pm_lower A numeric vector of lower bounds of the confidence interval for X.
+#' @param pm_upper A numeric vector of upper bounds of the confidence interval for X.
+#' @param pop_size A numeric vector of population sizes.
+#' @return A list containing the point estimate and confidence interval of the weighted average.
+#' @examples
+#' pm <- c(0.2, 0.3, 0.4)
+#' pm_lower <- c(0.1, 0.2, 0.3)
+#' pm_upper <- c(0.3, 0.4, 0.5)
+#' pop_size <- c(100, 200, 300)
+#' delta_method_weighted_avg(pm, pm_lower, pm_upper, pop_size)
+delta_method_weighted_avg <- function(pm, pm_lower, pm_upper, pop_size) {
+  # Check if the lengths of all vectors are the same
+  if (length(pm) != length(pm_lower) || length(pm) != length(pm_upper) || length(pm) != length(pop_size)) {
+    stop("All input vectors must have the same length.")
+  }
+
+  # Calculate the weighted average point estimate
+  total_pop_size <- sum(pop_size)
+  weights <- pop_size / total_pop_size
+  weighted_avg <- sum(weights * pm)
+
+  # Calculate the standard error using the delta method
+  se <- sqrt(sum(weights^2 * ((pm_upper - pm_lower) / (2 * 1.96))^2))
+
+  # Calculate the confidence interval
+  ci_lower <- weighted_avg - 1.96 * se
+  ci_upper <- weighted_avg + 1.96 * se
+
+  # Return the results
+  return(list(point_estimate = weighted_avg, ci_lower = ci_lower, ci_upper = ci_upper))
 }
 
 

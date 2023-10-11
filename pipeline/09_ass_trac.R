@@ -17,7 +17,6 @@ library(sf)
 library(sp)
 library(tictoc)
 library(rhdf5)
-suppressMessages({pkgload::load_all()})
 
 options(tidyverse.quiet = TRUE)
 
@@ -85,7 +84,11 @@ apply(states, 1, function(state) {
     file.path(tracDir, toString(year), .) %>%
     readRDS(.)
 
+<<<<<<< HEAD
+  tracts <- tracts %>% filter(sapply(tracts$geometry, length) >0)
+=======
   tracts <- tracts %>% filter(sapply(tracts$geometry, length) > 0)
+>>>>>>> bootstrap2
 
   tic(paste("Assigned pm exposure to each tract for year", toString(year), "in", name))
   library(purrr)
@@ -134,6 +137,33 @@ apply(states, 1, function(state) {
     # subset points, which are inside of the tract
     # if there are points inside of the tract, the tract is assigned the mean of pm of those points
     # if there are none, the pm of the closest point
+<<<<<<< HEAD
+    if (nrow(points_in_tract) > 0) {
+      pm <- points_in_tract$pm %>%
+        mean(., na.rm = TRUE)
+    } else {
+      tract_centroid <- geometry %>% st_centroid()
+      tract_centroid <- data.frame(
+        longitude = tract_centroid[1],
+        latitude = tract_centroid[2]
+      ) %>%
+        st_as_sf(
+          coords = c("longitude", "latitude"),
+          crs = st_crs(points_subset),
+          agr = "constant"
+        )
+
+      pm <- st_distance(x = points_subset, y = tract_centroid) %>%
+        which.min() %>%
+        points_subset[., ] %>%
+        pull(pm)
+    }
+
+    pm <- pm %>%
+      round %>%
+      prod(0.01)
+    return(pm)
+=======
 
     tract_centroid <- geometry %>% st_centroid()
     tract_centroid <- data.frame(
@@ -150,7 +180,7 @@ apply(states, 1, function(state) {
     top_10_pm <- points_subset %>%
       mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
       arrange(distance) %>%
-      slice_head(n = 100) %>%
+      slice_head(n = 50) %>%
       pull(pm)
 
     top_10_pm <- top_10_pm * 0.01
@@ -183,8 +213,11 @@ apply(states, 1, function(state) {
     pm_lower_value <- mean_val - margin_of_error
     pm_upper_value <- mean_val + margin_of_error
 
+    pm_lower_value <- min(pm_lower_value, pm_value)
+    pm_upper_value <- max(pm_upper_value, pm_value)
     # Return the closest pm value and the 95% CI bounds
     return(list(pm = pm_value, pm_lower = pm_lower_value, pm_upper = pm_upper_value))
+>>>>>>> bootstrap2
   })
 
   tracts <- bind_cols(tracts, pm_df)
@@ -208,7 +241,11 @@ apply(states, 1, function(state) {
 
   tracts <- tracts %>%
     as.data.frame() %>%
+<<<<<<< HEAD
+    dplyr::select(c("GEO_ID", "pm"))
+=======
     dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper"))
+>>>>>>> bootstrap2
 
 
   write.csv(tracts, exp_tracDirX, row.names = FALSE)

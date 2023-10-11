@@ -25,7 +25,7 @@ args <- commandArgs(trailingOnly = T)
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2011
+  year <- 2016
   agr_by <- "county"
   source <- "nvss"
 
@@ -41,6 +41,7 @@ if (rlang::is_empty(args)) {
   dem_agrDir <- args[9]
   agr_by <- args[10]
   source <- args[14]
+
   totalBurdenParsed2Dir <- args[17]
   attr_burdenDir <- args[18]
 }
@@ -53,7 +54,7 @@ attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
 attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_di_", toString(year), ".csv"))
 if (file.exists(attr_burdenDir)) {
-  #quit() #TODO
+  quit() #TODO
 }
 
 
@@ -69,10 +70,13 @@ if("Deaths" %in% colnames(total_burden)) total_burden <- total_burden %>% rename
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
 files <- list.files(file.path(dem_agrDir, agr_by, year))
 pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+#browser()
+
 pm_summ <- pm_summ %>% left_join(meta, by = "variable")
 pm_summ <- pm_summ %>% filter(min_age >= 25)
 # if(agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
 # pm_summ <- pm_summ %>% mutate(min_age = min(min_age), max_age = max(max_age))
+
 
 pm_summ <- pm_summ %>% mutate_at(c("rural_urban_class", "Education"), as.factor)
 total_burden <- total_burden %>% mutate_at(c("rural_urban_class", "Education"), as.factor)
@@ -83,7 +87,8 @@ total_burden <- total_burden %>%
   filter(min_age >= 25)
 
 pm_summ <- pm_summ %>%
-  dplyr::group_by_at(vars(one_of("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "rural_urban_class", "scenario", "pm", "min_age", "max_age"))) %>%
+  dplyr::group_by_at(vars(one_of("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education",
+                                 "rural_urban_class", "scenario", "pm", "pm_lower", "pm_upper", "min_age", "max_age"))) %>%
   dplyr::summarize(pop_size = sum(pop_size))
 
 # rm(meta, files)
@@ -141,20 +146,27 @@ paf_di <- inner_join_age_right_outer(pm_summ,
 #  summarise(pop_weight_pm_exp = weighted.mean(pm, pop_size)) %>%
 #  ungroup()
 #paf_di <- paf_di[1:200, ]
+# Assuming delta_method_weighted_avg function is already defined
+
+#paf_di <- paf_di %>% #TODO
+#  ungroup() %>%
+#  sample_n(2000)
+
 paf_di <- paf_di %>%
-  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pop_size"))))) %>%
+  dplyr::group_by_at(vars(one_of(setdiff(colnames(paf_di), c("pm", "pm_lower", "pm_upper", "pop_size"))))) %>%
   do({
     pm = .$pm
+    pm_lower = .$pm_lower
+    pm_upper = .$pm_upper
     pop_size = .$pop_size
-    result = calculate_weighted_mean_ci(pm, pop_size)
-    data.frame(pop_weight_pm_exp = result$pop_weight_pm_exp,
-               pop_weight_pm_exp_lower = result$lower,
-               pop_weight_pm_exp_upper = result$upper)
+    result = delta_method_weighted_avg(pm, pm_lower, pm_upper, pop_size)
+    data.frame(pop_weight_pm_exp = result$point_estimate,
+               pop_weight_pm_exp_lower = result$ci_lower,
+               pop_weight_pm_exp_upper = result$ci_upper)
   }) %>%
   ungroup()
 
-#TODO
-#colnames(paf_di)
+# colnames(paf_di)
 #[1] "Year"                    "county"                  "Race"                    "Hispanic.Origin"
 #[5] "Gender.Code"             "Education"               "rural_urban_class"       "scenario"
 #[9] "method"                  "label_cause"             "hr_mean"                 "hr_lower"

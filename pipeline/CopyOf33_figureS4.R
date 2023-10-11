@@ -69,6 +69,7 @@ attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill =
 
 # Filter data tables based on 'min_ageI'
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
+attr_burd <- attr_burd %>% filter(Year > 1990)
 
 # Set plot theme and options
 theme_set(theme_classic(base_family = "Helvetica"))
@@ -88,4 +89,59 @@ attr_burd <- attr_burd %>%
 attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd)
 attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
 attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-grep("\\*", attr_burd_filtered_dfs_names)]
+attr_burd_filtered_dfs_names <- setdiff(attr_burd_filtered_dfs_names, "All")
 #attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[-(attr_burd_filtered_dfs_names == "All")]
+attr_burd_filtered_dfs <- attr_burd_filtered_dfs[attr_burd_filtered_dfs_names]
+
+replacement_list <- list(
+  SES = "svi_bin1",
+  HCD = "svi_bin2",
+  MS = "svi_bin3",
+  HT = "svi_bin4",
+  SVI = "svi_bin",
+  Rurality = "rural_urban_class"
+)
+
+##test---
+plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i) {
+  attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
+
+  title <- attr_burd_filtered_dfs_names_i
+  # Loop through the list and replace each value with its corresponding key
+  for (key in names(replacement_list)) {
+    value <- replacement_list[[key]]
+    title <- str_replace_all(title, fixed(value), key)
+  }
+
+  #filtered_pm_summ_names_i
+  plot_i <- attr_burd_filtered_dfs_i %>%
+    ggplot(aes(x = Year, y = mean, color = !!sym(attr_burd_filtered_dfs_names_i))) +
+    geom_line(linewidth = 1.5) +
+    xlab("Year") +
+    scale_colour_manual(values = get_group_colors(attr_burd_filtered_dfs_i), limits = force) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +
+    guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
+    ggtitle(title)+
+    theme(legend.position = "bottom", axis.title.y = element_blank()) #+
+  # scale_y_continuous(
+  #    labels = scales::number_format(suffix = expression(" " * mu * "g/m"^3))
+  #  )
+
+  return(plot_i)
+})
+
+plots <- update_ylim(plots, use_actual_min = TRUE)
+
+# Combine plots
+combined_plot <- plots[[1]] + plots[[2]] + plots[[3]] + plots[[4]]  +
+  plots[[5]]  + plots[[7]]+ plots[[6]]+#  +
+  plot_layout(ncol = 3)
+
+# Show combined plot
+combined_plot
+
+
+# https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.png"),
+       dpi = 300, combined_plot, height = 11, width = 8)
+
