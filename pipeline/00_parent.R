@@ -114,7 +114,13 @@ no_figure_scripts_list <- no_figure_scripts_list_full[c(9)] #3,14,#c(15, 20, 22,
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 #24, 25, 27
 #
-years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+args <- commandArgs(trailingOnly = T)
+if (rlang::is_empty(args)) {
+  years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+}else{
+  years <- args[1]
+}
+
 
 agr_bys <- c("county", "nation", "STATEFP") #, "county" "county",
 #years <- 2016
