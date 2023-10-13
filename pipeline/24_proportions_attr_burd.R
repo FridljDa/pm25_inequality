@@ -101,7 +101,7 @@ attr_total_burden <- inner_join(
   by = c(
     "Year", "Gender.Code", "Race", "Hispanic.Origin", "svi_bin", "rural_urban_class", "Education",
     "source", "measure1", "measure2", agr_by, "min_age", "max_age"
-    #, "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
+    , "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
   )
 )
 
