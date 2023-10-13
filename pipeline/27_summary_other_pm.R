@@ -139,7 +139,9 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 pm_summ <- pm_summ %>% filter(!is.na(Gender.Code)) # TODO
 pm_summ <- pm_summ %>%
   mutate(pm_metric = "mean") %>%
-  rename(value = mean)
+  rename(value = pop_weight_pm_exp,
+         mean_lower = pop_weight_pm_exp_lower,
+         mean_upper = pop_weight_pm_exp_upper)
 
 
 ## --- find and replcase---
