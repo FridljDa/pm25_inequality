@@ -133,26 +133,29 @@ if(nrow(attr_total_burden_prop_of_difference) == 0){
 
 #delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
-test <- attr_total_burden_prop_of_difference %>%
-  mutate(
-    mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-    lower_black = lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-    upper_black = upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-    overall_total_burden_black =  overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
-  ) %>%
-  rowwise() %>%
-  mutate(delta_result = list(delta_method_sum(mean, lower, upper, - mean_black, - lower_black, - upper_black))) %>%
-  select(-mean, -lower, -upper,-mean_black, -lower_black, -upper_black) %>%
-  unnest_wider(delta_result) %>%
-  rename(lower = lb, upper = ub) %>%
-  mutate(
-    lower = lower/(overall_total_burden-overall_total_burden_black),
-    mean = mean/(overall_total_burden-overall_total_burden_black),
-    upper = upper/(overall_total_burden-overall_total_burden_black),
-    overall_total_burden = NULL,
-    overall_total_burden_black = NULL,
-    measure3 = "proportion of disparity to Black or African American attributable"
-  )
+if(FALSE){
+  test <- attr_total_burden_prop_of_difference %>%
+    mutate(
+      mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+      lower_black = lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+      upper_black = upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
+      overall_total_burden_black =  overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
+    ) %>%
+    rowwise() %>%
+    mutate(delta_result = list(delta_method_sum(mean, lower, upper, - mean_black, - lower_black, - upper_black))) %>%
+    select(-mean, -lower, -upper,-mean_black, -lower_black, -upper_black) %>%
+    unnest_wider(delta_result) %>%
+    rename(lower = lb, upper = ub) %>%
+    mutate(
+      lower = lower/(overall_total_burden-overall_total_burden_black),
+      mean = mean/(overall_total_burden-overall_total_burden_black),
+      upper = upper/(overall_total_burden-overall_total_burden_black),
+      overall_total_burden = NULL,
+      overall_total_burden_black = NULL,
+      measure3 = "proportion of disparity to Black or African American attributable"
+    )
+}
+
 
 attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
   #mutate(mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],

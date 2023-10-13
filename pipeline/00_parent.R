@@ -121,6 +121,7 @@ if (rlang::is_empty(args)) {
   years <- args[1]
 }
 
+
 agr_bys <- c("county", "nation", "STATEFP") #, "county" "county",
 #years <- 2016
 # years <- 1998 #,1990,1991
@@ -151,9 +152,9 @@ for (agr_by in agr_bys) {
       propOfAttrBurdDir = "data/16_prop_of_attr_burd" #20
     )
     for(no_figure_script in no_figure_scripts_list){
-      run_script(script = no_figure_script, args = args)
+    #  run_script(script = no_figure_script, args = args)
     }
-    cat("Year: ", year, "agr_by: ", agr_by)
+    #cat("Year: ", year, "agr_by: ", agr_by)
   }
 }
 
@@ -177,11 +178,8 @@ args <- paste(
   min_age = 25 #13
 )
 
-run_script(script = "pipeline/25_summary_attr_total_burd.R", args = args)
+#run_script(script = "pipeline/25_summary_attr_total_burd.R", args = args)
 run_script(script = "pipeline/27_summary_other_pm.R", args = args)
-#
-#run_script(script = summary.script, args = args)
-#run_script(script = "pipeline/25_summary_other.R", args = args)
 
 args <- paste(
   tmp.dir, # 1
@@ -196,6 +194,6 @@ args <- paste(
   scenario, # 10
   method, # 11
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
-  min_age = 65 #13
+  min_age = 25 #13
 )
-#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
+for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
