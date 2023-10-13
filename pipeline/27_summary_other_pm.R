@@ -69,11 +69,11 @@ pm_summ <- lapply(agr_bys, function(agr_by) {
 
     pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
 
-    if (agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
-
     if (nrow(pm_summ) == 0) {
       return(NULL)
     }
+
+    if (agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
 
     pm_summ <- pm_summ %>% left_join(meta, by = "variable")
 
