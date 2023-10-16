@@ -110,19 +110,20 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 #[25] "pipeline/24_proportions_attr_burd.R"
 #[26] "pipeline/24_sum_higher_geog_level_age_adjust_total_burden.R"
 #[27] "pipeline/25_summary_attr_total_burd.R"
-no_figure_scripts_list <- no_figure_scripts_list_full[c(9)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+no_figure_scripts_list <- no_figure_scripts_list_full[c(8, 9)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 #24, 25, 27
 #
 args <- commandArgs(trailingOnly = T)
 if (rlang::is_empty(args)) {
-  years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+  #years <- c(2000, 2010, 2016:2011, 2009:2001, 1999:1990)
+  years <- c(2015)
 }else{
   years <- args[1]
 }
 
 
-agr_bys <- c("county", "nation", "STATEFP") #, "county" "county",
+agr_bys <- c("county") #, "county" "county", , "nation", "STATEFP"
 #years <- 2016
 # years <- 1998 #,1990,1991
 source <- "nvss"
@@ -195,6 +196,6 @@ args <- paste(
   scenario, # 10
   method, # 11
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
-  min_age = 65 #13
+  min_age = 25 #13
 )
 #for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)

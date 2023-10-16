@@ -19,15 +19,18 @@ for (p in packages) {
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
-year <- args[1]
-tmpDir <- args[3]
-expDir <- args[4]
-tracDir <- args[5]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2015
-
+  year <- 2012
+  tracDir <- "data/02_tracts"
+  expDir <- "data/01_exposure"
+  tmpDir <- "data/tmp"
+}else{
+  year <- args[1]
+  tmpDir <- args[3]
+  expDir <- args[4]
+  tracDir <- args[5]
 }
 #-- load data---
 states <- file.path(tmpDir, "states.csv") %>% read.csv()
@@ -77,7 +80,7 @@ rm(filenameExp, filepathExp, filepathM)
 
 ### ------------------download tract shape files--------------------
 # Add key to .Renviron
-key <- "your key"
+#key <- "your key"
 Sys.setenv(CENSUS_KEY = key)
 
 filepathTr <- file.path(tracDir, toString(year))
@@ -93,7 +96,7 @@ apply(states, 1, function(state) {
   if (!file.exists(filepathTrX)) {
     tic(paste("Downloaded census tracts shape files for", year, name))
 
-    
+
     if (year == 1990) {
         tracts <- tigris::tracts(state = STUSPS, cb = TRUE, year = year)
       tracts <- tracts %>% mutate(GEO_ID = paste0(STATEFP, COUNTYFP, TRACTBASE, TRACTSUF))
@@ -103,9 +106,16 @@ apply(states, 1, function(state) {
     } else if (year == 2000) {
       tracts <- tidycensus::get_decennial(geography = "tract", variables = "P012A005", year = 2000, state = STUSPS, geometry = TRUE, key = key) %>%
         rename(GEO_ID = GEOID) # %>%
-      
+
     } else if (year %in% c(2009, 2011:2016)) {
-      tracts <- get_acs(geography = "tract", variables = "B01001A_003E", state = STUSPS, geometry = TRUE, year = year, key = key) 
+      #browser()
+      key <- "d44ca9c0b07372ada0b5243518e89adcc06651ef"
+      tracts <- get_acs(geography = "tract",
+                        variables = "B01001A_003E",
+                        state = STUSPS,
+                        geometry = TRUE,
+                        year = year,
+                        key = key)
       tracts <- tracts %>% dplyr::rename(GEO_ID = GEOID)
     }
     # save only relevant data
