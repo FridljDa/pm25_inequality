@@ -71,7 +71,7 @@ options(bitmapType = "cairo")
 
 # theme_set(theme_bw( base_family = "Helvetica"))
 dir.create(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI)), recursive = T, showWarnings = F)
-attr_burd <-  attr_burd %>% filter (Year > 1990)
+#attr_burd <-  attr_burd %>% filter (Year > 1990)
 
 ### ----- read stuff----
 attr_burd <- attr_burd %>%
