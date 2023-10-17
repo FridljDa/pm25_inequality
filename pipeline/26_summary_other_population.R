@@ -7,7 +7,7 @@
 
 #------------------SET-UP--------------------------------------------------
 # clear memory
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 
 # load packages, install if missing
 packages <- c("dplyr", "magrittr", "data.table", "testthat",  "tictoc", "stats", "matrixStats")
@@ -70,6 +70,7 @@ pop_summary1 <- pop_summary1 %>% rbindlist(use.name = TRUE, fill = TRUE)
 
 agr_bys <- files[!endsWith(files, ".csv")]
 agr_bys <- setdiff(agr_bys, "county")
+agr_bys <- "nation"
 pop_summary2 <- lapply(agr_bys, function(agr_by) {
   files2 <- list.files(file.path(pop.summary.dir, agr_by))
   pop_summary2 <- lapply(files2, function(file) fread(file.path(pop.summary.dir, agr_by, file))) %>% rbindlist(use.name = TRUE, fill = TRUE)
