@@ -35,7 +35,7 @@ rm(file_list)
 # Sensitivity of our findings to the use of a race-ethnicity-specific CRF:
 ```{r}
 attr_burd %>%
-  filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
+  filter(measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
            attr == "attributable" &
            source == "National Vital Statistics System" & scenario == "real") %>% 
   filter(agr_by == "nation" & Education == 666 & Ethnicity == "White, Not Hispanic or Latino" & measure3 == "proportion of disparity to Black or African American attributable" & rural_urban_class == "All"
@@ -115,8 +115,8 @@ plot_attr_burd_di
 ##---get median pm ---
 pm_summary <- readr::read_csv("../data/15_summary/pm_summary.csv") 
 pm_summary <- pm_summary %>% filter(scenario == "real" & rural_urban_class == "All" & Region == "United States" &
-                                      Ethnicity == "All, All Origins" & Education == 666 & Year == 2016 &
-                                      pm_metric == "mean")
+                                      Ethnicity == "All, All Origins" & Education == 666 & Year == 2016 & pm_metric == "mean")
+pm_summary <- pm_summary %>% filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" & min_age == 25)
 
 attr_burd_di_median <- paf_di %>% mutate(pm = pm_summary$value)
 attr_burd_di_median <- attr_burd_di_median %>%
