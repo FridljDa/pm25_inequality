@@ -27,6 +27,16 @@ A list containing the estimated mean, lower bound, and upper bound of the confid
 \description{
 Estimate the Mean and Confidence Interval for the Sum of Two Random Variables Using the Delta Method
 }
+\details{
+The Delta Method is used to approximate the variance of a function g(X, Y) of random variables X and Y.
+Var\link{g(X, Y)} is approximately (dg/dX)^2 * Var\link{X} + (dg/dY)^2 * Var\link{Y}.
+In this case, g(X, Y) = X + Y, so dg/dX = 1 and dg/dY = 1.
+Therefore, the variance of Z = X + Y is approximated as Var\link{Z} = Var\link{X} + Var\link{Y}.
+
+The standard deviation for each random variable is calculated from the confidence interval as:
+SD\link{X} = (UB\link{X} - LB\link{X}) / (2 * Z_alpha/2),
+where Z_alpha/2 is the critical value from the standard normal distribution corresponding to alpha/2.
+}
 \examples{
 # Example: Estimate the mean and 95\% CI for the sum of X and Y
 # where X has a mean of 10 and 95\% CI [8, 12]

@@ -67,15 +67,13 @@ pm_summ <- pm_summ %>%
 pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == scenarioI)
 pm_summ <- pm_summ %>%
-  replace_values(findreplace) %>%
-  filter(across(everything(), ~ . != "Unknown"))
+  filter(across(everything(), ~ . != "Unknown")) %>%
+  replace_values(findreplace)
 filtered_pm_summ <- generate_filtered_dfs(pm_summ)
 
 filtered_pm_summ <- filtered_pm_summ[!grepl("\\*", names(filtered_pm_summ))]
 filtered_pm_summ <- filtered_pm_summ[names(filtered_pm_summ) != c("All")]
 filtered_pm_summ_names <- names(filtered_pm_summ)
-
-
 
 # Define the replacement list
 replacement_list <- list(
@@ -102,6 +100,7 @@ plots <- lapply(filtered_pm_summ_names, function(filtered_pm_summ_names_i) {
   plot_i <- filtered_pm_summ_i %>%
     ggplot(aes(x = Year, y = value, color = !!sym(filtered_pm_summ_names_i))) +
     geom_line(linewidth = 1.5) +
+    geom_ribbon(aes(ymin = mean_lower, ymax = mean_upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     xlab("Year") +
     scale_colour_manual(values = get_group_colors(filtered_pm_summ_i), limits = force) +
     theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +

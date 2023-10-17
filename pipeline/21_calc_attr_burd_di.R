@@ -244,6 +244,13 @@ paf_di <- paf_di %>%
   select(-min_age) %>%
   select(-max_age)
 
+anti_join_paf_di <- diagnose_join_issues(df1 = total_burden,
+                                  df2 = paf_di,
+                                  join_cols = c("Year", agr_by, "Race", "Hispanic.Origin", "Gender.Code", "Education", "label_cause"))
+if(nrow(anti_join_paf_di) > 0){
+  warning("diagnose_join_issues() in 21_calc_attr_burd_di.R: total_burden, paf_di")
+}
+
 attr_burden_di <- left_join(
   total_burden,
   paf_di,

@@ -182,6 +182,16 @@ delta_method_quotient <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha 
 #' @param ub_y Upper bound of the confidence interval for Y
 #' @param alpha Significance level for the confidence interval (default is 0.05 for a 95% CI)
 #'
+#' @details
+#' The Delta Method is used to approximate the variance of a function g(X, Y) of random variables X and Y.
+#' Var[g(X, Y)] is approximately (dg/dX)^2 * Var[X] + (dg/dY)^2 * Var[Y].
+#' In this case, g(X, Y) = X + Y, so dg/dX = 1 and dg/dY = 1.
+#' Therefore, the variance of Z = X + Y is approximated as Var[Z] = Var[X] + Var[Y].
+#'
+#' The standard deviation for each random variable is calculated from the confidence interval as:
+#' SD[X] = (UB[X] - LB[X]) / (2 * Z_alpha/2),
+#' where Z_alpha/2 is the critical value from the standard normal distribution corresponding to alpha/2.
+#'
 #' @return A list containing the estimated mean, lower bound, and upper bound of the confidence interval for Z = X + Y
 #' @export
 #' @examples
@@ -213,6 +223,8 @@ delta_method_sum <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.0
 
   return(list(mean = mean_z, lb = lb_z, ub = ub_z))
 }
+
+
 
 #' Calculate Mean and 95% Confidence Interval
 #'

@@ -152,7 +152,7 @@ apply(states, 1, function(state) {
     top_10_pm <- points_subset %>%
       mutate(distance = as.vector(st_distance(., y = tract_centroid))) %>%
       arrange(distance) %>%
-      slice_head(n = 50) %>%
+      slice_head(n = 100) %>% #TODO
       pull(pm)
 
     top_10_pm <- top_10_pm * 0.01
@@ -213,7 +213,7 @@ apply(states, 1, function(state) {
 
   tracts <- tracts %>%
     as.data.frame() %>%
-    dplyr::select(c("GEO_ID", "pm"))
+    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper"))
 
 
   write.csv(tracts, exp_tracDirX, row.names = FALSE)

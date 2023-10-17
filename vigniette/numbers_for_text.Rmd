@@ -413,7 +413,7 @@ pm_summ <- pm_summ %>%
   filter(Gender.Code == "All genders" & Region == "United States" & pm_metric == "mean" & scenario == "real")
 
 ## -- figure 3, attributable burden---
-pm_summ <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666& svi_bin3 == 666& svi_bin4 == 666)
+pm_summ <- pm_summ %>% filter(Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All"& svi_bin3 == "All"& svi_bin4 == "All")
 
 pm_summ <- pm_summ %>% filter(Year >= 2000 & Ethnicity != "White")
 ```
@@ -440,13 +440,13 @@ pm_summ %>%
 library(dplyr)
 
 # Your data
-pm_summ <- data.frame(
-  Ethnicity = c("Black American", "NH White", "Black American", "NH White"),
-  Year = c(2000, 2000, 2016, 2016),
-  value = c(14.31, 12.14, 7.95, 7.01),
-  mean_lower = c(14.18, 12.10, 7.83, 6.92),
-  mean_upper = c(14.42, 12.27, 8.02, 7.10)
-)
+#pm_summ <- data.frame(
+#  Ethnicity = c("Black American", "NH White", "Black American", "NH White"),
+#  Year = c(2000, 2000, 2016, 2016),
+#  value = c(14.31, 12.14, 7.95, 7.01),
+#  mean_lower = c(14.18, 12.10, 7.83, 6.92),
+#  mean_upper = c(14.42, 12.27, 8.02, 7.10)
+#)
 
 # Filter and mutate
 filtered_data <- pm_summ %>%

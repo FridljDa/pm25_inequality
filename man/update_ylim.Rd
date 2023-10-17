@@ -4,19 +4,21 @@
 \alias{update_ylim}
 \title{Update y-axis limits for a list of ggplot objects}
 \usage{
-update_ylim(ggplot_list, column = NULL)
+update_ylim(ggplot_list, column = NULL, use_actual_min = FALSE)
 }
 \arguments{
 \item{ggplot_list}{A list of ggplot objects.}
 
 \item{column}{The name of the column to use for setting the y-axis limits. Defaults to NULL.}
+
+\item{use_actual_min}{Boolean flag to use the actual minimum value for y-axis lower limit. Defaults to FALSE.}
 }
 \value{
 A list of ggplot objects with updated y-axis limits.
 }
 \description{
 This function takes a list of ggplot objects and sets the y-axis limits
-to be the same for all plots, based on the maximum value in either the 'upper', 'value', or a specified column.
+to be the same for all plots, based on the maximum and minimum value in either the 'upper', 'value', or a specified column.
 Throws an error if neither column is present.
 }
 \examples{
