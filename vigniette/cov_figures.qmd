@@ -26,6 +26,7 @@ theme_set(theme_classic(base_family = "Helvetica"))
 
 ```{r}
 min_ageI <- 25
+cov_function <- function(x) { sqrt(var(x, na.rm = TRUE)) / mean(x, na.rm = TRUE) }
 ```
 
 ```{r}
@@ -47,7 +48,7 @@ attr_burden <- attr_burden %>%
     source == "National Vital Statistics System" & scenario == "real" &
     agr_by == "nation" & method == "di_gee" & measure2 == "age-adjusted rate per 100,000" & min_age == min_ageI &
     measure3 == "value")
-attr_burden <- attr_burden %>% select(-"...1")
+#attr_burden <- attr_burden %>% select(-"...1")
 ```
 
 ```{r}
@@ -140,12 +141,17 @@ attr_burd_filtered_dfs_star_sum <- lapply(seq_along(attr_burd_filtered_dfs_names
     ungroup() %>%
     group_by(across(c(split.column, "Year", "n"))) %>%
     summarise(
-      CoV = sqrt(var(mean, na.rm = TRUE)) / mean(mean, na.rm = TRUE),
-      max_abs_diff = max(mean, na.rm = TRUE) - min(mean, na.rm = TRUE),
-      rel_diff = max(mean, na.rm = TRUE) / min(mean, na.rm = TRUE),
-      average = mean(mean, na.rm = TRUE),
-      over = list(unique(.data[[color.column]][mean >= average]))
-    )
+    CoV = sqrt(var(mean)) / mean(mean),
+    bootstrap_results = list(parametric_bootstrap_stat(cur_data(), stat_function = cov_function))
+    ) %>%
+    unnest_wider(bootstrap_results)
+    #summarise(
+    #  CoV = sqrt(var(mean, na.rm = TRUE)) / mean(mean, na.rm = TRUE)#,
+      #max_abs_diff = max(mean, na.rm = TRUE) - min(mean, na.rm = TRUE),
+      #rel_diff = max(mean, na.rm = TRUE) / min(mean, na.rm = TRUE),
+      #average = mean(mean, na.rm = TRUE),
+      #over = list(unique(.data[[color.column]][mean >= average]))
+    #)
 })
 names(attr_burd_filtered_dfs_star_sum) <- names(attr_burd_filtered_dfs_star)
 ```
@@ -169,6 +175,7 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
   attr_burd_filtered_dfs_i %>%
     ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
     geom_line(linewidth = 1.5) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     xlab("Year") +
     ylim(0, NA) +
     theme(legend.position = "bottom") +
@@ -206,6 +213,7 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
   attr_burd_filtered_dfs_i %>%
     ggplot(aes(x = Year, y = CoV, color = .data[[split.column]])) +
     geom_line(linewidth = 1.5) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     xlab("Year") +
     ylim(0, NA) +
     theme(legend.position = "bottom") +
@@ -226,14 +234,22 @@ ggsave(
 
 ## 2
 
+
 ```{r}
 attr_burd_filtered_df_year <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i) {
   attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_i %>%
+    filter(!is.na(mean)) %>%
+    filter(!is.na(lower)) %>%
+    filter(!is.na(upper)) %>%
     group_by(Year) %>%
     summarise(
       n = n(),
-      CoV = sqrt(var(mean)) / mean(mean), .groups = "drop"
-    )
+      CoV = sqrt(var(mean)) / mean(mean), 
+      bootstrap_results = list(parametric_bootstrap_stat(cur_data(), stat_function = cov_function)),
+      .groups = "drop"
+    ) %>%
+   unnest_wider(bootstrap_results)
+
 })
 ```
 
@@ -248,8 +264,7 @@ attr_burd_filtered_df_year <- rbindlist(attr_burd_filtered_df_year)
 ```
 
 ```{r}
-attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
-  filter(!is.na(CoV))
+
 ```
 
 ```{r}
@@ -268,6 +283,7 @@ attr_burd_filtered_df_year <- attr_burd_filtered_df_year %>%
 g <- ggplot(attr_burd_filtered_df_year, aes(x = Year, y = CoV, color = cat))
 g <- g +
   geom_line(linewidth = 1.5) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
   xlab("Year") +
   guides(color = guide_legend(ncol = 3, byrow = TRUE)) +
   theme(legend.title = element_blank()) +
@@ -311,6 +327,7 @@ for(i in seq_along(list_of_dfs)) {
   factor_level <- names(list_of_dfs)[i]
   g <- ggplot(list_of_dfs[[i]], aes(x = Year, y = CoV, color = cat)) +
     geom_line(linewidth = 1.5) +
+    #geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     xlab("Year") +
     guides(color = guide_legend(ncol = 1, byrow = TRUE)) +
     theme(legend.title = element_blank()) +

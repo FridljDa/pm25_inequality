@@ -87,7 +87,10 @@ for (i in seq_len(nrow(states))) {
   # read demographic census data by tract
   trac_censData <- file.path(censDir, year, paste0("census_", toString(year), "_", STUSPS, ".csv")) %>%
     fread() %>%
-    mutate(GEO_ID = as.character(GEO_ID))
+    mutate(GEO_ID = as.character(GEO_ID)) %>%
+    mutate(pm = round(pm, digits = 2),
+           pm_lower = round(pm_lower, digits = 2),
+           pm_upper = round(pm_upper, digits = 2))
 
   # read pm exposure data by tract
   exp_tracDataDir <- file.path(exp_tracDir, year, paste0("exp_trac_", toString(year), "_", STUSPS, ".csv"))

@@ -213,7 +213,10 @@ apply(states, 1, function(state) {
 
   tracts <- tracts %>%
     as.data.frame() %>%
-    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper"))
+    dplyr::select(c("GEO_ID", "pm", "pm_lower", "pm_upper")) %>%
+    mutate(pm = round(pm, digits = 2),
+           pm_lower = round(pm_lower, digits = 2),
+           pm_upper = round(pm_upper, digits = 2))
 
 
   write.csv(tracts, exp_tracDirX, row.names = FALSE)

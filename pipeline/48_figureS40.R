@@ -96,8 +96,8 @@ all_burd <- all_burd %>%
     source == "National Vital Statistics System" & agr_by == "nation")
 
 ### get distinct---
-#all_burd <- all_burd %>% distinct()
-#attr_burd <- attr_burd %>% distinct()
+# all_burd <- all_burd %>% distinct()
+# attr_burd <- attr_burd %>% distinct()
 
 # Generate filtered data frames
 attr_burd_prop_filtered_dfs <- generate_filtered_dfs(attr_burd_prop)
@@ -110,8 +110,8 @@ attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
 # Filter names to include only those with '*'
 attr_burd_filtered_dfs_names <- attr_burd_filtered_dfs_names[grep("\\*", attr_burd_filtered_dfs_names)]
 
-#attr_burd_filtered_dfs_names <- "Ethnicity*rural_urban_class"
-pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+# attr_burd_filtered_dfs_names <- "Ethnicity*rural_urban_class"
+pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i) {
   data <- attr_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
   split_color_var <- strsplit(attr_burd_filtered_dfs_names_i, "\\*")
   split_color_var <- unlist(split_color_var)
@@ -120,7 +120,7 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
   color.column <- split_color_var[[1]]
   split.column <- split_color_var[[2]]
 
-  if(color.column == "Ethnicity"){
+  if (color.column == "Ethnicity") {
     data <- data %>%
       filter(Ethnicity != "Asian or Pacific Islander")
   }
@@ -129,18 +129,37 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
     rename(split.column = !!sym(split.column))
   # Calculate pairwise differences
   pairwise_diff <- data %>%
-    full_join(data, by = c(color.column, "Year"), multiple = "all") %>%
-    mutate(diff = mean.x - mean.y,
-           rel_diff = (mean.x - mean.y)/mean.x) %>%
+    full_join(data, by = c(color.column, "Year"), multiple = "all")
+
+  pairwise_diff <- pairwise_diff %>%
     filter(!grepl("Moderate|Vulnerable", split.column.x)) %>%
     filter(!grepl("Moderate|Resilient", split.column.y)) %>%
     filter(!grepl("Middle|High", split.column.y)) %>%
     filter(!grepl("Middle|Low", split.column.x)) %>%
     filter(!grepl("Small-medium|Large", split.column.x)) %>%
-    filter(!grepl("Small-medium|Non", split.column.y)) %>%
+    filter(!grepl("Small-medium|Non", split.column.y))
+
+  pairwise_diff <- pairwise_diff %>%
+    rowwise() %>%
+    mutate(
+      diff = mean.x - mean.y,
+      rel_diff = (mean.x - mean.y) / mean.x#,
+      #delta_method_result = list(delta_method_rel_diff(mean_x = mean.x, lb_x = lower.x, ub_x = upper.x,
+      #                                                 mean_y = mean.y, lb_y = lower.y, ub_y = upper.y))
+      )
+
+  #browser()
+  pairwise_diff <- pairwise_diff %>%
+    #mutate(
+    #  rel_diff_lower = map_dbl(delta_method_result, ~ .[["lb"]]),
+    #  rel_diff_upper = map_dbl(delta_method_result, ~ .[["ub"]])
+    #) %>%
+    ungroup()
+
+  pairwise_diff <- pairwise_diff %>%
     select(Year, !!sym(color.column), diff, rel_diff, split.column.x, split.column.y, mean.x, mean.y) %>%
     tidyr::unite("difference_col", split.column.x:split.column.y, sep = "-", remove = FALSE) %>%
-    mutate(rel_label = paste0("(",split.column.x,"-",split.column.y,")/", split.column.x))
+    mutate(rel_label = paste0("(", split.column.x, "-", split.column.y, ")/", split.column.x))
   return(pairwise_diff)
 })
 names(pairwise_differences) <- attr_burd_filtered_dfs_names
@@ -154,17 +173,23 @@ g_rel_ethn <- pairwise_differences_ethn %>%
   rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
   ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = Ethnicity)) +
   geom_line(linewidth = 1.5) +
-  facet_wrap(vars(difference_col)) +#rel_label
+  geom_ribbon(aes(ymin = rel_diff_lower, ymax = rel_diff_upper),
+    linetype = 2, alpha = 0, show.legend = FALSE
+  ) +
+  facet_wrap(vars(difference_col)) + # rel_label
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_percent()) +
   scale_colour_manual(values = get_group_colors(pairwise_differences_ethn)) +
-  guides(color = guide_legend(ncol = 3, byrow = TRUE))+
-  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5)  # Add dashed line at y = 0
+  guides(color = guide_legend(ncol = 3, byrow = TRUE)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5) # Add dashed line at y = 0
 
-ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-                            "attr_rel_differences", paste0("figure_ethn_", "combined", ".png")),
-       plot = g_rel_ethn,
-       dpi = 300, height = 6, width = 8
+ggsave(
+  filename = file.path(
+    figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
+    "attr_rel_differences", paste0("figure_ethn_", "combined", ".png")
+  ),
+  plot = g_rel_ethn,
+  dpi = 300, height = 6, width = 8
 )
 
 pairwise_differences_educ <- pairwise_differences %>%
@@ -174,21 +199,24 @@ g_rel_educ <- pairwise_differences_educ %>%
   rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
   ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = Education)) +
   geom_line(linewidth = 1.5) +
-  facet_wrap(vars(difference_col)) +#rel_label
+  facet_wrap(vars(difference_col)) + # rel_label
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_percent()) +
   scale_colour_manual(values = get_group_colors(pairwise_differences_educ)) +
-  guides(color = guide_legend(ncol = 2, byrow = TRUE))+
-  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5)  # Add dashed line at y = 0
+  guides(color = guide_legend(ncol = 2, byrow = TRUE)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5) # Add dashed line at y = 0
 
-ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-                            "attr_rel_differences", paste0("figure_educ_", "combined", ".png")),
-       plot = g_rel_educ,
-       dpi = 300, height = 6, width = 8
+ggsave(
+  filename = file.path(
+    figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
+    "attr_rel_differences", paste0("figure_educ_", "combined", ".png")
+  ),
+  plot = g_rel_educ,
+  dpi = 300, height = 6, width = 8
 )
 
-if(FALSE){
-  for(pairwise_diff in pairwise_differences){
+if (FALSE) {
+  for (pairwise_diff in pairwise_differences) {
     g_abs <- pairwise_diff %>%
       rename(`absolute difference in PM2.5-attributable mortality rate` = diff) %>%
       ggplot(aes(x = Year, y = `absolute difference in PM2.5-attributable mortality rate`, color = !!sym(color.column))) +
@@ -196,27 +224,31 @@ if(FALSE){
       facet_wrap(vars(difference_col)) +
       theme(legend.position = "bottom")
 
-    ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-                                "attr_abs_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
-           plot = g_abs,
-           dpi = 300, height = 8, width = 7
+    ggsave(
+      filename = file.path(
+        figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
+        "attr_abs_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")
+      ),
+      plot = g_abs,
+      dpi = 300, height = 8, width = 7
     )
 
     g_rel <- pairwise_diff %>%
       rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
       ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = !!sym(color.column))) +
       geom_line(linewidth = 1.5) +
-      facet_wrap(vars(difference_col)) +#rel_label
+      facet_wrap(vars(difference_col)) + # rel_label
       theme(legend.position = "bottom") +
       scale_y_continuous(labels = label_percent()) +
-      geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5)  # Add dashed line at y = 0
+      geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5) # Add dashed line at y = 0
 
-    ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-                                "attr_rel_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
-           plot = g_rel,
-           dpi = 300, height = 8, width = 7
+    ggsave(
+      filename = file.path(
+        figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
+        "attr_rel_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")
+      ),
+      plot = g_rel,
+      dpi = 300, height = 8, width = 7
     )
   }
-
-
 }
