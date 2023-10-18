@@ -16,7 +16,7 @@ if (rlang::is_empty(args)) {
 
   agr_by <- "nation"
   source <- "nvss"
-  year <- 2016
+  year <- 2011
 } else {
   year <- args[1]
   source <- "nvss"
@@ -32,7 +32,7 @@ dir.create(propDir, recursive = T, showWarnings = F)
 propDir <- file.path(propDir, paste0("attr_burden_prop_", year, ".csv"))
 
 if (file.exists(propDir)) {
-  quit()
+  #quit()
 }
 
 ## ---- read total burden, attr burden, join----
@@ -133,8 +133,8 @@ if(nrow(attr_total_burden_prop_of_difference) == 0){
 
 #delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
-if(FALSE){
-  test <- attr_total_burden_prop_of_difference %>%
+
+  attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     mutate(
       mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
       lower_black = lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
@@ -154,25 +154,7 @@ if(FALSE){
       overall_total_burden_black = NULL,
       measure3 = "proportion of disparity to Black or African American attributable"
     )
-}
 
-
-attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
-  #mutate(mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-  #       overall_total_burden_black = )
-  mutate(
-    mean = 100 * (mean - mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
-      (overall_total_burden - overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]),
-    lower = 100 * (lower - lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
-      (overall_total_burden - overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]),
-    upper = 100 * (upper - upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"]) /
-      (overall_total_burden - overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"])
-  ) %>%
-  ungroup() %>%
-  mutate(
-    overall_total_burden = NULL,
-    measure3 = "proportion of disparity to Black or African American attributable"
-  )
 if(nrow(attr_total_burden_prop_of_difference) == 0){
   warning(paste("2: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }

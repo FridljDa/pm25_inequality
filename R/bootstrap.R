@@ -275,3 +275,80 @@ calculate_mean_and_ci <- function(x) {
   return(confidence_interval_df)
 }
 
+#' Estimate the Mean and Confidence Interval for the Relative Difference Using the Delta Method
+#'
+#' @param mean_x Mean of the first random variable X
+#' @param lb_x Lower bound of the confidence interval for X
+#' @param ub_x Upper bound of the confidence interval for X
+#' @param mean_y Mean of the second random variable Y
+#' @param lb_y Lower bound of the confidence interval for Y
+#' @param ub_y Upper bound of the confidence interval for Y
+#' @param alpha Significance level for the confidence interval (default is 0.05 for a 95% CI)
+#'
+#' @details
+#' The Delta Method is used to approximate the variance of a function g(X, Y) of random variables X and Y.
+#' In this case, g(X, Y) = (X - Y) / X.
+#'
+#' @return A list containing the estimated mean, lower bound, and upper bound of the confidence interval for g(X, Y)
+#' @export
+delta_method_rel_diff <- function(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05) {
+  # Calculate standard deviations from confidence intervals
+  z_alpha = qnorm(1 - alpha / 2)
+  sd_x = (ub_x - lb_x) / (2 * z_alpha)
+  sd_y = (ub_y - lb_y) / (2 * z_alpha)
+
+  # Estimate the mean of g(X, Y)
+  mean_g = (mean_x - mean_y) / mean_x
+
+  # Estimate the variance of g(X, Y) using the Delta Method
+  var_g = (mean_y / mean_x^2)^2 * sd_x^2 + (-1 / mean_x)^2 * sd_y^2
+
+  # Estimate the standard deviation of g(X, Y)
+  sd_g = sqrt(var_g)
+
+  # Calculate the confidence interval for g(X, Y)
+  lb_g = mean_g - z_alpha * sd_g
+  ub_g = mean_g + z_alpha * sd_g
+
+  return(list(mean = mean_g, lb = lb_g, ub = ub_g))
+}
+
+#' Parametric Bootstrap for Custom Statistic
+#'
+#' This function performs parametric bootstrapping to estimate a custom statistic and its 95% confidence intervals,
+#' taking into account existing confidence intervals for each X_i.
+#'
+#' @param data A data frame containing columns 'mean', 'lower', and 'upper', which represent
+#'        the point estimates and the lower and upper bounds of the 95% confidence intervals for each X_i.
+#' @param stat_function A function to calculate the statistic of interest from a sample.
+#' @param n_boot Number of bootstrap samples (default is 1000).
+#'
+#' @return A list containing the mean and 95% confidence intervals (lower and upper) for the custom statistic.
+#' @export
+#' @examples
+#' original_data <- data.frame(mean = c(1, 2, 3, 4, 5), lower = c(0.5, 1.5, 2.5, 3.5, 4.5), upper = c(1.5, 2.5, 3.5, 4.5, 5.5))
+#' cov_function <- function(x) { sqrt(var(x)) / mean(x) }
+#' parametric_bootstrap_stat(original_data, stat_function = cov_function)
+parametric_bootstrap_stat <- function(data, stat_function, n_boot = 1000) {
+  # Initialize a vector to store the bootstrap estimates of the custom statistic
+  boot_stat <- numeric(n_boot)
+
+  # Calculate the standard deviation for each X_i based on the confidence intervals
+  z_alpha <- qnorm(1 - 0.05 / 2)
+  sd_i <- (data$upper - data$lower) / (2 * z_alpha)
+
+  # Perform parametric bootstrap resampling
+  for (i in 1:n_boot) {
+    # Sample from the normal distribution using the point estimates and calculated SDs
+    boot_sample <- rnorm(length(data$mean), mean = data$mean, sd = sd_i)
+
+    # Calculate the bootstrap estimate of the custom statistic using the passed function
+    boot_stat[i] <- stat_function(boot_sample)
+  }
+
+  # Calculate the 95% confidence interval for the custom statistic
+  ci_lower <- quantile(boot_stat, 0.025, na.rm = TRUE)
+  ci_upper <- quantile(boot_stat, 0.975, na.rm = TRUE)
+
+  return(list(mean = mean(boot_stat), lower = ci_lower, upper = ci_upper))
+}

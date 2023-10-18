@@ -90,79 +90,61 @@ get_legend_custom <- function(group.colors, ncol = 3){
 #' @param group.colors A vector of colors to use for the different groups.
 #' @param remove_legend Logical value to indicate whether to remove the legend or not.
 #' @param remove_y_titel Logical value to indicate whether to remove the y-axis title or not.
+#' @param title Title for the plot.
 #' @return A ggplot object.
 #' @examples
 #' plot_df(data.frame(Year = c(2000, 2001), mean = c(1, 2), color = c("red", "blue")))
-plot_df <- function(df, color.column, group.colors = get_group_colors(df),
+plot_df <- function(df, color.column = NULL, group.colors = NULL,
                     remove_legend = TRUE, remove_y_titel = TRUE, title = NA) {
-  # Check that all required columns are present
-  if (!all(c("Year", color.column) %in% colnames(df))) {
-    stop("Required columns (Year, mean, and color column) are not present in the data frame.")
-  }
-  df <- df %>% distinct()
 
-  # Check for multiple values for x, y, and color
-  check_df <- df %>% group_by(Year, !!sym(color.column)) %>% summarise(n = n())
-  if(any(check_df$n > 1)) {
-
-    # Check for multiple unique values in all columns except "Year" and color.column
-    excluded_columns <- c("Year", color.column, "lower", "upper", "mean", "value")
-    other_columns <- setdiff(colnames(df), excluded_columns)
-
-    for (col in other_columns) {
-      unique_values <- df %>%
-        select(!!sym(col)) %>%
-        unlist %>%
-        unique
-        #group_by(Year, !!sym(color.column)) %>%
-        #summarise(unique_vals = list(unique(!!sym(col)))) %>%
-        #ungroup()
-
-      #problematic_rows <- unique_values %>% filter(length(unique_vals) > 1)
-
-      if (length(unique_values) > 1) {
-        print(glue::glue("Column '{col}' has multiple unique values: {unique_values}"))
-        #print(unique(unlist(unique_values$unique_vals)))
-        #print("problematic multiple values:")
-        #print(unique_values)
-      }
+  # Handle the case when color.column is NULL
+  if (is.null(color.column)) {
+    aes_params <- aes(x = Year, y = ifelse("value" %in% colnames(df), value, mean))
+  } else {
+    if (!color.column %in% colnames(df)) {
+      stop("The specified color column is not present in the data frame.")
     }
-
-    stop("Multiple values for x, y, and color are not allowed.")
+    aes_params <- aes(x = Year, y = ifelse("value" %in% colnames(df), value, mean), color = !!sym(color.column))
   }
+
+  g <- ggplot(df, aes_params)
 
   # Add ribbon if lower and upper columns are present
   if ("lower" %in% colnames(df)) {
-    g <- ggplot(df, aes(x = Year, y = mean, color = !!sym(color.column)))
-    g <- g + geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE)
-  } else if ("value" %in% colnames(df)) {
-    g <- ggplot(df, aes(x = Year, y = value, color = !!sym(color.column)))
+    g <- g + geom_ribbon(aes(ymin = lower, ymax = upper),
+                         linetype = 2, alpha = 0, show.legend = FALSE)
+  } else if ("mean_lower" %in% colnames(df)) {
+    g <- g + geom_ribbon(aes(ymin = mean_lower, ymax = mean_upper),
+                         linetype = 2, alpha = 0, show.legend = FALSE)
   }
 
   # Add line and other elements
   g <- g +
     geom_line(linewidth = 1.5) +
     xlab("Year") +
-    scale_colour_manual(values = group.colors) +
     ylim(0, NA)
 
-  if(remove_legend){
+  if (!is.null(group.colors)) {
+    g <- g + scale_colour_manual(values = group.colors)
+  }
+
+  if (remove_legend) {
     g <- g + theme(legend.title = element_blank(), legend.position = "none")
   } else {
     g <- g + theme(legend.position = "bottom")
   }
-  if(remove_y_titel){
-    g <- g +
-      theme(axis.title.y = element_blank())
+
+  if (remove_y_titel) {
+    g <- g + theme(axis.title.y = element_blank())
   }
 
-  if(!is.na(title)){
-    g <- g +
-      theme(title = title)
+  if (!is.na(title)) {
+    g <- g + ggtitle(title)
   }
 
   return(g)
 }
+
 
 
 #' Create Combined Plot
