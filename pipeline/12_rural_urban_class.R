@@ -1,6 +1,6 @@
 # Load required packages and install if missing
 packages <- c("dplyr", "magrittr", "data.table", "testthat",  "tictoc", "readxl")
-
+library(stringr)
 for (p in packages) {
   suppressMessages(library(p, character.only = TRUE, warn.conflicts = FALSE, quietly = TRUE))
 }

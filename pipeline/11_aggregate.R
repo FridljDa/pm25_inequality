@@ -87,10 +87,7 @@ for (i in seq_len(nrow(states))) {
   # read demographic census data by tract
   trac_censData <- file.path(censDir, year, paste0("census_", toString(year), "_", STUSPS, ".csv")) %>%
     fread() %>%
-    mutate(GEO_ID = as.character(GEO_ID)) %>%
-    mutate(pm = round(pm, digits = 2),
-           pm_lower = round(pm_lower, digits = 2),
-           pm_upper = round(pm_upper, digits = 2))
+    mutate(GEO_ID = as.character(GEO_ID))
 
   # read pm exposure data by tract
   exp_tracDataDir <- file.path(exp_tracDir, year, paste0("exp_trac_", toString(year), "_", STUSPS, ".csv"))
@@ -99,6 +96,11 @@ for (i in seq_len(nrow(states))) {
   }
 
   exp_tracData <- fread(exp_tracDataDir) %>% mutate(GEO_ID = as.character(GEO_ID))
+
+  exp_tracDataDir <- exp_tracDataDir %>%
+    mutate(pm = round(pm, digits = 2),
+           pm_lower = round(pm_lower, digits = 2),
+           pm_upper = round(pm_upper, digits = 2))
 
   # Check if 'pm_lower' column exists
   if (!"pm_lower" %in% names(exp_tracData)) {
