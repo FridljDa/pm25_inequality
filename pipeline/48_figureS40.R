@@ -139,25 +139,20 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
     filter(!grepl("Small-medium|Large", split.column.x)) %>%
     filter(!grepl("Small-medium|Non", split.column.y))
 
-  pairwise_diff <- pairwise_diff %>%
-    rowwise() %>%
-    mutate(
-      diff = mean.x - mean.y,
-      rel_diff = (mean.x - mean.y) / mean.x#,
-      #delta_method_result = list(delta_method_rel_diff(mean_x = mean.x, lb_x = lower.x, ub_x = upper.x,
-      #                                                 mean_y = mean.y, lb_y = lower.y, ub_y = upper.y))
-      )
+    pairwise_diff <- pairwise_diff %>%
+      rowwise() %>%
+      mutate(
+        diff = mean.x - mean.y,
+        rel_diff = (mean.x - mean.y) / mean.x,
+        bootstrap_results = list(parametric_bootstrap_rel_diff(cur_data()))
+      ) %>%
+      unnest_wider(bootstrap_results)
 
-  #browser()
-  pairwise_diff <- pairwise_diff %>%
-    #mutate(
-    #  rel_diff_lower = map_dbl(delta_method_result, ~ .[["lb"]]),
-    #  rel_diff_upper = map_dbl(delta_method_result, ~ .[["ub"]])
-    #) %>%
-    ungroup()
 
   pairwise_diff <- pairwise_diff %>%
-    select(Year, !!sym(color.column), diff, rel_diff, split.column.x, split.column.y, mean.x, mean.y) %>%
+    select(Year, !!sym(color.column), diff,
+           rel_diff, rel_diff_mean, rel_diff_lower, rel_diff_upper,
+           split.column.x, split.column.y, mean.x, mean.y) %>%
     tidyr::unite("difference_col", split.column.x:split.column.y, sep = "-", remove = FALSE) %>%
     mutate(rel_label = paste0("(", split.column.x, "-", split.column.y, ")/", split.column.x))
   return(pairwise_diff)
@@ -170,7 +165,7 @@ pairwise_differences_ethn <- pairwise_differences %>%
   filter(!grepl("MS", difference_col))
 
 g_rel_ethn <- pairwise_differences_ethn %>%
-  rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
+  rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff_mean) %>%
   ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = Ethnicity)) +
   geom_line(linewidth = 1.5) +
   geom_ribbon(aes(ymin = rel_diff_lower, ymax = rel_diff_upper),
@@ -196,7 +191,7 @@ pairwise_differences_educ <- pairwise_differences %>%
   filter(is.na(Ethnicity))
 
 g_rel_educ <- pairwise_differences_educ %>%
-  rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
+  rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff_mean) %>%
   ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = Education)) +
   geom_line(linewidth = 1.5) +
   facet_wrap(vars(difference_col)) + # rel_label

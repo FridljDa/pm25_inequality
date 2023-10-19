@@ -352,3 +352,44 @@ parametric_bootstrap_stat <- function(data, stat_function, n_boot = 1000) {
 
   return(list(mean = mean(boot_stat), lower = ci_lower, upper = ci_upper))
 }
+
+#' Parametric Bootstrap for Relative Difference
+#'
+#' This function performs parametric bootstrapping to estimate the relative difference
+#' defined as (mean.x - mean.y) / mean.x, and its 95% confidence intervals.
+#'
+#' @param data A data frame containing columns 'mean.x', 'lower.x', 'upper.x', 'mean.y', 'lower.y', 'upper.y'.
+#' @param n_boot Number of bootstrap samples (default is 1000).
+#'
+#' @return A list containing the mean and 95% confidence intervals (lower and upper) for the relative difference.
+#' @export
+#' @examples
+#' # Replace with your actual data
+#' data <- data.frame(mean.x = c(1, 2), lower.x = c(0.5, 1.5), upper.x = c(1.5, 2.5),
+#'                    mean.y = c(1, 1), lower.y = c(0.5, 0.5), upper.y = c(1.5, 1.5))
+#' parametric_bootstrap_rel_diff(data)
+parametric_bootstrap_rel_diff <- function(data, n_boot = 1000) {
+  # Initialize a vector to store the bootstrap estimates of the relative difference
+  boot_rel_diff <- numeric(n_boot)
+
+  # Calculate the standard deviation based on the confidence intervals
+  z_alpha <- qnorm(1 - 0.05 / 2)
+  sd_x <- (data$upper.x - data$lower.x) / (2 * z_alpha)
+  sd_y <- (data$upper.y - data$lower.y) / (2 * z_alpha)
+
+  # Perform parametric bootstrap resampling
+  for (i in 1:n_boot) {
+    # Sample from the normal distribution using the point estimates and calculated SDs
+    boot_sample_x <- rnorm(length(data$mean.x), mean = data$mean.x, sd = sd_x)
+    boot_sample_y <- rnorm(length(data$mean.y), mean = data$mean.y, sd = sd_y)
+
+    # Calculate the bootstrap estimate of the relative difference
+    boot_rel_diff[i] <- (mean(boot_sample_x) - mean(boot_sample_y)) / mean(boot_sample_x)
+  }
+
+  # Calculate the 95% confidence interval for the relative difference
+  ci_lower <- quantile(boot_rel_diff, 0.025)
+  ci_upper <- quantile(boot_rel_diff, 0.975)
+
+  return(list(rel_diff_mean = mean(boot_rel_diff), rel_diff_lower = ci_lower, rel_diff_upper = ci_upper))
+}

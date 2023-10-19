@@ -234,7 +234,6 @@ ggsave(
 
 ## 2
 
-
 ```{r}
 attr_burd_filtered_df_year <- lapply(attr_burd_filtered_dfs, function(attr_burd_filtered_dfs_i) {
   attr_burd_filtered_dfs_i <- attr_burd_filtered_dfs_i %>%
