@@ -110,7 +110,9 @@ no_figure_scripts_list_full <- script_vector[!grepl("figure", script_vector)]
 #[25] "pipeline/24_proportions_attr_burd.R"
 #[26] "pipeline/24_sum_higher_geog_level_age_adjust_total_burden.R"
 #[27] "pipeline/25_summary_attr_total_burd.R"
-no_figure_scripts_list <- no_figure_scripts_list_full[c(8, 9)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+
+no_figure_scripts_list <- no_figure_scripts_list_full[c(11, 22, 24, 25, 26)] #3,14,#c(15, 20, 22, 24, 25, 26, 27)
+
 #no_figure_scripts_list <- no_figure_scripts_list_full[c(26)]#no_figure_scripts_list <- no_figure_scripts_list_full
 #24, 25, 27
 #
@@ -153,9 +155,9 @@ for (agr_by in agr_bys) {
       propOfAttrBurdDir = "data/16_prop_of_attr_burd" #20
     )
     for(no_figure_script in no_figure_scripts_list){
-      run_script(script = no_figure_script, args = args)
+     # run_script(script = no_figure_script, args = args)
     }
-    cat("Year: ", year, "agr_by: ", agr_by)
+    #cat("Year: ", year, "agr_by: ", agr_by)
   }
 }
 
@@ -179,9 +181,8 @@ args <- paste(
   min_age = 25 #13
 )
 
-#run_script(script = "pipeline/24_summary_attr_total_burd.R", args = args)
-#run_script(script = summary.script, args = args)
-#run_script(script = "pipeline/25_summary_other.R", args = args)
+#run_script(script = "pipeline/25_summary_attr_total_burd.R", args = args)
+run_script(script = "pipeline/27_summary_other_pm.R", args = args)
 
 args <- paste(
   tmp.dir, # 1
@@ -198,4 +199,4 @@ args <- paste(
   propOfAttrBurdDir = "data/16_prop_of_attr_burd", # 12
   min_age = 25 #13
 )
-#for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
+for(figure_script in figure_scripts_list) run_script(script = figure_script, args = args)
