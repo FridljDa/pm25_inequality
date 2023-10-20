@@ -69,7 +69,19 @@ if("Deaths" %in% colnames(total_burden)) total_burden <- total_burden %>% rename
 
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
 files <- list.files(file.path(dem_agrDir, agr_by, year))
-pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+pm_summ <- lapply(files, function(file){
+  file_i <- fread(file.path(dem_agrDir, agr_by, year, file))
+
+  if (!"pm_lower" %in% names(file_i)) {
+    file_i <- file_i %>%
+      mutate(pm_lower = pm)
+  }
+
+  if (!"pm_upper" %in% names(file_i)) {
+    file_i <- file_i %>%
+      mutate(pm_upper = pm)
+  }
+} ) %>% rbindlist()
 #browser()
 
 pm_summ <- pm_summ %>% left_join(meta, by = "variable")
