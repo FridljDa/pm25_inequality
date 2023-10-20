@@ -49,6 +49,7 @@ attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
+devtools::load_all()
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
