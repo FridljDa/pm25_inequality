@@ -97,11 +97,6 @@ for (i in seq_len(nrow(states))) {
 
   exp_tracData <- fread(exp_tracDataDir) %>% mutate(GEO_ID = as.character(GEO_ID))
 
-  exp_tracDataDir <- exp_tracDataDir %>%
-    mutate(pm = round(pm, digits = 2),
-           pm_lower = round(pm_lower, digits = 2),
-           pm_upper = round(pm_upper, digits = 2))
-
   # Check if 'pm_lower' column exists
   if (!"pm_lower" %in% names(exp_tracData)) {
     exp_tracData <- exp_tracData %>%
@@ -113,6 +108,14 @@ for (i in seq_len(nrow(states))) {
     exp_tracData <- exp_tracData %>%
       mutate(pm_upper = pm)
   }
+
+  exp_tracData <- exp_tracData %>%
+    mutate(pm = as.numeric(pm),
+           pm_lower = as.numeric(pm_lower),
+           pm_upper = as.numeric(pm_upper)) %>%
+    mutate(pm = round(pm, digits = 2),
+           pm_lower = round(pm_lower, digits = 2),
+           pm_upper = round(pm_upper, digits = 2))
 
   # stylized scenarios
   exp_tracData <- exp_tracData %>% mutate(scenario = "real")
