@@ -25,7 +25,7 @@ args <- commandArgs(trailingOnly = T)
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  year <- 2016
+  year <- 2015
   agr_by <- "county"
   source <- "nvss"
 
@@ -81,7 +81,8 @@ pm_summ <- lapply(files, function(file){
     file_i <- file_i %>%
       mutate(pm_upper = pm)
   }
-} ) %>% rbindlist()
+  return(file_i)
+} ) %>% rbindlist(use.names=TRUE)
 #browser()
 
 pm_summ <- pm_summ %>% left_join(meta, by = "variable")
