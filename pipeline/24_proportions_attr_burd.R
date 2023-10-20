@@ -144,7 +144,9 @@ if(nrow(attr_total_burden_prop_of_difference) == 0){
     rowwise() %>%
     mutate(delta_result = list(delta_method_sum(mean, lower, upper, - mean_black, - lower_black, - upper_black))) %>%
     select(-mean, -lower, -upper,-mean_black, -lower_black, -upper_black) %>%
-    unnest_wider(delta_result) %>%
+    unnest_wider(delta_result)
+
+  attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     rename(lower = lb, upper = ub) %>%
     mutate(
       lower = lower/(overall_total_burden-overall_total_burden_black),
