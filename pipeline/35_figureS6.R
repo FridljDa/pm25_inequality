@@ -36,7 +36,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 65
+  min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -69,8 +69,63 @@ attr_burden_proportion_to_black <- attr_burd %>%
   mutate(proportion_to_black = 1-mean/mean[Ethnicity == "Black American"]) %>%
   filter(Ethnicity != "Black American")
 
-g <- ggplot(attr_burden_proportion_to_black, aes(x = Year, y = proportion_to_black, color = Ethnicity)) +
+# Define the delta_method_product function here (as provided earlier)
+
+# Your attr_burd data frame (replace this with your actual data)
+# attr_burd <- ...
+
+# Calculate the ratio and its confidence intervals
+# Define the delta_method_product function here (as provided earlier)
+
+# Your attr_burd data frame (replace this with your actual data)
+# attr_burd <- ...
+
+# Calculate the ratio and its confidence intervals
+attr_burd_ratio_to_black <- attr_burd %>%
+  group_by(Year) %>%
+  mutate(
+    mean_black = mean[Ethnicity == "Black American"],
+    lb_black = lower[Ethnicity == "Black American"],
+    ub_black = upper[Ethnicity == "Black American"]
+  )
+
+attr_burd_ratio_to_black <- attr_burd_ratio_to_black %>%
+  rowwise() %>%
+  mutate(
+    delta_method_result = list(delta_method_product(
+      mean_x = mean, lb_x = lower, ub_x = upper,
+      mean_y = 1 / mean_black, lb_y = 1 / ub_black, ub_y = 1 / lb_black,
+      alpha = 0.05
+    ))
+  )
+
+attr_burd_ratio_to_black <- attr_burd_ratio_to_black %>%
+  unnest_wider(delta_method_result, names_repair = "unique") %>%
+  ungroup()
+
+attr_burd_ratio_to_black <- attr_burd_ratio_to_black %>%
+  rename(ratio_mean = mean...28,
+         ratio_lower = lb,
+         ratio_upper = ub)
+
+attr_burd_ratio_to_black <- attr_burd_ratio_to_black%>%
+  mutate(
+    proportion_to_black = 1 - ratio_mean,
+    lb_proportion_to_black = 1 - ratio_lower,
+    ub_proportion_to_black = 1 - ratio_upper
+  )
+
+attr_burd_ratio_to_black <- attr_burd_ratio_to_black %>%
+  filter(Ethnicity != "Black American")
+
+# This will add columns 'proportion_to_black', 'lb_proportion_to_black', and 'ub_proportion_to_black' to attr_burd_ratio_to_black
+
+#1- ....
+
+g <- ggplot(attr_burd_ratio_to_black, aes(x = Year, y = proportion_to_black, color = Ethnicity)) +
   geom_line()+
+  geom_ribbon(aes(ymin = lb_proportion_to_black, ymax = ub_proportion_to_black),
+              linetype = 2, alpha = 0, show.legend = FALSE) +
   ylab("relative difference to Black American")+
   scale_y_continuous(labels = scales::percent)
 

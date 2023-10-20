@@ -14,7 +14,7 @@ library(dplyr)
 library(magrittr)
 library(data.table)
 library(ggplot2)
-
+library(foreach)
 
 options(bitmapType ="cairo")
 theme_set(theme_classic(base_family = "Helvetica"))
