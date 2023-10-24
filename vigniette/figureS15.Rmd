@@ -25,7 +25,8 @@ file_list <- file.path("../data/17_summary", file_list[grepl("attr_bur", file_li
 # file_list <- list.files("data/17_summary")
 # file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
 attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
-attr_burd <- attr_burd %>% filter(min_age == 25)
+min_ageI <- 65
+attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 ```
 
@@ -40,19 +41,92 @@ attr_burd <- attr_burd %>%
     method %in% c("di_gee", "di_gee_white")  &
       measure3 == "prop. of overall burden" ) 
 
+attr_burd <- attr_burd %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" &
+           svi_bin3 == "All" & svi_bin4 == "All")
 ```
 
 ```{r}
+attr_burd %>%
+  select(Year, method, Ethnicity, mean, lower, upper) %>%
+  head()
+```
+```{r}
+devtools::load_all()
+library(dplyr)
+library(purrr)  # for map_dbl
+
+# Assuming delta_method_sum is already defined
+
 attr_burd_contrast <- attr_burd %>%
   group_by(Year, method) %>%
-  mutate(difference = mean[Ethnicity == "Black American"] - mean,
-         ratio = mean[Ethnicity == "Black American"]/ mean) %>%
-  ungroup()
+  mutate(
+    black_mean = mean[Ethnicity == "Black American"],
+    black_lower = lower[Ethnicity == "Black American"],
+    black_upper = upper[Ethnicity == "Black American"]
+  ) %>%
+  rowwise() %>%
+  mutate(
+    difference_result = list(delta_method_sum(black_mean, black_lower, black_upper, -mean, -lower, -upper)),
+    ratio_result = list(delta_method_quotient(black_mean, black_lower, black_upper, mean, lower, upper))
+  ) %>%
+  ungroup() %>%
+  mutate(
+    difference_mean = map_dbl(difference_result, ~ .[["mean"]]),
+    difference_lower = map_dbl(difference_result, ~ .[["lb"]]),
+    difference_upper = map_dbl(difference_result, ~ .[["ub"]]),
+    ratio_mean = map_dbl(ratio_result, ~ .[["mean"]]),
+    ratio_lower = map_dbl(ratio_result, ~ .[["lb"]]),
+    ratio_upper = map_dbl(ratio_result, ~ .[["ub"]])
+  ) %>%
+  select(-difference_result, -ratio_result)  # Remove the list columns if not needed
 
-attr_burd_contrast <- pivot_longer(attr_burd_contrast,
-                                   cols= c("difference", "ratio"),
-                                   names_to = "contrast_measure",
-                                   values_to = "contrast_value") 
+```
+
+```{r}
+attr_burd_contrast <- attr_burd_contrast %>%
+  select(Year, Ethnicity, method,
+         difference_mean, difference_lower, difference_upper,
+         ratio_mean, ratio_lower, ratio_upper)
+
+head(attr_burd_contrast)
+```
+```{r}
+# Create a dataset for 'difference'
+difference_data <- attr_burd_contrast %>%
+  select(Year, method, Ethnicity, difference_mean, difference_lower, difference_upper) %>%
+  rename(mean = difference_mean, lower = difference_lower, upper = difference_upper) %>%
+  mutate(contrast_measure = "difference")
+
+# Create a dataset for 'ratio'
+ratio_data <- attr_burd_contrast %>%
+  select(Year, method, Ethnicity, ratio_mean, ratio_lower, ratio_upper) %>%
+  rename(mean = ratio_mean, lower = ratio_lower, upper = ratio_upper) %>%
+  mutate(contrast_measure = "ratio")
+
+# Combine the two datasets
+attr_burd_contrast <- bind_rows(difference_data, ratio_data)
+
+# View the reshaped data
+attr_burd_contrast
+```
+
+```{r}
+#attr_burd_contrast <- attr_burd %>%
+#  group_by(Year, method) %>%
+  #mutate(
+  #  black_mean = mean[Ethnicity == "Black American"],
+  #  black_lower = lower[Ethnicity == "Black American"],
+  #  black_upper = upper[Ethnicity == "Black American"]
+  #) %>%
+#  mutate(difference = mean[Ethnicity == "Black American"] - mean,
+#         ratio = mean[Ethnicity == "Black American"]/ mean) %>%
+#  ungroup()
+
+#attr_burd_contrast <- pivot_longer(attr_burd_contrast,
+#                                   cols= c("difference", "ratio"),
+#                                   names_to = "contrast_measure",
+#                                   values_to = "contrast_value") 
 
 attr_burd_contrast <- attr_burd_contrast %>% filter(Ethnicity != "Black American") 
 
@@ -69,22 +143,24 @@ attr_burd_contrast <- attr_burd_contrast %>%
 ```
 
 ```{r}
-group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
-                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
-group.colors[c(12,2)] <- group.colors[c(2,12)] 
+group.colors <- get_group_colors(attr_burd_contrast)
+#group.colors <- c(RColorBrewer::brewer.pal(n = 12, name = "Paired")[c(1:6,8:10, 12)], 
+#                  RColorBrewer::brewer.pal(n = 6, name = "Spectral")[1:2])
+#group.colors[c(12,2)] <- group.colors[c(2,12)] 
 
-names(group.colors) <- c("NH White",
-                         "Hispanic or Latino White",
-                         "Black American",
-                         "White",
-                         "Asian or Pacific Islander",
-                         "American Indian or Alaska Native"
-)
-group.colors <- group.colors[c(1,2,4,5,6)]
+#names(group.colors) <- c("NH White",
+#                         "Hispanic or Latino White",
+#                         "Black American",
+#                         "White",
+#                         "Asian or Pacific Islander",
+#                         "American Indian or Alaska Native"
+#)
+#group.colors <- group.colors[c(1,2,4,5,6)]
 ```
 
 ```{r}
- g <- ggplot(attr_burd_contrast, aes(x = Year, y = contrast_value, color = Ethnicity))+
+ g <- ggplot(attr_burd_contrast, aes(x = Year, y = mean, color = Ethnicity))+
+  geom_ribbon(aes(ymin = lower, ymax = upper), linetype = 2, alpha = 0, show.legend = FALSE) +
     geom_line(linewidth = 1.5) +
     xlab("Year") +
     scale_colour_manual(values=group.colors) +
@@ -101,6 +177,6 @@ scenarioI <- "real"
 methodI <- "di_gee"
 figuresDir <- here::here("data/18_figures") 
 
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS15.png"), dpi = 300, g, height = 6, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS15.png"), dpi = 300, g, height = 6, width = 8)
 ```
 

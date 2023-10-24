@@ -136,8 +136,8 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
     filter(!grepl("Moderate|Resilient", split.column.y)) %>%
     filter(!grepl("Middle|High", split.column.y)) %>%
     filter(!grepl("Middle|Low", split.column.x)) %>%
-    filter(!grepl("Small-medium|Large", split.column.x)) %>%
-    filter(!grepl("Small-medium|Non", split.column.y))
+    filter(!grepl("Small-medium|Large", split.column.y)) %>%
+    filter(!grepl("Small-medium|Non", split.column.x))
 
     pairwise_diff <- pairwise_diff %>%
       rowwise() %>%
@@ -194,6 +194,9 @@ g_rel_educ <- pairwise_differences_educ %>%
   rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff_mean) %>%
   ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = Education)) +
   geom_line(linewidth = 1.5) +
+  geom_ribbon(aes(ymin = rel_diff_lower, ymax = rel_diff_upper),
+              linetype = 2, alpha = 0, show.legend = FALSE
+  ) +
   facet_wrap(vars(difference_col)) + # rel_label
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = label_percent()) +
@@ -209,41 +212,3 @@ ggsave(
   plot = g_rel_educ,
   dpi = 300, height = 6, width = 8
 )
-
-if (FALSE) {
-  for (pairwise_diff in pairwise_differences) {
-    g_abs <- pairwise_diff %>%
-      rename(`absolute difference in PM2.5-attributable mortality rate` = diff) %>%
-      ggplot(aes(x = Year, y = `absolute difference in PM2.5-attributable mortality rate`, color = !!sym(color.column))) +
-      geom_line(linewidth = 1.5) +
-      facet_wrap(vars(difference_col)) +
-      theme(legend.position = "bottom")
-
-    ggsave(
-      filename = file.path(
-        figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-        "attr_abs_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")
-      ),
-      plot = g_abs,
-      dpi = 300, height = 8, width = 7
-    )
-
-    g_rel <- pairwise_diff %>%
-      rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff) %>%
-      ggplot(aes(x = Year, y = `relative difference in PM2.5-attributable mortality rate`, color = !!sym(color.column))) +
-      geom_line(linewidth = 1.5) +
-      facet_wrap(vars(difference_col)) + # rel_label
-      theme(legend.position = "bottom") +
-      scale_y_continuous(labels = label_percent()) +
-      geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", size = 0.5) # Add dashed line at y = 0
-
-    ggsave(
-      filename = file.path(
-        figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),
-        "attr_rel_differences", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")
-      ),
-      plot = g_rel,
-      dpi = 300, height = 8, width = 7
-    )
-  }
-}
