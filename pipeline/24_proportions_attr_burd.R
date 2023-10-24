@@ -138,7 +138,7 @@ if (nrow(attr_total_burden_prop_of_difference) == 0) {
 # delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
 
-if(FALSE){
+if (TRUE) {
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     group_by(across(all_of(group_variables))) %>%
     mutate(
@@ -160,7 +160,7 @@ if(FALSE){
       overall_total_burden_black = NULL,
       measure3 = "proportion of disparity to Black or African American attributable"
     )
-}else{
+} else {
   test <- attr_total_burden %>%
     group_by(across(all_of(group_variables))) %>%
     filter("Black or African American" %in% c(Race)) %>%
@@ -172,12 +172,12 @@ if(FALSE){
     ) %>%
     ungroup() %>%
     mutate(
-      test = (mean - mean_black) / (overall_total_burden - overall_total_burden_black) *100
+      test = (mean - mean_black) / (overall_total_burden - overall_total_burden_black) * 100
     ) %>%
     filter(Race %in% c("White", "Black or African American") & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666 &
-             svi_bin3 == 666 & svi_bin4 == 666 & rural_urban_class == 666  & method == "di_gee" &
-             measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25)
-  #&Hispanic.Origin == "Not Hispanic or Latino"
+      svi_bin3 == 666 & svi_bin4 == 666 & rural_urban_class == 666 & method == "di_gee" &
+      measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25)
+  # &Hispanic.Origin == "Not Hispanic or Latino"
 
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     mutate(
@@ -186,22 +186,24 @@ if(FALSE){
       upper_black = upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
       overall_total_burden_black = overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
     ) %>%
-    #rowwise() %>%
-    #mutate(delta_result = list(delta_method_sum(mean, lower, upper, -mean_black, -lower_black, -upper_black))) %>%
-    #select(-mean, -lower, -upper, -mean_black, -lower_black, -upper_black) %>%
-    #unnest_wider(delta_result) %>%
-    #rename(lower = lb, upper = ub) %>%
+    # rowwise() %>%
+    # mutate(delta_result = list(delta_method_sum(mean, lower, upper, -mean_black, -lower_black, -upper_black))) %>%
+    # select(-mean, -lower, -upper, -mean_black, -lower_black, -upper_black) %>%
+    # unnest_wider(delta_result) %>%
+    # rename(lower = lb, upper = ub) %>%
     mutate(
-    #  lower = lower / (overall_total_burden - overall_total_burden_black),
-    #  mean = mean / (overall_total_burden - overall_total_burden_black),
-    #  upper = upper / (overall_total_burden - overall_total_burden_black),
+      #  lower = lower / (overall_total_burden - overall_total_burden_black),
+      #  mean = mean / (overall_total_burden - overall_total_burden_black),
+      #  upper = upper / (overall_total_burden - overall_total_burden_black),
       lower = (lower - lower_black) / (overall_total_burden - overall_total_burden_black),
       mean = (mean - mean_black) / (overall_total_burden - overall_total_burden_black),
       mean = (upper - upper_black) / (overall_total_burden - overall_total_burden_black),
-
       overall_total_burden = NULL,
       overall_total_burden_black = NULL,
-      measure3 = "proportion of disparity to Black or African American attributable"
+      mean_black = NULL,
+      lower_black = NULL,
+      upper_black = NULL,
+      measure3 = "proportion of disparity to Black or African American attributable",
     )
 }
 
@@ -217,7 +219,11 @@ if (nrow(attr_total_burden_prop_of_difference) == 0) {
   warning(paste("3: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }
 
-attr_total_burden_combined <- rbind(attr_total_burden_value, attr_total_burden_prop_overall_burden, attr_total_burden_prop_of_difference)
+attr_total_burden_combined <- rbind(
+  attr_total_burden_value,
+  attr_total_burden_prop_overall_burden,
+  attr_total_burden_prop_of_difference
+)
 
 fwrite(attr_total_burden_combined, propDir)
 
