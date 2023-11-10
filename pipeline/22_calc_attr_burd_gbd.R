@@ -14,6 +14,7 @@ suppressMessages(library("data.table", character.only = T, warn.conflicts = FALS
 suppressMessages(library("testthat", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("tictoc", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("MALDIquant", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
+library(tidyr)
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -74,6 +75,9 @@ total_burden <- total_burden %>%
   filter(county != "Unknown") %>%
   mutate(county = as.integer(county))
 
+#total_burden <- total_burden %>%
+#  filter(svi_bin == "666" & svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666")
+
 #to save time, delete if necessary
 total_burden <- total_burden %>% filter(Education == "666")
 ## ----determine join variables
@@ -115,7 +119,8 @@ pm_summ <- pm_summ %>%
 attr_burden_gbd <- inner_join(
   total_burden,
   pm_summ,
-  by = c("Year", "Gender.Code", "Race", "Hispanic.Origin", "county", "Education")
+  by = c("Year", "Gender.Code", "Race", "Hispanic.Origin", "county", "Education"),
+  relationship = "many-to-many"
 )
 ## ---- add age group to toal burden ----
 causes_ages <- file.path(tmpDir, "causes_ages.csv") %>% read.csv()
