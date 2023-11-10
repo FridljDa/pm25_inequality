@@ -393,3 +393,69 @@ parametric_bootstrap_rel_diff <- function(data, n_boot = 1000) {
 
   return(list(rel_diff_mean = mean(boot_rel_diff), rel_diff_lower = ci_lower, rel_diff_upper = ci_upper))
 }
+
+#' Parametric Bootstrap for Sum of Means with 95% CI
+#'
+#' This function performs parametric bootstrapping to estimate the 95% confidence
+#' interval for the sum of means based on a data frame containing mean, lower,
+#' and upper 95% confidence intervals.
+#'
+#' @param df A data frame with columns: mean, lower, upper
+#' @param n_bootstrap Number of bootstrap samples to generate
+#'
+#' @return A data frame with columns: mean, lower, upper representing the 95% CI for the sum
+#' @examples
+#' df <- data.frame(mean = c(10, 20, 30), lower = c(9, 19, 29), upper = c(11, 21, 31))
+#' ci_df <- parametric_bootstrap_sum(df, 1000)
+parametric_bootstrap_sum <- function(df, n_bootstrap = 1000) {
+  # Initialize an empty vector to store bootstrap sums
+  bootstrap_sums <- numeric(n_bootstrap)
+
+  # Loop through each bootstrap iteration
+  for (i in 1:n_bootstrap) {
+    # Generate bootstrap samples for each mean using normal distribution
+    bootstrap_samples <- rnorm(n = nrow(df), mean = df$mean, sd = abs(df$upper - df$lower) / 3.92)
+
+    # Calculate the sum of the bootstrap samples
+    bootstrap_sums[i] <- sum(bootstrap_samples)
+  }
+
+  # Calculate the mean, lower, and upper 95% CI for the sum
+  mean_sum <- mean(bootstrap_sums)
+  lower_sum <- quantile(bootstrap_sums, 0.025, na.rm = TRUE)
+  upper_sum <- quantile(bootstrap_sums, 0.975, na.rm = TRUE)
+
+  # Create a data frame to store the results
+  result_df <- data.frame(mean = mean_sum, lower = lower_sum, upper = upper_sum)
+
+  return(result_df)
+}
+
+#' Parametric Bootstrap for Mean of Means with 95% CI
+#'
+#' This function performs parametric bootstrapping to estimate the 95% confidence
+#' interval for the mean of means based on a data frame containing mean, lower,
+#' and upper 95% confidence intervals.
+#'
+#' @param df A data frame with columns: mean, lower, upper
+#' @param n_bootstrap Number of bootstrap samples to generate
+#'
+#' @return A data frame with columns: mean, lower, upper representing the 95% CI for the mean
+#' @examples
+#' df <- data.frame(mean = c(10, 20, 30), lower = c(9, 19, 29), upper = c(11, 21, 31))
+#' ci_df <- parametric_bootstrap_mean(df, 1000)
+parametric_bootstrap_mean <- function(df, n_bootstrap = 1000) {
+  # Call the parametric_bootstrap_sum function to get the bootstrap sums
+  bootstrap_sums <- parametric_bootstrap_sum(df, n_bootstrap)
+
+  # Calculate the mean, lower, and upper 95% CI for the mean
+  mean_mean <- bootstrap_sums$mean / nrow(df)
+  lower_mean <- bootstrap_sums$lower / nrow(df)
+  upper_mean <- bootstrap_sums$upper / nrow(df)
+
+  # Create a data frame to store the results
+  result_df <- data.frame(mean = mean_mean, lower = lower_mean, upper = upper_mean)
+
+  return(result_df)
+}
+

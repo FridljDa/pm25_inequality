@@ -16,16 +16,23 @@ library(magrittr)
 library(ggplot2)
 library(ggpubr)
 library(tidyr)
+library(magrittr)
 theme_set(theme_classic(base_family = "Helvetica"))
+
+devtools::load_all()
+
+library(purrr)  # for map_dbl
 ```
 
 ```{r}
 file_list <- list.files("../data/17_summary")
-file_list <- file.path("../data/17_summary", file_list[grepl("attr_bur", file_list)])
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+file_list <- file.path("../data/17_summary", file_list)
 # file_list <- list.files("data/17_summary")
 # file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
-min_ageI <- 65
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill=TRUE)
+min_ageI <- 25
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 ```
@@ -52,19 +59,17 @@ attr_burd %>%
   head()
 ```
 ```{r}
-devtools::load_all()
-library(dplyr)
-library(purrr)  # for map_dbl
 
 # Assuming delta_method_sum is already defined
-
 attr_burd_contrast <- attr_burd %>%
   group_by(Year, method) %>%
   mutate(
     black_mean = mean[Ethnicity == "Black American"],
     black_lower = lower[Ethnicity == "Black American"],
     black_upper = upper[Ethnicity == "Black American"]
-  ) %>%
+  ) 
+
+attr_burd_contrast <- attr_burd_contrast %>%
   rowwise() %>%
   mutate(
     difference_result = list(delta_method_sum(black_mean, black_lower, black_upper, -mean, -lower, -upper)),
@@ -178,5 +183,9 @@ methodI <- "di_gee"
 figuresDir <- here::here("data/18_figures") 
 
 ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS15.png"), dpi = 300, g, height = 6, width = 8)
+```
+
+```{r}
+
 ```
 

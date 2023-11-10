@@ -18,7 +18,7 @@ if (rlang::is_empty(args)) {
 
   agr_by <- "nation"
   source <- "nvss"
-  year <- 2015
+  year <- 2016
 } else {
   year <- args[1]
   source <- "nvss"
@@ -94,6 +94,9 @@ anti_join <- diagnose_join_issues(
     "source", "measure1", "measure2", agr_by, "min_age", "max_age", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
   )
 )
+browser()
+#attributable_burden_test <- attributable_burden %>% filter(Race == "White" & Education == "lower")
+
 if (nrow(anti_join) > 0) {
   warning("diagnose_join_issues() in 24_proportions_attr_burd.R: total_burden, attributable_burden")
 }
@@ -138,7 +141,7 @@ if (nrow(attr_total_burden_prop_of_difference) == 0) {
 # delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
 
-if (TRUE) {
+if (FALSE) {
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     group_by(across(all_of(group_variables))) %>%
     mutate(
@@ -153,32 +156,14 @@ if (TRUE) {
     unnest_wider(delta_result) %>%
     rename(lower = lb, upper = ub) %>%
     mutate(
-      lower = lower / (overall_total_burden - overall_total_burden_black),
+      lower = upper  / (overall_total_burden - overall_total_burden_black),
       mean = mean / (overall_total_burden - overall_total_burden_black),
-      upper = upper / (overall_total_burden - overall_total_burden_black),
+      upper = lower / (overall_total_burden - overall_total_burden_black),
       overall_total_burden = NULL,
       overall_total_burden_black = NULL,
       measure3 = "proportion of disparity to Black or African American attributable"
     )
 } else {
-  test <- attr_total_burden %>%
-    group_by(across(all_of(group_variables))) %>%
-    filter("Black or African American" %in% c(Race)) %>%
-    mutate(
-      mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-      lower_black = lower[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-      upper_black = upper[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
-      overall_total_burden_black = overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
-    ) %>%
-    ungroup() %>%
-    mutate(
-      test = (mean - mean_black) / (overall_total_burden - overall_total_burden_black) * 100
-    ) %>%
-    filter(Race %in% c("White", "Black or African American") & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666 &
-      svi_bin3 == 666 & svi_bin4 == 666 & rural_urban_class == 666 & method == "di_gee" &
-      measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25)
-  # &Hispanic.Origin == "Not Hispanic or Latino"
-
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     mutate(
       mean_black = mean[Race == "Black or African American" & Hispanic.Origin == "All Origins"],
@@ -197,7 +182,7 @@ if (TRUE) {
       #  upper = upper / (overall_total_burden - overall_total_burden_black),
       lower = (lower - lower_black) / (overall_total_burden - overall_total_burden_black),
       mean = (mean - mean_black) / (overall_total_burden - overall_total_burden_black),
-      mean = (upper - upper_black) / (overall_total_burden - overall_total_burden_black),
+      upper = (upper - upper_black) / (overall_total_burden - overall_total_burden_black),
       overall_total_burden = NULL,
       overall_total_burden_black = NULL,
       mean_black = NULL,
@@ -207,6 +192,13 @@ if (TRUE) {
     )
 }
 
+test <- attr_total_burden_prop_of_difference %>%
+  ungroup %>%
+  filter(Race %in% c("White") & Hispanic.Origin == "Not Hispanic or Latino" & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666 &
+           svi_bin3 == 666 & svi_bin4 == 666 & rural_urban_class == 666 & method == "di_gee" &
+           measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25) %>%
+  select(Year, Race, Hispanic.Origin, lower, mean, upper) %>%
+  mutate(lower = round(lower, 3))
 
 if (nrow(attr_total_burden_prop_of_difference) == 0) {
   warning(paste("2: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))

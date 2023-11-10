@@ -212,3 +212,10 @@ ggsave(
   plot = g_rel_educ,
   dpi = 300, height = 6, width = 8
 )
+
+#High school graduates or lower living in large metropolitan areas experienced
+pairwise_differences_educ %>%
+  filter(Education == "High school graduate or lower" &
+           rel_label == "(Large metro-Non metro)/Large metro" &
+           Year == 2016)
+

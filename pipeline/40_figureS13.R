@@ -39,7 +39,9 @@ if (rlang::is_empty(args)) {
 }
 
 file_list <- list.files("data/17_summary")
-file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+file_list <- file.path("data/17_summary", file_list)
 attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill=TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
@@ -63,7 +65,7 @@ attr_burd <- attr_burd %>%
 attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
                                      measure3 == "proportion of disparity to Black or African American attributable" &
                                      rural_urban_class == "All" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
-                                   & method %in% c("di_gee","di_gee_white")) #"di_gee","di_gee_white"
+                                    method %in% c("di_gee","di_gee_white")) #"di_gee","di_gee_white"
 range(attr_burd1$mean) %>% round(1)
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity, linetype = method))
 g1 + geom_line()
@@ -115,11 +117,11 @@ g1 <- g1 +
   scale_colour_manual(values=group.colors) +
   theme(legend.title = element_blank()) +
   guides(color=guide_legend(ncol=3,byrow=TRUE), linetype = "none")+
-  ylab("%") +
+  ylab("") +
+  scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   theme(legend.position = "bottom")+
   theme(text = element_text(size=15))
 
 g1
 
-
-ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI), "figureS13.png"),plot = g1, dpi = 300, height = 4, width = 8)
+ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI,"-","25"), "figureS13.png"),plot = g1, dpi = 300, height = 4, width = 8)

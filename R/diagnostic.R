@@ -39,7 +39,7 @@ is_maximal <- function(subset, all_subsets) {
 #' @return A data frame after performing the required joins
 #' @examples
 #' diagnose_join_issues(df1, df2, c("col1", "col2"))
-diagnose_join_issues <- function(df1, df2, join_cols) {
+diagnose_join_issues <- function(df1, df2, join_cols, power_set_limit = 5) {
   # Try to get the names of df1 and df2, fall back to default names if it fails
   df1_name <- tryCatch(deparse(substitute(df1)), error = function(e) "df1")
   df2_name <- tryCatch(deparse(substitute(df2)), error = function(e) "df2")
@@ -81,7 +81,7 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
 
   if (!problem_identified) {
     # Check if join_cols has too many elements for power set
-    if (length(join_cols) > 20) { # Adjust this limit as you see fit
+    if (length(join_cols) > power_set_limit) { # Adjust this limit as you see fit
       warning("Skipping power set calculation due to large number of join columns.")
     } else {
       # Take power set of join_cols
