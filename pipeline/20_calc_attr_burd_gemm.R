@@ -10,14 +10,17 @@
 #rm(list = ls(all = TRUE))
 
 # load packages, install if missing
-packages <- c(
-  "dplyr", "magrittr", "data.table", "testthat", "tictoc", "truncnorm",# "triangle",
-  "matrixStats"
-)
+
+library(dplyr)
 library(tidyr)
-for (p in packages) {
-  suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-}
+library(magrittr)
+library(data.table)
+library(testthat)
+library(tictoc)
+library(truncnorm)
+library(matrixStats)
+
+
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
@@ -34,15 +37,15 @@ totalBurdenParsed2Dir <- args[17]
 attr_burdenDir <- args[18]
 
 if (rlang::is_empty(args)) {
-  year <- 2001
-  agr_by <- "nation"
+  year <- 2015
+  agr_by <- "county"
   source <- "nvss"
 
   tmpDir <-  "data/tmp"
   censDir <- "data/05_demog"
   dem_agrDir <- "data/06_dem.agr"
   pafDir <- "data/07_gbd_paf"
-  totalBurdenParsed2Dir <-"data/13_total_burden_rate"
+  totalBurdenParsed2Dir <-"data/09_total_burden_parsed"
   attr_burdenDir <- "data/14_attr_burd"
 
 }
@@ -60,7 +63,7 @@ attr_burdenDir <- file.path(attr_burdenDir, paste0("attr_burd_gemm_", toString(y
 if (!file.exists(attr_burdenDir)) {
   tic(paste("calculated attributable burden with GEMM", year, agr_by, source))
   #----read some data-----
-  total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
+  total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_nvss_", year, ".csv")) %>%
     fread()
   total_burden <- total_burden %>% dplyr::filter(label_cause == "ncd_lri")
   total_burden <- total_burden %>%
@@ -76,7 +79,9 @@ if (!file.exists(attr_burdenDir)) {
 
   meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
   files <- list.files(file.path(dem_agrDir, agr_by, year))
-  pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+  pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file)))
+
+  pm_summ <- pm_summ %>% rbindlist(fill = TRUE)
   pm_summ <- pm_summ %>% left_join(meta, by = "variable")
   pm_summ <- pm_summ %>%
     filter(min_age >= 25) %>%
@@ -146,11 +151,11 @@ if (!file.exists(attr_burdenDir)) {
 
   attr_burden <- attr_burden %>%
     mutate(
-      mean = value * mean,
-      lower = value * lower,
-      upper = value * upper,
+      mean = Deaths * mean,
+      lower = Deaths * lower,
+      upper = Deaths * upper,
       attr = "attributable",
-      value = NULL, label_cause = NULL
+      Deaths = NULL, label_cause = NULL
     )
   fwrite(attr_burden, attr_burdenDir)
   toc()
