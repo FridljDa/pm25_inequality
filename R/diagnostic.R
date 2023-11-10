@@ -81,7 +81,7 @@ diagnose_join_issues <- function(df1, df2, join_cols) {
 
   if (!problem_identified) {
     # Check if join_cols has too many elements for power set
-    if (length(join_cols) > 10) { # Adjust this limit as you see fit
+    if (length(join_cols) > 5) { # Adjust this limit as you see fit
       warning("Skipping power set calculation due to large number of join columns.")
     } else {
       # Take power set of join_cols
