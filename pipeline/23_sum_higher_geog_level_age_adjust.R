@@ -14,8 +14,8 @@ suppressMessages({pkgload::load_all()})
 args <- commandArgs(trailingOnly = T)
 
 if (rlang::is_empty(args)) {
-  agr_by <- "county"
-  year <- 2011
+  agr_by <- "nation"
+  year <- 2016
 } else {
   year <- args[1]
   dataDir <- args[2]
@@ -39,7 +39,7 @@ dir.create(summaryHigherDir, recursive = T, showWarnings = F)
 summaryHigherDir <- file.path(summaryHigherDir, paste0("attr_burden_age_adjusted_", year, ".csv"))
 
 if (file.exists(summaryHigherDir)) {
-  quit()
+ # quit()
 }
 ## --- read attr burden----
 attr_burdenDir <- file.path(attr_burdenDir, "county", "nvss")
@@ -81,10 +81,15 @@ if(year <= 2008){
     filter(Education == "666")
 }
 #filter out combination
-attr_burden <- attr_burden %>%
-  filter(!(Education != "666" & Race != "All" &
-             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" |
-                svi_bin2 != "666" | svi_bin3 != "666"| svi_bin4 != "666")))
+#attr_burden_tmp <- attr_burden %>%
+#  filter(!(Education != "666" & Race != "All" &
+#             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" |
+#                svi_bin2 != "666" | svi_bin3 != "666"| svi_bin4 != "666")))
+
+#attr_burden <- attr_burden %>%
+#  filter(!(Education != "666" & Race != "All" &
+#             (rural_urban_class != "666" | svi_bin != "666" | svi_bin1 != "666" |
+#                svi_bin2 != "666" | svi_bin3 != "666"| svi_bin4 != "666")))
 
 ## ----group out counties---
 

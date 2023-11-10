@@ -36,7 +36,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 25
+  min_ageI <- 65
   scenarioI <- "real"
   methodI <- "di_gee"
 }
