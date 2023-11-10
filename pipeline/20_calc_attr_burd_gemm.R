@@ -41,14 +41,13 @@ if (rlang::is_empty(args)) {
   agr_by <- "county"
   source <- "nvss"
 
-  tmpDir <-  "data/tmp"
-  censDir <- "data/05_demog"
-  dem_agrDir <- "data/06_dem.agr"
-  pafDir <- "data/07_gbd_paf"
-  totalBurdenParsed2Dir <-"data/09_total_burden_parsed"
-  attr_burdenDir <- "data/14_attr_burd"
-
 }
+tmpDir <-  "data/tmp"
+censDir <- "data/05_demog"
+dem_agrDir <- "data/06_dem.agr"
+pafDir <- "data/07_gbd_paf"
+totalBurdenParsed2Dir <-"data/09_total_burden_parsed"
+attr_burdenDir <- "data/14_attr_burd"
 
 if (agr_by != "county") {
   quit()
