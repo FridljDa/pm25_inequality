@@ -32,19 +32,26 @@ totalBurdenParsed2Dir <- args[17]
 attr_burdenDir <- args[18]
 
 if (rlang::is_empty(args)) {
-  year <- 2012
+  year <- 2015
   agr_by <- "county"
   source <- "nvss"
 
-  tmpDir <- "data/tmp"
-  exp_rrDir <- "data/04_exp_rr"
-  censDir <- "data/05_demog"
-  dem_agrDir <- "data/06_dem.agr"
-  pafDir <- "data/07_gbd_paf"
-
-  totalBurdenParsed2Dir <- "data/13_total_burden_rate"
-  attr_burdenDir <- "data/14_attr_burd"
 }
+tmpDir <- "data/tmp"
+exp_rrDir <- "data/04_exp_rr"
+censDir <- "data/05_demog"
+dem_agrDir <- "data/06_dem.agr"
+pafDir <- "data/07_gbd_paf"
+
+totalBurdenParsed2Dir <- "data/13_total_burden_rate"
+attr_burdenDir <- "data/14_attr_burd"
+
+tmpDir <-  "data/tmp"
+censDir <- "data/05_demog"
+dem_agrDir <- "data/06_dem.agr"
+pafDir <- "data/07_gbd_paf"
+totalBurdenParsed2Dir <-"data/09_total_burden_parsed"
+attr_burdenDir <- "data/14_attr_burd"
 
 attr_burdenDir <- file.path(attr_burdenDir, agr_by, source)
 dir.create(attr_burdenDir, recursive = T, showWarnings = F)
@@ -59,7 +66,7 @@ if (file.exists(attr_burdenDir)) {
 }
 tic(paste("calculated burden with GBD", year, agr_by, source))
 # read some data
-total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_", year, ".csv")) %>%
+total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_nvss_", year, ".csv")) %>%
   fread() %>%
   filter(label_cause %in% c("cvd_ihd", "cvd_stroke", "neo_lung", "resp_copd", "lri", "t2_dm"))
 
@@ -75,7 +82,7 @@ group_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urba
 
 ## ---read and summarise pm data ----
 files <- list.files(file.path(dem_agrDir, agr_by, year))
-pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist(fill=TRUE)
 pm_summ <- pm_summ %>% filter(scenario == "real")
 
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
@@ -172,7 +179,7 @@ rm(exp_rr)
 ##---join speratly, calculate seperatly---
 #county
 
-group_variable <- setdiff(colnames(attr_burden_gbd), c("matched_pm_level","attr", "label_cause", "age_group_id", "value", "paf"))
+group_variable <- setdiff(colnames(attr_burden_gbd), c("matched_pm_level","attr", "label_cause", "age_group_id", "Deaths", "paf"))
 
 #attr_burden_gbd <- attr_burden_gbd %>%
 #  split(list(attr_burden_gbd$Race, attr_burden_gbd$min_age, attr_burden_gbd$max_age,
@@ -189,7 +196,7 @@ attr_burden_gbd <- lapply(attr_burden_gbd, function(attr_burden_gbd_i){
   #)
   attr_burden_gbd_i <- attr_burden_gbd_i %>%
     left_join(exp_paf, by =c("matched_pm_level" = "exposure_spline", "label_cause",  "age_group_id")) %>%
-    mutate(attr = paf*value)
+    mutate(attr = paf*Deaths)
 
   attr_burden_gbd_i <- attr_burden_gbd_i %>%
     dplyr::group_by_at(vars(one_of(group_variable))) %>%
