@@ -63,7 +63,7 @@ if (agr_by != "county") {
 }
 
 if (file.exists(attr_burdenDir)) {
-  quit()
+  #quit()
 }
 tic(paste("calculated burden with GBD", year, agr_by, source))
 # read some data
@@ -75,14 +75,20 @@ total_burden <- total_burden %>%
   filter(county != "Unknown") %>%
   mutate(county = as.integer(county))
 
+total_burden <- total_burden %>% #TODO
+  sample_n(30)
 #total_burden <- total_burden %>%
 #  filter(svi_bin == "666" & svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666")
 
 #to save time, delete if necessary
 total_burden <- total_burden %>% filter(Education == "666")
 ## ----determine join variables
-join_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urban_class", "Gender.Code", "label_cause", "min_age", "max_age", agr_by)
-group_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urban_class", "Gender.Code", agr_by)
+join_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urban_class", "Gender.Code", "label_cause", "min_age", "max_age", agr_by,
+                    "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4", "svi_bin"
+                    )
+group_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urban_class", "Gender.Code", agr_by,
+                     "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4", "svi_bin"
+                     )
 
 ## ---read and summarise pm data ----
 files <- list.files(file.path(dem_agrDir, agr_by, year))
@@ -124,8 +130,8 @@ find_closest <- function(x, vec) {
 # Applying the custom function
 pm_summ <- pm_summ %>%
   mutate(matched_pm_level = sapply(pm_mean, function(x) find_closest(x, pm_levels))) %>%
-  select(-c("state", "rural_urban_class", "pm_mean"))
-
+  select(-c("state", "rural_urban_class", "pm_mean")) %>%
+  select(-starts_with("svi_bin"))
 
 ## ---join with total burden-----
 attr_burden_gbd <- inner_join(
@@ -224,9 +230,9 @@ attr_burden_gbd <- lapply(attr_burden_gbd, function(attr_burden_gbd_i){
     )%>%
     dplyr::ungroup() %>%
     mutate(
-      mean = round(mean, digits = 2),
-      lower = round(lower, digits = 2),
-      upper = round(upper, digits = 2)
+      mean = round(mean, digits = 3),
+      lower = round(lower, digits = 3),
+      upper = round(upper, digits = 3)
     )
 
   attr_burden_gbd_i
@@ -237,7 +243,9 @@ attr_burden_gbd <- attr_burden_gbd %>% rbindlist()
 ###----
 attr_burden_gbd <- attr_burden_gbd %>%
   mutate(method = "GBD",
-         attr = "attributable")
+         attr = "attributable",
+         pm_lower = NULL,
+         pm_upper = NULL)
 
 
 fwrite(attr_burden_gbd, attr_burdenDir)
