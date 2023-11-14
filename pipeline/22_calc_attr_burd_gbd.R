@@ -63,7 +63,7 @@ if (agr_by != "county") {
 }
 
 if (file.exists(attr_burdenDir)) {
-  #quit()
+  quit()
 }
 tic(paste("calculated burden with GBD", year, agr_by, source))
 # read some data
@@ -75,8 +75,7 @@ total_burden <- total_burden %>%
   filter(county != "Unknown") %>%
   mutate(county = as.integer(county))
 
-total_burden <- total_burden %>% #TODO
-  sample_n(30)
+
 #total_burden <- total_burden %>%
 #  filter(svi_bin == "666" & svi_bin1 == "666" & svi_bin2 == "666" & svi_bin3 == "666" & svi_bin4 == "666")
 
@@ -130,15 +129,22 @@ find_closest <- function(x, vec) {
 # Applying the custom function
 pm_summ <- pm_summ %>%
   mutate(matched_pm_level = sapply(pm_mean, function(x) find_closest(x, pm_levels))) %>%
-  select(-c("state", "rural_urban_class", "pm_mean")) %>%
-  select(-starts_with("svi_bin"))
+  select(-c("state",  "pm_mean")) #%>%
+  #"rural_urban_class",
+  #select(-starts_with("svi_bin"))
+
+pm_summ <- pm_summ %>%
+  group_by(across(-c(pm_lower, pm_upper, matched_pm_level))) %>%
+  slice(1) %>%
+  ungroup()
 
 ## ---join with total burden-----
 attr_burden_gbd <- inner_join(
   total_burden,
   pm_summ,
-  by = c("Year", "Gender.Code", "Race", "Hispanic.Origin", "county", "Education"),
-  relationship = "many-to-many"
+  by = c("Year", "Gender.Code", "Race", "Hispanic.Origin", "county", "Education",
+         "rural_urban_class", "svi_bin", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4")#,
+  #relationship = "many-to-many"
 )
 ## ---- add age group to toal burden ----
 causes_ages <- file.path(tmpDir, "causes_ages.csv") %>% read.csv()
