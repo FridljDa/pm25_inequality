@@ -13,8 +13,8 @@ suppressMessages(library("magrittr", character.only = T, warn.conflicts = FALSE,
 suppressMessages(library("data.table", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("testthat", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 suppressMessages(library("tictoc", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
-suppressMessages(library("MALDIquant", character.only = T, warn.conflicts = FALSE, quietly = TRUE))
 library(tidyr)
+#library(MALDIquant)
 
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
@@ -107,13 +107,25 @@ pm_summ <- pm_summ %>%
 example_exp_rr <- file.path(exp_rrDir, "cvd_ihd_25.csv") %>% read.csv()
 pm_levels <- example_exp_rr$exposure_spline
 
+#pm_summ <- pm_summ %>%
+#  mutate(matched_pm_level = sapply(pm_mean, function(x) {
+#    pm_levels[
+#      MALDIquant::match.closest(x, pm_levels)
+#    ]
+#  })) %>%
+#  select(-c("state", "rural_urban_class", "pm_mean"))
+
+# Custom function to find the closest match
+find_closest <- function(x, vec) {
+  abs_diff <- abs(vec - x)
+  return(vec[which.min(abs_diff)])
+}
+
+# Applying the custom function
 pm_summ <- pm_summ %>%
-  mutate(matched_pm_level = sapply(pm_mean, function(x) {
-    pm_levels[
-      MALDIquant::match.closest(x, pm_levels)
-    ]
-  })) %>%
+  mutate(matched_pm_level = sapply(pm_mean, function(x) find_closest(x, pm_levels))) %>%
   select(-c("state", "rural_urban_class", "pm_mean"))
+
 
 ## ---join with total burden-----
 attr_burden_gbd <- inner_join(
