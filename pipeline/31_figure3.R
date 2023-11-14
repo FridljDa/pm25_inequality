@@ -233,5 +233,5 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure3.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure3.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.pdf"), dpi = 300, g_combined, height = 9, width = 8)

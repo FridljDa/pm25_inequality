@@ -222,7 +222,12 @@ attr_burden_gbd <- lapply(attr_burden_gbd, function(attr_burden_gbd_i){
       lower = quantile(attr, p = .025),
       upper = quantile(attr, p = .975)
     )%>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    mutate(
+      mean = round(mean, digits = 2),
+      lower = round(lower, digits = 2),
+      upper = round(upper, digits = 2)
+    )
 
   attr_burden_gbd_i
 })
