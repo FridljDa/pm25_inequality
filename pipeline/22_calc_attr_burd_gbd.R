@@ -19,6 +19,8 @@ library(tidyr)
 options(dplyr.summarise.inform = FALSE)
 options(dplyr.join.inform = FALSE)
 
+suppressMessages({pkgload::load_all()})
+
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
 
@@ -63,12 +65,12 @@ if (agr_by != "county") {
 }
 
 if (file.exists(attr_burdenDir)) {
-  quit()
+  #quit()
 }
 tic(paste("calculated burden with GBD", year, agr_by, source))
 # read some data
 total_burden <- file.path(totalBurdenParsed2Dir, agr_by, source, paste0("total_burden_nvss_", year, ".csv")) %>%
-  fread() %>%
+  read_data() %>%
   filter(label_cause %in% c("cvd_ihd", "cvd_stroke", "neo_lung", "resp_copd", "lri", "t2_dm"))
 
 total_burden <- total_burden %>%
@@ -81,6 +83,9 @@ total_burden <- total_burden %>%
 
 #to save time, delete if necessary
 total_burden <- total_burden %>% filter(Education == "666")
+
+#total_burden <- total_burden %>%
+#  sample_n(30)
 ## ----determine join variables
 join_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urban_class", "Gender.Code", "label_cause", "min_age", "max_age", agr_by,
                     "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4", "svi_bin"
@@ -91,7 +96,7 @@ group_variables <- c("Year", "Race", "Hispanic.Origin", "Education", "rural_urba
 
 ## ---read and summarise pm data ----
 files <- list.files(file.path(dem_agrDir, agr_by, year))
-pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist(fill=TRUE)
+pm_summ <- lapply(files, function(file) read_data(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist(fill=TRUE)
 pm_summ <- pm_summ %>% filter(scenario == "real")
 
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
