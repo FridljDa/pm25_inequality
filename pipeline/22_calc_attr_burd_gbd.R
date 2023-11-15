@@ -65,7 +65,7 @@ if (agr_by != "county") {
 }
 
 if (file.exists(attr_burdenDir)) {
-  #quit()
+  quit()
 }
 tic(paste("calculated burden with GBD", year, agr_by, source))
 # read some data
