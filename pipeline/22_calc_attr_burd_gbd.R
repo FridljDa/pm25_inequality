@@ -201,7 +201,7 @@ exp_paf <- exp_rr %>%
 #computationally too expensive to take all draws
 exp_paf <- exp_paf %>%
   group_by(exposure_spline, label_cause, age_group_id)%>%
-  slice(10) %>%
+  slice(500) %>%
   ungroup()
 rm(exp_rr)
 
