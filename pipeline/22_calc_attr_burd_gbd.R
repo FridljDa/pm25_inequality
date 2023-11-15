@@ -143,6 +143,11 @@ pm_summ <- pm_summ %>%
   slice(1) %>%
   ungroup()
 
+total_burden <- total_burden %>%
+  mutate(Education = as.integer(Education))
+
+pm_summ <- pm_summ %>%
+  mutate(Education = as.integer(Education))
 ## ---join with total burden-----
 attr_burden_gbd <- inner_join(
   total_burden,
