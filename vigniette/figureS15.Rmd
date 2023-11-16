@@ -63,6 +63,7 @@ attr_burd %>%
 # Assuming delta_method_sum is already defined
 attr_burd_contrast <- attr_burd %>%
   group_by(Year, method) %>%
+  filter("Black American" %in% c(Ethnicity)) %>% #TODO
   mutate(
     black_mean = mean[Ethnicity == "Black American"],
     black_lower = lower[Ethnicity == "Black American"],

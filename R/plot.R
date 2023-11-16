@@ -104,7 +104,9 @@ plot_df <- function(df, color.column = NULL, group.colors = NULL,
     if (!color.column %in% colnames(df)) {
       stop("The specified color column is not present in the data frame.")
     }
-    aes_params <- aes(x = Year, y = ifelse("value" %in% colnames(df), value, mean), color = !!sym(color.column))
+    aes_params <- aes(x = Year,
+                      #y = ifelse("value" %in% colnames(df), value, mean),
+                      color = !!sym(color.column))
   }
 
   g <- ggplot(df, aes_params)
@@ -118,15 +120,22 @@ plot_df <- function(df, color.column = NULL, group.colors = NULL,
                          linetype = 2, alpha = 0, show.legend = FALSE)
   }
 
+  if ("mean" %in% colnames(df)) {
+    g <- g + geom_line(aes(y = mean),
+                         linewidth = 1.5)
+  } else if ("value" %in% colnames(df)) {
+    g <- g + geom_line(aes(y = value),
+                       linewidth = 1.5)
+  }
   # Add line and other elements
-  g <- g +
-    geom_line(linewidth = 1.5) +
-    xlab("Year") +
-    ylim(0, NA)
 
   if (!is.null(group.colors)) {
     g <- g + scale_colour_manual(values = group.colors)
   }
+
+  g <- g +
+    xlab("Year") +
+    ylim(0, NA)
 
   if (remove_legend) {
     g <- g + theme(legend.title = element_blank(), legend.position = "none")
@@ -357,7 +366,12 @@ plot_attr_all_burd <- function(attr_burd, all_burd, color.column, split.column) 
   # Formatting (assuming get_group_colors and get_legend_custom are defined)
   group.colors <- get_group_colors(attr_burd)
   group.colors <- group.colors[names(group.colors) %in% unique(attr_burd[[color.column]])]
-  legend_plot <- get_legend_custom(group.colors)
+  if(color.column == "Education"){
+    ncol <- 2
+  }else{
+    ncol <- 3
+  }
+  legend_plot <- get_legend_custom(group.colors, ncol = ncol)
 
   # Arrange plots (assuming create_combined_plot is defined)
   g_combined <- create_combined_plot(plots,

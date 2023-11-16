@@ -60,13 +60,13 @@ options(bitmapType = "cairo")
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
 
-
 attr_burd <- attr_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     attr == "attributable" & svi_bin != "All" & rural_urban_class == "All" &
     source == "National Vital Statistics System" & scenario == scenarioI &
-    agr_by == "nation" & method == methodI & Year >= 2009 & measure3 == "value" & Ethnicity != "All, All Origins" &
+    agr_by == "nation" & method == methodI  & measure3 == "value" & Ethnicity != "All, All Origins" &
     rural_urban_class == "All" & Education == 666)
+#& Year >= 2009
 
 all_burd <- all_burd %>%
   filter(Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &

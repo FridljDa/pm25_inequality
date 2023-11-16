@@ -62,6 +62,7 @@ attr_burd <- attr_burd %>%
 ## -- figure 3, attributable burden---
 #TODO method di_gee/burnett
 
+
 attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & Education == 666 & Ethnicity != "All, All Origins" &
                                      measure3 == "proportion of disparity to Black or African American attributable" &
                                      rural_urban_class == "All" & svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
@@ -124,4 +125,4 @@ g1 <- g1 +
 
 g1
 
-ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI,"-","25"), "figureS13.png"),plot = g1, dpi = 300, height = 4, width = 8)
+ggsave(file.path("data/18_figures", paste0(methodI,"-",scenarioI,"-",min_ageI), "figureS13.png"),plot = g1, dpi = 300, height = 4, width = 8)

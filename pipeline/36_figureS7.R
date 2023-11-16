@@ -61,8 +61,8 @@ attr_burd <- attr_burd %>%
     source == "National Vital Statistics System" & scenario == scenarioI)
 
 attr_burd <- attr_burd %>%
-  filter(agr_by == "nation" & method == methodI & Year >= 2001 & measure3 == "value")
-
+  filter(agr_by == "nation" & method == methodI & measure3 == "value")
+#& Year >= 2001
 ## -- figure 3, attributable burden---
 attr_burd1 <- attr_burd %>% filter(Education == 666 & Ethnicity != "All, All Origins" &svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &  rural_urban_class == "Large metro")
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
@@ -219,4 +219,4 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS7.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS7.png"), dpi = 300, g_combined, height = 9, width = 8)

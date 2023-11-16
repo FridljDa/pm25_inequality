@@ -46,7 +46,7 @@ theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo"
 all_burden <- fread(file.path(summaryDir, "all_burd.csv")) %>% as.data.frame()
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 all_burden <- all_burden %>% filter(min_age == min_ageI)
 rm(file_list)
@@ -278,6 +278,6 @@ g_combined
 #)
 
 #as_ggplot(g_combined)
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS10.png"), dpi = 300, g_combined,
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS10.png"), dpi = 300, g_combined,
        height = 6, width = 9
 )

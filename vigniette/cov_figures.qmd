@@ -25,7 +25,7 @@ theme_set(theme_classic(base_family = "Helvetica"))
 ```
 
 ```{r}
-min_ageI <- 25
+min_ageI <- 65
 cov_function <- function(x) { sqrt(var(x, na.rm = TRUE)) / mean(x, na.rm = TRUE) }
 ```
 
@@ -342,8 +342,29 @@ for(i in seq_along(list_of_dfs)) {
 list_of_plots[[1]] <- list_of_plots[[1]] + ylab("Coefficient of Variation (CoV)") 
 
 # Combine the individual ggplots into one plot using ggarrange
-combined_plot <- do.call(ggarrange, c(list_of_plots, ncol = num_palettes))
+#combined_plot <- do.call(ggarrange, c(list_of_plots, ncol = num_palettes))
+#print(combined_plot)
+```
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Assuming you have a list of ggplot objects named list_of_plots
+combined_plot <- list_of_plots[[1]]
+
+for (i in 2:length(list_of_plots)) {
+    combined_plot <- combined_plot + list_of_plots[[i]] +
+                     plot_layout(guides = 'collect') &
+                     theme(legend.position = 'bottom')
+}
+
+# To align the plots by their axes
+combined_plot <- combined_plot #+ plot_layout(align = 'v')
+
+# Display the combined plot
 print(combined_plot)
+
 ```
 
 ```{r}

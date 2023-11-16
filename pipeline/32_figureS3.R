@@ -46,7 +46,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary"
   figuresDir <- "data/18_figures"
 
-  min_ageI <- 65
+  min_ageI <- 25
   scenarioI <- "real"
   methodI <- "di_gee"
 }
@@ -78,9 +78,9 @@ filtered_pm_summ_names <- names(filtered_pm_summ)
 # Define the replacement list
 replacement_list <- list(
   SES = "svi_bin1",
-  HCD = "svi_bin2",
+  HC = "svi_bin2",
   MS = "svi_bin3",
-  HT = "svi_bin4",
+  HTT = "svi_bin4",
   SVI = "svi_bin",
   Rurality = "rural_urban_class"
 )

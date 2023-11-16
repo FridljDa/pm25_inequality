@@ -24,7 +24,7 @@ lead attributable burden
 ```{r}
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill = TRUE)
 attr_burd <- attr_burd %>% filter(min_age == 25)
 ```
 
@@ -44,6 +44,8 @@ attr_burd <- attr_burd %>%
   filter(Ethnicity %in% c("Black American", "NH White", "Hispanic or Latino White", "American Indian or Alaska Native", "Asian or Pacific Islander") &
     Education == 666 & Ethnicity != "All, All Origins" & rural_urban_class == "All" )
 
+attr_burd <- attr_burd %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All")
 ```
 
 separate 

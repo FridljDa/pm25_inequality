@@ -125,6 +125,10 @@ pairwise_differences <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_
       filter(Ethnicity != "Asian or Pacific Islander")
   }
 
+  if (color.column == "Education") {
+    #TODO
+  }
+
   data <- data %>%
     rename(split.column = !!sym(split.column))
   # Calculate pairwise differences
@@ -188,7 +192,8 @@ ggsave(
 )
 
 pairwise_differences_educ <- pairwise_differences %>%
-  filter(is.na(Ethnicity))
+  filter(is.na(Ethnicity)) %>%
+  filter(grepl("HC|HCD|HTT|SES|metro|SVI|MS", difference_col))
 
 g_rel_educ <- pairwise_differences_educ %>%
   rename(`relative difference in PM2.5-attributable mortality rate` = rel_diff_mean) %>%
