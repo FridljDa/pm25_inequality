@@ -68,7 +68,19 @@ if("Deaths" %in% colnames(total_burden)) total_burden <- total_burden %>% rename
 
 meta <- read.csv(file.path(censDir, "meta", paste0("cens_meta_", year, ".csv")))
 files <- list.files(file.path(dem_agrDir, agr_by, year))
-pm_summ <- lapply(files, function(file) fread(file.path(dem_agrDir, agr_by, year, file))) %>% rbindlist()
+pm_summ <- lapply(files, function(file){
+  file_i <- fread(file.path(dem_agrDir, agr_by, year, file))
+
+  file_i <- file_i %>%
+    select(county,variable,scenario,pm,pop_size, #pm_lower,pm_upper,
+           prop,rural_urban_class,
+           svi_bin,svi_bin1,svi_bin2,svi_bin3,svi_bin4
+    )
+
+  return(file_i)
+})
+
+pm_summ <- pm_summ %>% rbindlist()
 pm_summ <- pm_summ %>% left_join(meta, by = "variable")
 pm_summ <- pm_summ %>% filter(min_age >= 25)
 # if(agr_by != "nation") pm_summ <- pm_summ %>% filter(scenario == "real")
@@ -175,6 +187,22 @@ if ("rural_urban_class" %in% names(paf_di)) {
 
 if ("svi_bin" %in% names(paf_di)) {
   paf_di <- paf_di %>% select(-svi_bin)
+}
+
+if ("svi_bin1" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin1)
+}
+
+if ("svi_bin2" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin2)
+}
+
+if ("svi_bin3" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin3)
+}
+
+if ("svi_bin4" %in% names(paf_di)) {
+  paf_di <- paf_di %>% select(-svi_bin4)
 }
 #paf_di
 ##---join---

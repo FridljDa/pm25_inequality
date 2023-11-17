@@ -1,6 +1,10 @@
 county
 attr_burd_STATEFP_1.csv
 attr_burd_STATEFP_2.csv
+<<<<<<< HEAD
+attr_burd_STATEFP_5.csv
+attr_burd_STATEFP_6.csv
+=======
 attr_burd_STATEFP_3.csv
 attr_burd_STATEFP_4.csv
 attr_burd_STATEFP_5.csv
@@ -8,3 +12,4 @@ attr_burd_STATEFP_6.csv
 attr_burd_STATEFP_7.csv
 attr_burd_STATEFP_8.csv
 attr_burd_STATEFP_9.csv
+>>>>>>> 469a2c71521718cf73ec8aae455db2cff18bb73d

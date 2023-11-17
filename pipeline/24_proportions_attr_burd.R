@@ -128,6 +128,10 @@ attr_total_burden_prop_overall_burden <- attr_total_burden %>%
     measure3 = "prop. of overall burden"
   )
 
+# Check for values of mean greater than 100
+if (any(attr_total_burden_prop_overall_burden$mean > 100)) {
+  stop("Mean value greater than 100 found")
+}
 ### ---disparity to race-ethnicity----
 
 group_variables <- setdiff(colnames(attr_total_burden), c("mean", "lower", "upper", "overall_total_burden", "Race", "Hispanic.Origin"))
@@ -140,8 +144,8 @@ if (nrow(attr_total_burden_prop_of_difference) == 0) {
 
 # delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
-
-if (FALSE) {
+if(FALSE){
+if(FALSE){
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
     group_by(across(all_of(group_variables))) %>%
     mutate(
@@ -151,9 +155,12 @@ if (FALSE) {
       overall_total_burden_black = overall_total_burden[Race == "Black or African American" & Hispanic.Origin == "All Origins"]
     ) %>%
     rowwise() %>%
-    mutate(delta_result = list(delta_method_sum(mean, lower, upper, -mean_black, -lower_black, -upper_black))) %>%
-    select(-mean, -lower, -upper, -mean_black, -lower_black, -upper_black) %>%
-    unnest_wider(delta_result) %>%
+    mutate(delta_result = list(delta_method_sum(mean, lower, upper, - mean_black, - lower_black, - upper_black))) %>%
+    select(-mean, -lower, -upper,-mean_black, -lower_black, -upper_black) %>%
+    unnest_wider(delta_result)
+
+  attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
+
     rename(lower = lb, upper = ub) %>%
     mutate(
       lower = upper  / (overall_total_burden - overall_total_burden_black),
@@ -210,14 +217,15 @@ attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
 if (nrow(attr_total_burden_prop_of_difference) == 0) {
   warning(paste("3: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }
-
+}
 attr_total_burden_combined <- rbind(
   attr_total_burden_value,
-  attr_total_burden_prop_overall_burden,
-  attr_total_burden_prop_of_difference
+  attr_total_burden_prop_overall_burden#,
+  #attr_total_burden_prop_of_difference
 )
 
-fwrite(attr_total_burden_combined, propDir)
+attr_total_burden_combined <- as.data.frame(attr_total_burden_combined)
+fwrite(attr_total_burden_combined, file = propDir)
 
 
 toc()
