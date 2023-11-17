@@ -104,10 +104,21 @@ plot_df <- function(df, color.column = NULL, group.colors = NULL,
     if (!color.column %in% colnames(df)) {
       stop("The specified color column is not present in the data frame.")
     }
-    aes_params <- aes(x = Year,
-                      #y = ifelse("value" %in% colnames(df), value, mean),
-                      color = !!sym(color.column))
+
+    if ("mean" %in% colnames(df)) {
+      aes_params <- aes(x = Year,
+                        y = mean,
+                        colour = !!sym(color.column))
+    } else if ("value" %in% colnames(df)) {
+      aes_params <- aes(x = Year,
+                        y = value,
+                        colour = !!sym(color.column))
+    }
   }
+
+  #if(color.column == "Education"){
+  #  browser()
+  #}
 
   g <- ggplot(df, aes_params)
 
@@ -129,8 +140,11 @@ plot_df <- function(df, color.column = NULL, group.colors = NULL,
   }
   # Add line and other elements
 
-  if (!is.null(group.colors)) {
-    g <- g + scale_colour_manual(values = group.colors)
+  if (!is.null(color.column)) {
+    group.colors <- get_group_colors(df)
+    g <- g +
+      scale_colour_manual(values = group.colors) +
+      scale_fill_manual(values = group.colors)
   }
 
   g <- g +
