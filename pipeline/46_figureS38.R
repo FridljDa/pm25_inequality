@@ -117,9 +117,17 @@ plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_na
   attr_burd_i <- attr_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
   all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
 
+  attr_burd_i <- attr_burd_i %>%
+    ungroup() %>%
+    as.data.frame()
+  all_burd_i <- all_burd_i %>%
+    ungroup() %>%
+    as.data.frame()
+
   split_color_var <- strsplit(attr_burd_filtered_dfs_names_i, "\\*")
   split_color_var <- unlist(split_color_var)
 
+  #browser()
   # Create the plot
   plot_i <- plot_attr_all_burd(attr_burd_i, all_burd_i, split_color_var[1], split_color_var[2])
 

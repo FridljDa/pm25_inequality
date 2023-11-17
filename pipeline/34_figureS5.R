@@ -73,7 +73,7 @@ pm_summ2 <- pm_summ %>%
 #pm_summ2 <- replace_values(pm_summ, findreplace = rindreplace1)
 
 
-total_burden <- total_burden %>%
+all_burden <- all_burden %>%
   left_join(rindreplace1, by = c("Region" = "RegionFrom", "agr_by")) %>%
   mutate(
     Region = coalesce(RegionTo, Region),

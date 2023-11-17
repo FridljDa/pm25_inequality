@@ -18,7 +18,7 @@ packages <- c(
 
 # Load required packages
 library(purrr)
-
+library(patchwork)
 for (p in packages) {
   if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -95,9 +95,9 @@ attr_burd_filtered_dfs <- attr_burd_filtered_dfs[attr_burd_filtered_dfs_names]
 
 replacement_list <- list(
   SES = "svi_bin1",
-  HCD = "svi_bin2",
+  HC = "svi_bin2",
   MS = "svi_bin3",
-  HT = "svi_bin4",
+  HTT = "svi_bin4",
   SVI = "svi_bin",
   Rurality = "rural_urban_class"
 )

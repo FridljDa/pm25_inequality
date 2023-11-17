@@ -215,4 +215,4 @@ g_combined <- cowplot::plot_grid(plot_attr_burd_ethn_2000, plot_attr_burd_educ_2
   plot_attr_burd_ethn_2016, plot_attr_burd_educ_2016
 )
 
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figureS11.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS11.png"), dpi = 300, g_combined, height = 9, width = 8)

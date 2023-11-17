@@ -35,36 +35,20 @@ min_ageI <- args[13]
 
 # TODO delete
 if (rlang::is_empty(args)) {
-  summaryDir <- "/Users/default/Desktop/paper2021/data/17_summary"
-  figuresDir <- "/Users/default/Desktop/paper2021/data/18_figures"
-  totalBurdenDir <- "/Users/default/Desktop/paper2021/data/12_total_burden_parsed2"
-  exp_rrDir <- "/Users/default/Desktop/paper2021/data/04_exp_rr"
-  tmpDir <- "/Users/default/Desktop/paper2021/data/tmp"
-
-  summaryDir <- "/g/huber/users/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/g/huber/users/fridljand/R/HIGH/data/18_figures"
-  totalBurdenDir <- "/g/huber/users/fridljand/R/HIGH/data/12_total_burden_parsed2"
-  exp_rrDir <- "/g/huber/users/fridljand/R/HIGH/data/04_exp_rr"
-  tmpDir <- "/g/huber/users/fridljand/R/HIGH/data/tmp"
-
-  summaryDir <-"/Volumes/fridljand/R/HIGH/data/17_summary"
-  figuresDir <- "/Volumes/fridljand/R/HIGH/data/18_figures"
-  totalBurdenDir <- "/Volumes/fridljand/R/HIGH/data/12_total_burden_parsed2"
-  exp_rrDir <- "/Volumes/fridljand/R/HIGH/data/04_exp_rr"
-  tmpDir <-  "/Volumes/fridljand/R/HIGH/data/tmp"
 
   min_ageI <- 25
   exp_rrDir <- "data/04_exp_rr"
-  totalBurdenDir <- "data/13_total_burden_rate"
+  totalBurdenDir <- "data/16_sum_higher_geog_level_total"
   summaryDir <-"data/17_summary"
   figuresDir <- "data/18_figures"
   tmpDir <-  "data/tmp"
 }
 theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
 #--- reading total burden data---
-files <- list.files(file.path(totalBurdenDir, "nation", "nvss"))
+files <- list.files(file.path(totalBurdenDir, "nation"))
+
 total_burden <- lapply(files, function(file) {
-  total_burden <- fread(file.path(totalBurdenDir, "nation", "nvss", file))
+  total_burden <- fread(file.path(totalBurdenDir, "nation",  file))
   total_burden <- total_burden %>%
     filter(Gender.Code == "A" & measure1 == "Deaths" & measure2 == "absolute number" & source == "nvss" &
       Education == 666 & Race == "All" & Hispanic.Origin == "All Origins" & rural_urban_class == 666) %>%
@@ -83,7 +67,7 @@ total_burden <- lapply(files, function(file) {
 }) %>% rbindlist()
 rm(files)
 
-total_burden <- total_burden %>% filter(min_age == min_ageI)
+#total_burden <- total_burden %>% filter(min_age == min_ageI)
 total_burden <- total_burden %>% filter(Year == 2016)
 total_burden <- total_burden %>% mutate(value = value *100000/323100000) #Population in 2016
 ## --- GBD estimate----

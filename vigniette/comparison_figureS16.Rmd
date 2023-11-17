@@ -28,8 +28,14 @@ file_list <- list.files("../data/17_summary")
 file_list <- file.path("../data/17_summary", file_list[grepl("attr_bur", file_list)])
 #file_list <- list.files("data/17_summary")
 #file_list <- file.path("data/17_summary", file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T)
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
 rm(file_list)
+```
+
+```{r}
+attr_burd <- attr_burd %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" &
+           svi_bin4 == "All")
 ```
 
 # Sensitivity of our findings to the use of a race-ethnicity-specific CRF:
@@ -80,6 +86,12 @@ total_burden <- total_burden %>% filter(Region == "United States" &
                                           Education == 666 & svi_bin == "All" & rural_urban_class == "All" & measure1 == "Deaths" &
                                           measure2 == "age-adjusted rate per 100,000" & Year == 2016)
 
+total_burden <- total_burden %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" &
+           svi_bin4 == "All")
+
+total_burden <- total_burden %>% filter(min_age == 25)
+
 hr_race_specific <- data.frame(
   method = rep("di_gee", 1),
   Ethnicity = c("White","NH White", "Black American", "Asian or Pacific Islander", "Hispanic or Latino White", "American Indian or Alaska Native", "All"), # TODO
@@ -101,7 +113,7 @@ attr_burd_di <- attr_burd_di %>%
   mutate(
     attributable_burden = case_when(
       pm < 5 ~ 0,
-      pm >= 5 ~ overall_value * (pm - 5) * (hr_mean - 1) / 10
+      pm >= 5 ~ value * (pm - 5) * (hr_mean - 1) / 10
     )
   ) 
   
@@ -120,12 +132,17 @@ pm_summary <- pm_summary %>% filter(scenario == "real" & rural_urban_class == "A
                                       Ethnicity == "All, All Origins" & Education == 666 & Year == 2016 &
                                       pm_metric == "mean")
 
+pm_summary <- pm_summary %>%
+  filter(svi_bin == "All" & svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" &
+           svi_bin4 == "All")
+pm_summary <- pm_summary %>% filter(min_age == 25)
+
 attr_burd_di_median <- paf_di %>% mutate(pm = pm_summary$value)
 attr_burd_di_median <- attr_burd_di_median %>%
   mutate(
     attributable_burden = case_when(
       pm < 5 ~ 0,
-      pm >= 5 ~ overall_value * (pm - 5) * (hr_mean - 1) / 10
+      pm >= 5 ~ value * (pm - 5) * (hr_mean - 1) / 10
     ),
     attributable_burden = round(attributable_burden, 2)
   )

@@ -95,9 +95,9 @@ all_burd <- all_burd %>%
 # Define the replacement list
 replacement_list <- list(
   SES = "svi_bin1",
-  HCD = "svi_bin2",
+  HC = "svi_bin2",
   MS = "svi_bin3",
-  HT = "svi_bin4",
+  HTT = "svi_bin4",
   SVI = "svi_bin",
   Rurality = "rural_urban_class"
 )
@@ -129,7 +129,7 @@ attr_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_d
 
 #ggarrange(plotlist = attr_plots)
 
-all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+attr_burd_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
   all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
 
   title <- attr_burd_filtered_dfs_names_i
@@ -147,7 +147,7 @@ all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_df
   return(all_plot_i)
 })
 
-all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
+attr_burd_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_names_i){
   all_burd_i <- all_burd_filtered_dfs[[attr_burd_filtered_dfs_names_i]]
 
   title <- attr_burd_filtered_dfs_names_i
@@ -170,11 +170,11 @@ all_plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_df
   return(all_plot_i)
 })
 
-all_plots <- update_ylim(all_plots, use_actual_min = TRUE)
+attr_burd_plots <- update_ylim(attr_burd_plots, use_actual_min = TRUE)
 
 # Combine plots
-combined_plot <- all_plots[[1]] + all_plots[[2]] + all_plots[[3]] + all_plots[[4]]  +
-  all_plots[[5]]  +  all_plots[[6]] + all_plots[[7]]+#  +
+combined_plot <- attr_burd_plots[[1]] + attr_burd_plots[[2]] + attr_burd_plots[[3]] + attr_burd_plots[[4]]  +
+  attr_burd_plots[[5]]  +  attr_burd_plots[[6]] + attr_burd_plots[[7]]+#  +
   plot_layout(ncol = 3)
 
 # Show combined plot
