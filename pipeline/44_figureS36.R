@@ -207,7 +207,7 @@ t4 <- grobTree(
 ) # "Some college education but no 4-year college degree"
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("lower svi", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("lower SVI", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(

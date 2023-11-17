@@ -1,0 +1,32 @@
+---
+title: "check_pop_data"
+author: "Daniel Fridljand"
+format: html
+editor: visual
+---
+
+```{r}
+devtools::load_all()
+
+library(dplyr)
+library(purrr)
+```
+
+```{r}
+pop_2010 <- get_population_data(agr_by = "nation", year = 2010, pop.summary.dir = "data/12_population_summary")
+# Apply is_partition function to each group
+result <- pop_summary2 %>%
+ group_by(across(-all_of(c("Population", "min_age", "max_age")))) %>%
+  nest() %>%
+  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
+  unnest(cols = c(is_partition))
+```
+
+```{r}
+pop_2009 <- get_population_data(agr_by = "nation", year = 2009, pop.summary.dir = "data/12_population_summary")
+result <- pop_2009 %>%
+ group_by(across(-all_of(c("Population", "min_age", "max_age")))) %>%
+  nest() %>%
+  mutate(is_partition = map(data, ~ is_partition(.x))) %>%
+  unnest(cols = c(is_partition))
+```
