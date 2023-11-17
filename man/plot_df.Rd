@@ -6,8 +6,8 @@
 \usage{
 plot_df(
   df,
-  color.column,
-  group.colors = get_group_colors(df),
+  color.column = NULL,
+  group.colors = NULL,
   remove_legend = TRUE,
   remove_y_titel = TRUE,
   title = NA
@@ -23,6 +23,8 @@ plot_df(
 \item{remove_legend}{Logical value to indicate whether to remove the legend or not.}
 
 \item{remove_y_titel}{Logical value to indicate whether to remove the y-axis title or not.}
+
+\item{title}{Title for the plot.}
 }
 \value{
 A ggplot object.

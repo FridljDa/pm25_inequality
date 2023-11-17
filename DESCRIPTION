@@ -14,4 +14,4 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     narcan
-Remotes: mkiang/narcan, jokergoo/ComplexHeatmap
+Remotes: jokergoo/ComplexHeatmap

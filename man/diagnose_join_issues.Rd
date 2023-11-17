@@ -4,7 +4,7 @@
 \alias{diagnose_join_issues}
 \title{Diagnose join issues between two data frames}
 \usage{
-diagnose_join_issues(df1, df2, join_cols)
+diagnose_join_issues(df1, df2, join_cols, power_set_limit = 5)
 }
 \arguments{
 \item{df1}{A data frame to be joined}
