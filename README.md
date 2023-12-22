@@ -31,16 +31,13 @@ Many of the input data are automatically downloaded in the script. Where it was 
 
 * data/08_svi county level look up table for social-vulnerability level from [here](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 * data/09_total_burden_parsed/causes.csv look up table for causes and ICD codes considered in this study.
-* data/09_total_burden_parsed/findreplace.csv TODO
-* data/09_total_burden_parsed/[county/nation/STATEFP] TODO
-* data/10_cdc_population/[nation/STATEFP] TODO
+* data/09_total_burden_parsed/findreplace.csv. Find replace loop up table for the mortality counts to parse it to a more readable format.
+
+* data/10_cdc_population/[nation/STATEFP]. Population counts by educational attainment and race-ethnicity sourced from (here)[https://www.census.gov/data/tables/2016/demo/education-attainment/cps-detailed-tables.html].
 * data/11_ethn_educ_population population counts on national level of the Population 18 Years and Over, by Age, Sex, Race, and Hispanic Origin for the years TODO manually downloaded from [census](https://www2.census.gov/programs-surveys/demo/tables/educational-attainment/) Educational Attainment
-* data/12_population_summary parsed and summarized population counts based on data/05_demog, data/10_cdc_population, data/11_ethn_educ_population
-* data/13_total_burden_parsed2 TODO mortality rates based on data/08_total_burden and data/12_population_summary
-* data/14_attr_burden TODO based on data/06_dem.agr, data/13_total_burden_parsed2,
-* data/15_summary high-level summary of TODO
-* data/17_summary
-* data/18_figures
+* data/12_population_summary parsed and summarized population counts based on data/05_demog, data/10_cdc_population, data/11_ethn_educ_population Bridged-Race Population Estimates from (here)[https://wonder.cdc.gov/bridged-race-population.html].
+* data/17_summary. High-level summary of our results.
+* data/18_figures. Figures used in the manuscript.
 
 ## Not included in repo
 * data/01_exposure/[YYYY].h5 PM2.5 exposure estimates for contiguous US sourced from [here](ftp://stetson.phys.dal.ca/jmeng/HEI2018-HistoricalPM25/historicalPM25/). Too large to include on Github.
@@ -50,13 +47,13 @@ Many of the input data are automatically downloaded in the script. Where it was 
 * data/04_exp_rr/mrbrt MR-BRT files for GBD-CRF (see [1](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext), [2](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext#supplementaryMaterial)) privately shared by IHME team (not primary CRF in main analysis). Private, so not shared on Github.
 * data/05_demog/[YYYY]_in_[ZZZZ] census tract level population counts of year [YYYY] translated into census tracts of year [ZZZZ] using data/crosswalk_[YYYY]_[ZZZZ].csv. Too large to include on Github.
 * data/06_dem.agr population counts by exposure level and county. Too large to include on Github.
-* data/07_gbd_paf TODO
 * data/08_total_burden/mort[YYYY].csv restricted use mortality counts were obtained from US National Vital Statistics System (NVSS) covering all deaths occurring within the United States. The usage of the restricted-use data set for this study was approved by the Division of Vital Statistics at the Center for Disease Control and Prevention. Not shared due to privacy concerns and data-usage restrictions.
-* data/15_sum_higher_geog_level
-* data/16_prop_of_attr_burd
-* data/16_sum_higher_geog_level_total
-
-* data/tmp
+* data/09_total_burden_parsed. Mortality counts parsed to a more readable format than in data/08_total_burden. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
+* data/14_attr_burden. Estimates for mortality attributable to PM2.5 exposure on county level. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
+* data/15_sum_higher_geog_level. Estimates for mortality attributable to PM2.5 exposure aggregated to county, state and national level. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
+* data/16_sum_higher_geog_level_total. All-cause mortality aggregated to county, state and national level. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
+* data/16_prop_of_attr_burd. Proportion of all-cause mortality attributable to PM2.5 exposure. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
+* data/tmp TODO
 
 ### Necessary starting data folder structure to reproduce
 
@@ -135,13 +132,6 @@ data
 │   │       ├── cens_agr_1990_AL.csv
 │   │       ├── cens_agr_1990_AR.csv
 │   │       ├── ...
-├── 07_gbd_paf
-│   ├── STATEFP
-│   │   ├── 1990
-│   │   │   ├── paf_1990_1.csv
-│   │   │   ├── paf_1990_10.csv
-│   │   │   ├── paf_1990_11.csv
-│   │   │   ├── ...
 ├── 08_svi
 │   ├── SVI_2000_US_county.csv
 │   ├── SVI_2010_US_county.csv
