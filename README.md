@@ -19,19 +19,17 @@ Many of the input data are automatically downloaded in the script. Where it was 
 * data/crosswalk_[YYYY]_[YYYY].csv: cross-walk files for census boundaries from the [Longitudinal Tract Database](https://s4.ad.brown.edu/Projects/Diversity/researcher/bridging.htm).
 * data/NCHSURCodes2013.xlsx classification for urbanisation level on county level from [here](https://www.cdc.gov/nchs/data_access/urban_rural.htm)
 * data/rural_urban_class.csv urbanisation classification from NCHSURCodes2013.xlsx crosswalked to county boundary versions of 1990, 2000, 2010 using crosswalk_[YYYY]_[YYYY].csv. The classes 1,2 were aggregated into one, similarly 3,4 and 5,6.
-* data/08_svi county level look up table for social-vulnerability level from [here](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+
 * data/standartpopulation.xlsx manually typed from "Table VIII. United States standard population" in the [National Vital Statistics Reports Volume 57, Number 14](https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf)
 * data/nhgis0002_ds120_1990_tract.csv population data at census tract level for 1990 [Ipums](https://data2.nhgis.org/) (Year: 1990; Geographic level: Census Tract (by State--County); Dataset: 1990 Census: STF 1 - 100% Data; NHGIS code: 1990_STF1; NHGIS ID: ds120; Tables: Race by Sex by Age, Universe: Persons, Source code: NP12, NHGIS code:  ET4)    
 * IHME_GBD_2019_TMRLT_Y2021M01D05.csv GBD Reference Life Table used for optional calculation of Years of Life Lost
 * ihme_fips.rda from [here](https://github.com/mkiang/narcan/blob/master/data/ihme_fips.rda.)
 * data/04_exp_rr calculated from MR-BRT files.
 
-* data/05_demog/meta/cens_meta_[YYYY].csv TODO
-* data/05_demog/meta_down/cens_meta_[YYYY].csv TODO and translated via cross_bridge/cross_meta files
-* data/05_demog/cross_bridge/cross_meta_[YYYY].csv TODO
-* data/05_demog/[YYYY] census tract level population counts of year [YYYY]
-* data/08_total_burden/mort[YYYY].csv restricted use mortality counts were obtained from US National Vital Statistics System (NVSS) covering all deaths occurring within the United States. The usage of the restricted-use data set for this study was approved by the Division of Vital Statistics at the Center for Disease Control and Prevention. Not shared due to privacy concerns and data-usage restrictions.
+* data/05_demog/meta_down/cens_meta_[YYYY].csv Meta files for the population counts as downloaded from the census files.
+* data/05_demog/cross_bridge/cross_meta_[YYYY].csv Meta files for the population counts for years where census data was not available translated.
 
+* data/08_svi county level look up table for social-vulnerability level from [here](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 * data/09_total_burden_parsed/causes.csv look up table for causes and ICD codes considered in this study.
 * data/09_total_burden_parsed/findreplace.csv TODO
 * data/09_total_burden_parsed/[county/nation/STATEFP] TODO
@@ -53,7 +51,7 @@ Many of the input data are automatically downloaded in the script. Where it was 
 * data/05_demog/[YYYY]_in_[ZZZZ] census tract level population counts of year [YYYY] translated into census tracts of year [ZZZZ] using data/crosswalk_[YYYY]_[ZZZZ].csv. Too large to include on Github.
 * data/06_dem.agr population counts by exposure level and county. Too large to include on Github.
 * data/07_gbd_paf TODO
-
+* data/08_total_burden/mort[YYYY].csv restricted use mortality counts were obtained from US National Vital Statistics System (NVSS) covering all deaths occurring within the United States. The usage of the restricted-use data set for this study was approved by the Division of Vital Statistics at the Center for Disease Control and Prevention. Not shared due to privacy concerns and data-usage restrictions.
 * data/15_sum_higher_geog_level
 * data/16_prop_of_attr_burd
 * data/16_sum_higher_geog_level_total
