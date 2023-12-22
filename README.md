@@ -34,7 +34,7 @@ Many of the input data are automatically downloaded in the script. Where it was 
 * data/09_total_burden_parsed/findreplace.csv. Find replace loop up table for the mortality counts to parse it to a more readable format.
 
 * data/10_cdc_population/[nation/STATEFP]. Population counts by educational attainment and race-ethnicity sourced from (here)[https://www.census.gov/data/tables/2016/demo/education-attainment/cps-detailed-tables.html].
-* data/11_ethn_educ_population population counts on national level of the Population 18 Years and Over, by Age, Sex, Race, and Hispanic Origin for the years TODO manually downloaded from [census](https://www2.census.gov/programs-surveys/demo/tables/educational-attainment/) Educational Attainment
+* data/11_ethn_educ_population population counts on national level of the Population 18 Years and Over, by Age, Sex, Race, and Hispanic Origin manually downloaded from [census](https://www2.census.gov/programs-surveys/demo/tables/educational-attainment/) Educational Attainment
 * data/12_population_summary parsed and summarized population counts based on data/05_demog, data/10_cdc_population, data/11_ethn_educ_population Bridged-Race Population Estimates from (here)[https://wonder.cdc.gov/bridged-race-population.html].
 * data/17_summary. High-level summary of our results.
 * data/18_figures. Figures used in the manuscript.
@@ -53,7 +53,7 @@ Many of the input data are automatically downloaded in the script. Where it was 
 * data/15_sum_higher_geog_level. Estimates for mortality attributable to PM2.5 exposure aggregated to county, state and national level. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
 * data/16_sum_higher_geog_level_total. All-cause mortality aggregated to county, state and national level. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
 * data/16_prop_of_attr_burd. Proportion of all-cause mortality attributable to PM2.5 exposure. Not included, because directly derived from data/08_total_burden and thus subject to data-usage restrictions.
-* data/tmp TODO
+* data/tmp temporary files used for the calculations.
 
 ### Necessary starting data folder structure to reproduce
 
