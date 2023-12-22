@@ -1,7 +1,7 @@
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/FridljDa/pm25_inequality/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FridljDa/pm25_inequality/actions/workflows/R-CMD-check.yaml)
   <!-- badges: end -->
-  
+
 # PM2.5-attributable-mortality-analysis
 
 Repo supporting ["TODO publication"](https://www-pnas-org.stanford.idm.oclc.org/content/118/2/e2011048118).
@@ -11,28 +11,15 @@ Repo supporting ["TODO publication"](https://www-pnas-org.stanford.idm.oclc.org/
 The main estimates generated in the paper are available at `data/15_summary`. T
 
 # Data
- 
-Many of the input data are automatically downloaded in the script. Where it was not possible, directions for accessing the raw data are included along with the download links provided below. 
 
+Many of the input data are automatically downloaded in the script. Where it was not possible, directions for accessing the raw data are included along with the download links provided below.
 
-Census user key needs to specified in line [here](https://github.com/FridljDa/PM2.5-attributable-mortality-analysis-private/blob/master/code/02_download_meta.R) and [here](https://github.com/FridljDa/PM2.5-attributable-mortality-analysis-private/blob/master/code/04_download_cens.R).
-
-## Not included in repo
-* data/01_exposure/[YYYY].h5 PM2.5 exposure estimates for contiguous US sourced from [here](ftp://stetson.phys.dal.ca/jmeng/HEI2018-HistoricalPM25/historicalPM25/). Too large to include on Github. 
-* data/01_exposure/epa PM2.5 exposure measurements for Alaska and Hawaii sourced from [here](https://aqs.epa.gov/aqsweb/airdata/download_files.html). Too large to include on Github.  
-* data/02_tract tract_shape files in .rds sourced using directly [tigris](https://cran.r-project.org/web/packages/tigris/index.html) (1990) or inderictly [tidycensus::get_decennial](https://walker-data.com/tidycensus/reference/get_decennial.html) (2000:2008, 2010) or [tidycensus::get_acs](https://github.com/walkerke/tidycensus/blob/master/man/get_acs.Rd) (2009,2011:2016). Too large to include on Github.   
-* data/03_exp_tracts csv tables with census tract geographic identifier and assigned PM2.5 exposure based on data/01_exposure and data/02_tract. Too large to include on Github.
-* data/04_exp_rr/mrbrt MR-BRT files for GBD-CRF (see [1](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext), [2](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext#supplementaryMaterial)) privately shared by IHME team (not primary CRF in main analysis). Private, so not shared on Github.
-* data/05_demog/[YYYY]_in_[ZZZZ] census tract level population counts of year [YYYY] translated into census tracts of year [ZZZZ] using data/crosswalk_[YYYY]_[ZZZZ].csv. Too large to include on Github.
-* data/06_dem.agr TODO. Too large to include on Github.
-* data/07_gbd_paf TODO
-* 
 ## Included in repo
 
 * data/crosswalk_[YYYY]_[YYYY].csv: cross-walk files for census boundaries from the [Longitudinal Tract Database](https://s4.ad.brown.edu/Projects/Diversity/researcher/bridging.htm).
 * data/NCHSURCodes2013.xlsx classification for urbanisation level on county level from [here](https://www.cdc.gov/nchs/data_access/urban_rural.htm)
 * data/rural_urban_class.csv urbanisation classification from NCHSURCodes2013.xlsx crosswalked to county boundary versions of 1990, 2000, 2010 using crosswalk_[YYYY]_[YYYY].csv. The classes 1,2 were aggregated into one, similarly 3,4 and 5,6.
-
+* data/08_svi county level look up table for social-vulnerability level from [here](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 * data/standartpopulation.xlsx manually typed from "Table VIII. United States standard population" in the [National Vital Statistics Reports Volume 57, Number 14](https://www.cdc.gov/nchs/data/nvsr/nvsr57/nvsr57_14.pdf)
 * data/nhgis0002_ds120_1990_tract.csv population data at census tract level for 1990 [Ipums](https://data2.nhgis.org/) (Year: 1990; Geographic level: Census Tract (by State--County); Dataset: 1990 Census: STF 1 - 100% Data; NHGIS code: 1990_STF1; NHGIS ID: ds120; Tables: Race by Sex by Age, Universe: Persons, Source code: NP12, NHGIS code:  ET4)    
 * IHME_GBD_2019_TMRLT_Y2021M01D05.csv GBD Reference Life Table used for optional calculation of Years of Life Lost
@@ -42,51 +29,250 @@ Census user key needs to specified in line [here](https://github.com/FridljDa/PM
 * data/05_demog/meta/cens_meta_[YYYY].csv TODO
 * data/05_demog/meta_down/cens_meta_[YYYY].csv TODO and translated via cross_bridge/cross_meta files
 * data/05_demog/cross_bridge/cross_meta_[YYYY].csv TODO
-* data/05_demog/[YYYY] census tract level population counts of year [YYYY] 
-* data/08_total_burden/mort[YYYY].csv TODO for [YYYY] in 1990:1998 from [here](https://www.nber.org/research/data/mortality-data-vital-statistics-nchs-multiple-cause-death-data)
-* data/08_total_burden/mort[YYYY].csv restricted use mortality counts were obtained from US National Vital Statistics System (NVSS) covering all deaths occurring within the United States for [YYYY] in 1999:2016 The usage of the restricted-use data set for this study was approved by the Division of Vital Statistics at the Center for Disease Control and Prevention. 
-* data/09_total_burden_parsed/causes.csv TODO
+* data/05_demog/[YYYY] census tract level population counts of year [YYYY]
+* data/08_total_burden/mort[YYYY].csv restricted use mortality counts were obtained from US National Vital Statistics System (NVSS) covering all deaths occurring within the United States. The usage of the restricted-use data set for this study was approved by the Division of Vital Statistics at the Center for Disease Control and Prevention. Not shared due to privacy concerns and data-usage restrictions.
+
+* data/09_total_burden_parsed/causes.csv look up table for causes and ICD codes considered in this study.
 * data/09_total_burden_parsed/findreplace.csv TODO
 * data/09_total_burden_parsed/[county/nation/STATEFP] TODO
 * data/10_cdc_population/[nation/STATEFP] TODO
-* data/11_ethn_educ_population population counts on national level of the Population 18 Years and Over, by Age, Sex, Race, and Hispanic Origin for the years TODO manually downloaded from [census](https://www2.census.gov/programs-surveys/demo/tables/educational-attainment/) Educational Attainment 
+* data/11_ethn_educ_population population counts on national level of the Population 18 Years and Over, by Age, Sex, Race, and Hispanic Origin for the years TODO manually downloaded from [census](https://www2.census.gov/programs-surveys/demo/tables/educational-attainment/) Educational Attainment
 * data/12_population_summary parsed and summarized population counts based on data/05_demog, data/10_cdc_population, data/11_ethn_educ_population
 * data/13_total_burden_parsed2 TODO mortality rates based on data/08_total_burden and data/12_population_summary
-* data/14_attr_burden TODO based on data/06_dem.agr, data/13_total_burden_parsed2, 
+* data/14_attr_burden TODO based on data/06_dem.agr, data/13_total_burden_parsed2,
 * data/15_summary high-level summary of TODO
-* data/18_figures TODO
+* data/17_summary
+* data/18_figures
+
+## Not included in repo
+* data/01_exposure/[YYYY].h5 PM2.5 exposure estimates for contiguous US sourced from [here](ftp://stetson.phys.dal.ca/jmeng/HEI2018-HistoricalPM25/historicalPM25/). Too large to include on Github.
+* data/01_exposure/epa PM2.5 exposure measurements for Alaska and Hawaii sourced from [here](https://aqs.epa.gov/aqsweb/airdata/download_files.html). Too large to include on Github.  
+* data/02_tract tract_shape files in .rds sourced using directly [tigris](https://cran.r-project.org/web/packages/tigris/index.html) (1990) or inderictly [tidycensus::get_decennial](https://walker-data.com/tidycensus/reference/get_decennial.html) (2000:2008, 2010) or [tidycensus::get_acs](https://github.com/walkerke/tidycensus/blob/master/man/get_acs.Rd) (2009,2011:2016). Too large to include on Github.   
+* data/03_exp_tracts csv tables with census tract geographic identifier and assigned PM2.5 exposure based on data/01_exposure and data/02_tract. Too large to include on Github.
+* data/04_exp_rr/mrbrt MR-BRT files for GBD-CRF (see [1](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext), [2](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)30752-2/fulltext#supplementaryMaterial)) privately shared by IHME team (not primary CRF in main analysis). Private, so not shared on Github.
+* data/05_demog/[YYYY]_in_[ZZZZ] census tract level population counts of year [YYYY] translated into census tracts of year [ZZZZ] using data/crosswalk_[YYYY]_[ZZZZ].csv. Too large to include on Github.
+* data/06_dem.agr population counts by exposure level and county. Too large to include on Github.
+* data/07_gbd_paf TODO
+
+* data/15_sum_higher_geog_level
+* data/16_prop_of_attr_burd
+* data/16_sum_higher_geog_level_total
+
 * data/tmp
+
 ### Necessary starting data folder structure to reproduce
 
 ```
 data
- ├── crosswalk_1990_2010.csv
- ├── crosswalk_2000_2010.csv
- ├── IHME_GBD_2019_TMRLT_Y2021M01D05.csv
- ├── NCHSURCodes2013.xlsx
- ├── nhgis0002_ds120_1990_tract.csv
- ├── rural_urban_class.csv
- ├── standartpopulation.xlsx
- ├── 01_exposure
- │	 ├── [YYYY].h5 (for 1990-2016)
- │	 ├── epa
- │   └── annual_conc_by_monitor_[YYYY].csv (for 1990-2016)
- ├── 04_exp_rr
- │   ├── mrbrt
- │   │	 ├── bw.csv 
- │   │	 ├── ...
- ├── 08_total_burden
- │	 └── nvss
- │  │	 └── mort[YYYY].csv (for 1990-2016)
- ├── 10_cdc_population
- │	 ├── nation 
- │  │	 ├── ...
- │	 │	 └── Bridged-Race Population Estimates 1990-2016.txt
- │	 └── STATEFP
- │  │	 ├── ...
- │	 │	 └── Bridged-Race Population Estimates 1990-2016.txt
- └── 11_ethn_educ_population
- │  └── table.xls
+├── 01_exposure
+│   ├── 1990.h5
+│   ├── 1991.h5
+│   ├── 1992.h5
+│   ├── 1993.h5
+│   ├── ...
+│   └── epa
+│       ├── annual_conc_by_monitor_1990.csv
+│       ├── annual_conc_by_monitor_1991.csv
+│       ├── annual_conc_by_monitor_1992.csv
+│       ├── ...
+├── 02_tracts
+│   ├── 1990
+│   │   ├── tracts_1990_AK.rds
+│   │   ├── tracts_1990_AL.rds
+│   │   ├── ...
+│   ├── 1991
+│   └── ...
+├── 03_exp_tracts
+│   ├── 1990
+│   │   ├── exp_trac_1990_AK.csv
+│   │   ├── exp_trac_1990_AL.csv
+│   │   ├── exp_trac_1990_AR.csv
+│   │   ├── ...
+│   ├── 1991
+│   │   ├── exp_trac_2013_AK.csv
+│   │   ├── exp_trac_2013_AL.csv
+│   │   ├── exp_trac_2013_AR.csv
+│   └── epa_tmp
+│       ├── trac_loc_1990_AK.csv
+│       ├── trac_loc_1990_HI.csv
+│       ├── ...
+├── 04_exp_rr
+│   ├── cvd_ihd_25.csv
+│   ├── cvd_ihd_30.csv
+│   ├── cvd_ihd_35.csv
+│   ├── cvd_ihd_40.csv
+│   ├── ...
+│   ├── lri.csv
+│   ├── mrbrt
+│   │   ├── bw.csv
+│   │   ├── cvd_ihd_25.csv
+│   │   ├── cvd_ihd_30.csv
+│   │   ├── cvd_ihd_35.csv
+│   │   ├── ...
+├── 05_demog
+│   ├── 1990
+│   │   ├── census_1990_AK.csv
+│   │   ├── census_1990_AL.csv
+│   │   ├── census_1990_AR.csv
+│   ├── 1991
+│   ├── cross_bridge
+│   │   ├── cross_meta_1990.csv
+│   │   ├── cross_meta_2000.csv
+│   │   ├── cross_meta_2009.csv
+│   │   ├── ...
+│   ├── meta
+│   │   ├── cens_meta_1990.csv
+│   │   ├── cens_meta_1991.csv
+│   │   ├── cens_meta_1992.csv
+│   │   ├── ...
+│   └── meta_down
+│       ├── cens_meta_1990.csv
+│       ├── cens_meta_1991.csv
+│       ├── cens_meta_1992.csv
+│       ├── ...
+├── 06_dem.agr
+│   ├── county
+│   │   └── 1990
+│   │       ├── cens_agr_1990_AK.csv
+│   │       ├── cens_agr_1990_AL.csv
+│   │       ├── cens_agr_1990_AR.csv
+│   │       ├── ...
+├── 07_gbd_paf
+│   ├── STATEFP
+│   │   ├── 1990
+│   │   │   ├── paf_1990_1.csv
+│   │   │   ├── paf_1990_10.csv
+│   │   │   ├── paf_1990_11.csv
+│   │   │   ├── ...
+├── 08_svi
+│   ├── SVI_2000_US_county.csv
+│   ├── SVI_2010_US_county.csv
+│   ├── SVI_2014_US_county.csv
+│   ├── SVI_2016_US_county.csv
+│   ├── SVI_2018_US_county.csv
+│   ├── SVI_2020_US_county.csv
+│   └── svi_lookup_table.csv
+├── 09_total_burden_parsed
+│   ├── STATEFP
+│   │   └── nvss
+│   │       ├── total_burden_nvss_1990.csv
+│   │       ├── total_burden_nvss_1991.csv
+│   │       ├── total_burden_nvss_1992.csv
+│   │       ├── ...
+│   └── findreplace.csv
+├── 10_cdc_population
+│   ├── STATEFP
+│   │   ├── Bridged-Race Population Estimates 1990-2016 (1).txt
+│   │   ├── Bridged-Race Population Estimates 1990-2016 (10).txt
+│   │   ├── Bridged-Race Population Estimates 1990-2016 (11).txt
+│   │   ├── ...
+│   └── nation
+│       ├── Bridged-Race Population Estimates 1990-2016 (1).txt
+│       ├── Bridged-Race Population Estimates 1990-2016 (2).txt
+│       ├── ...
+├── 11_ethn_educ_population
+│   ├── table-1-02 (1).xlsx
+│   ├── table-1-02 (2).xlsx
+│   ├── table-1-02.xlsx
+│   ├── ...
+├── 12_population_summary
+│   ├── nation
+│   │   ├── pop_sum_1990.csv
+│   │   ├── pop_sum_1991.csv
+│   │   ├── pop_sum_1992.csv
+│   │   ├── ...
+│   ├── pop_cdc_nation.csv
+│   ├── pop_nation.csv
+│   └── pop_race_educ_nation.csv
+├── 14_attr_burd
+│   └── county
+│       └── nvss
+│           ├── attr_burd_di_1990.csv
+│           ├── attr_burd_di_1991.csv
+│           ├── attr_burd_di_1992.csv
+│           ├── attr_burd_di_1993.csv
+│           ├── ...
+├── 15_sum_higher_geog_level
+│   ├── STATEFP
+│   │   ├── attr_burden_age_adjusted_1991.csv
+│   │   ├── attr_burden_age_adjusted_1992.csv
+│   │   ├── attr_burden_age_adjusted_1993.csv
+│   │   ├── ...
+│   ├── county
+│   │   ├── attr_burden_age_adjusted_1990.csv
+│   │   ├── attr_burden_age_adjusted_1991.csv
+│   │   ├── attr_burden_age_adjusted_1992.csv
+│   │   ├── ...
+│   └── nation
+│       ├── attr_burden_age_adjusted_1991.csv
+│       ├── attr_burden_age_adjusted_1992.csv
+│       ├── attr_burden_age_adjusted_1993.csv
+│       ├── ...
+├── 16_prop_of_attr_burd
+│   └── nation
+│       ├── attr_burden_prop_1992.csv
+│       ├── attr_burden_prop_1993.csv
+│       ├── attr_burden_prop_1994.csv
+│       ├── ...
+├── 16_sum_higher_geog_level_total
+│   ├── STATEFP
+│   │   ├── total_burden_age_adjusted_1990.csv
+│   │   ├── total_burden_age_adjusted_1991.csv
+│   │   ├── total_burden_age_adjusted_1992.csv
+│   │   ├── ...
+│   ├── county
+│   │   ├── total_burden_age_adjusted_1990.csv
+│   │   ├── total_burden_age_adjusted_1991.csv
+│   │   ├── total_burden_age_adjusted_1992.csv
+│   │   ├── total_burden_age_adjusted_1993.csv
+│   │   ├── ...
+│   └── nation
+│       ├── total_burden_age_adjusted_1990.csv
+│       ├── total_burden_age_adjusted_1991.csv
+│       ├── total_burden_age_adjusted_1992.csv
+│       ├── ...
+├── 17_summary
+│   ├── all_burd.csv
+│   ├── attr_burd_STATEFP_1.csv
+│   ├── attr_burd_STATEFP_2.csv
+│   ├── attr_burd_STATEFP_5.csv
+│   ├── attr_burd_STATEFP_6.csv
+│   ├── attr_burd_nation_1.csv
+│   ├── attr_burd_nation_2.csv
+│   ├── attr_burd_nation_3.csv
+│   ├── attr_burd_nation_4.csv
+│   ├── attr_burd_nation_7.csv
+│   ├── attr_burd_nation_8.csv
+│   ├── county
+│   │   ├── all_burd.csv
+│   │   ├── attr_burd_1.csv
+│   │   ├── attr_burd_2.csv
+│   │   ├── attr_burd_3.csv
+│   │   ├── attr_burd_4.csv
+│   │   ├── attr_burd_5.csv
+│   │   ├── attr_burd_6.csv
+│   │   ├── attr_burd_7.csv
+│   │   └── attr_burd_8.csv
+│   └── pm_summary.csv
+├── 18_figures
+│   ├── di_gee-real-25
+│   │   ├── figure1.pdf
+│   │   ├── figure1.png
+│   │   ├── figure2.pdf
+│   │   ├── ...
+├── IHME_GBD_2019_TMRLT_Y2021M01D05.csv
+├── NCHSURCodes2013.xlsx
+├── crosswalk_1990_2010.csv
+├── crosswalk_2000_2010.csv
+├── final_findreplace.csv
+├── ihme_fips.rda
+├── rural_urban_class.csv
+├── standartpopulation.xlsx
+└── tmp
+    ├── causes_ages.csv
+    ├── counties_2000.RData
+    ├── counties_2009.RData
+    ├── ...
 ```
 # R Packages needed
 
@@ -190,5 +376,5 @@ loaded via a namespace (and not attached):
  [97] boot_1.3-23         MASS_7.3-51.4       gtools_3.8.1        assertthat_0.2.1    pkgload_1.1.0       openssl_1.4.1      
 [103] rprojroot_1.3-2     withr_2.3.0         fracdiff_1.5-1      parallel_3.6.1      hms_0.5.2           quadprog_1.5-8     
 [109] grid_3.6.1          rpart_4.1-15        timeDate_3043.102   class_7.3-15        minqa_1.2.4         TTR_0.23-5         
-[115] base64enc_0.1-3 
+[115] base64enc_0.1-3
 ```
