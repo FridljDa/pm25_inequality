@@ -12,7 +12,7 @@ library(magrittr)
 library(dplyr)
 library(ggplot2)
 library(ggpubr)
-
+library(tidyr)
 
 # Pass in arguments
 args <- commandArgs(trailingOnly = T)
@@ -42,7 +42,7 @@ all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
 all_burd <- all_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
+theme_set(theme_classic(base_family = "Helvetica")); #options(bitmapType ="cairo");
 
 if(min_ageI == 65){
   quit()
