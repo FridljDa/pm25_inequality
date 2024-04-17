@@ -16,7 +16,7 @@ library(ggpubr)
 scenarioI <- "real"
 methodI <- "di_gee"
   
-summaryDir <- here::here("data/15_summary") 
+summaryDir <- here::here("data/17_summary") 
 figuresDir <- here::here("data/18_figures") 
 ```
 

@@ -10,13 +10,17 @@ library(usmap)
 library(data.table)
 library(ggplot2)
 library(ggpubr)
+
+suppressMessages({
+  pkgload::load_all()
+})
 ```
 
 ```{r}
 scenarioI <- "real"
 methodI <- "di_gee"
   
-summaryDir <- here::here("data/15_summary") 
+summaryDir <- here::here("data/17_summary") 
 figuresDir <- here::here("data/18_figures") 
 ```
 
@@ -26,9 +30,18 @@ file_list <- list.files(file.path(summaryDir, "county"))
 file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
 attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
 
+read
 ```
 
 ```{r}
+attr_burd_test <- attr_burd %>%
+  filter(
+    Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & method == "di_gee" &
+      attr == "attributable" &
+      source == "National Vital Statistics System" &
+       scenario == "real" 
+  )
+
 attr_burd <- attr_burd %>%
   filter(
     Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" & method == "di_gee" &
