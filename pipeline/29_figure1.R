@@ -314,6 +314,11 @@ g_combined <- grid.arrange(
   layout_matrix = lay
 )
 
+#ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]],
+#          legend_plots[[1]], legend_plots[[2]], legend_plots[[3]], legend_plots[[4]],
+#          ncol = 4, nrow = 2,
+#          heights = c(1, 0.4))
+
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
 ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.png"), dpi = 300, g_combined, height = 9, width = 11)
