@@ -246,9 +246,17 @@ t6 <- grobTree(
   textGrob("Social Vulnerability Index", gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
 )
 
+#t7 <- grobTree(
+#  rectGrob(gp = gpar(fill = "grey")),
+#  textGrob("PM2.5-attributable mortality rate", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"))
+#)
+
+
 t7 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("PM2.5-attributable mortality rate", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"))
+  textGrob(expression(PM[2.5] ~ "-attributable mortality rate"),
+           rot = 90,
+           gp = gpar(fontsize = 10, fontface = "bold"))
 )
 
 #t8 <- grobTree(
