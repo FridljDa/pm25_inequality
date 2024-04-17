@@ -18,7 +18,7 @@ if (rlang::is_empty(args)) {
 
   agr_by <- "nation"
   source <- "nvss"
-  year <- 2016
+  year <- 2000
 } else {
   year <- args[1]
   source <- "nvss"
@@ -36,6 +36,8 @@ propDir <- file.path(propDir, paste0("attr_burden_prop_", year, ".csv"))
 if (file.exists(propDir)) {
   # quit()
 }
+
+calculate_prop_of_dif <- (agr_by == "nation")
 
 ## ---- read total burden, attr burden, join----
 tic("calculated proportions of attributable burden and parsed")
@@ -94,7 +96,7 @@ anti_join <- diagnose_join_issues(
     "source", "measure1", "measure2", agr_by, "min_age", "max_age", "svi_bin1", "svi_bin2", "svi_bin3", "svi_bin4"
   )
 )
-browser()
+
 # attributable_burden_test <- attributable_burden %>% filter(Race == "White" & Education == "lower")
 
 if (nrow(anti_join) > 0) {
@@ -132,19 +134,22 @@ attr_total_burden_prop_overall_burden <- attr_total_burden %>%
 if (any(attr_total_burden_prop_overall_burden$mean > 100)) {
   stop("Mean value greater than 100 found")
 }
+
 ### ---disparity to race-ethnicity----
+
 
 group_variables <- setdiff(colnames(attr_total_burden), c("mean", "lower", "upper", "overall_total_burden", "Race", "Hispanic.Origin"))
 attr_total_burden_prop_of_difference <- attr_total_burden %>%
   group_by(across(all_of(group_variables))) %>%
   filter("Black or African American" %in% c(Race))
+
 if (nrow(attr_total_burden_prop_of_difference) == 0) {
   warning(paste("1: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
 }
 
 # delta_method_sum(mean_x, lb_x, ub_x, mean_y, lb_y, ub_y, alpha = 0.05)
 # Your existing data frame manipulation
-if (FALSE) {
+if (calculate_prop_of_dif) {
   if (FALSE) {
     attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
       group_by(across(all_of(group_variables))) %>%
@@ -198,16 +203,20 @@ if (FALSE) {
       )
   }
 
-  test <- attr_total_burden_prop_of_difference %>%
+  attr_total_burden_prop_of_difference_nh_white <- attr_total_burden_prop_of_difference %>%
     ungroup() %>%
     filter(Race %in% c("White") & Hispanic.Origin == "Not Hispanic or Latino" & svi_bin == 666 & svi_bin1 == 666 & svi_bin2 == 666 &
       svi_bin3 == 666 & svi_bin4 == 666 & rural_urban_class == 666 & method == "di_gee" &
-      measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25) %>%
-    select(Year, Race, Hispanic.Origin, lower, mean, upper) %>%
+      measure2 == "age-adjusted rate" & scenario == "real" & min_age == 25 & Education == 666) %>%
+    #select(Year, Race, Hispanic.Origin, lower, mean, upper) %>%
     mutate(lower = round(lower, 3))
 
   if (nrow(attr_total_burden_prop_of_difference) == 0) {
     warning(paste("2: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
+  }
+
+  if(nrow(attr_total_burden_prop_of_difference_nh_white) > 0){
+    cat("The difference between NH White and Black or African American in the year", year, "is", attr_total_burden_prop_of_difference_nh_white$mean, "\n")
   }
 
   attr_total_burden_prop_of_difference <- attr_total_burden_prop_of_difference %>%
@@ -217,11 +226,18 @@ if (FALSE) {
     warning(paste("3: in 24_proportions_attr_burd.R, attr_total_burden_prop_of_difference has 0 rows ", year, agr_by))
   }
 }
+
 attr_total_burden_combined <- rbind(
   attr_total_burden_value,
-  attr_total_burden_prop_overall_burden # ,
-  # attr_total_burden_prop_of_difference
+  attr_total_burden_prop_overall_burden
 )
+
+if(calculate_prop_of_dif){
+  attr_total_burden_combined <- rbind(
+    attr_total_burden_combined,
+    attr_total_burden_prop_of_difference
+  )
+}
 
 attr_total_burden_combined <- as.data.frame(attr_total_burden_combined)
 fwrite(attr_total_burden_combined, file = propDir)
