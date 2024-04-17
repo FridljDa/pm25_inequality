@@ -41,9 +41,9 @@ states <- file.path(tmpDir, "states.csv") %>%
 tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
-#agr_bys <- "nation"
+agr_bys <- "nation"
 ## --- read and bind attr burden----
-cat("row-bind attr_burden-start")
+cat("row-bind attr_burden-start\n")
 tic("row-bind attr_burden")
 attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
@@ -74,7 +74,7 @@ if (nrow(attr_burden) == 0) {
   stop(paste("attr_burd still missing in year", year, "in 25_summary_attr_total_burd.R"))
 }
 ## --- read and bind all burden----
-cat("row-bind total_burden-start")
+cat("row-bind total_burden-start\n")
 tic("row-bind total_burden")
 agr_bys <- list.files(summaryHigherTotalDir)
 agr_bys <- "nation"
@@ -153,12 +153,12 @@ attr_burden <- attr_burden %>%
 
 findreplace <- read.csv("data/final_findreplace.csv")
 
-cat("total_burden findreplace-start")
+cat("total_burden findreplace-start\n")
 tic("total_burden findreplace")
 total_burden <- total_burden %>% replace_values(findreplace)
 toc()
 
-cat("attr_burden findreplace-start")
+cat("attr_burden findreplace-start\n")
 tic("attr_burden findreplace")
 attr_burden <- attr_burden %>% replace_values(findreplace)
 toc()
