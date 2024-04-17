@@ -148,7 +148,8 @@ plots <- lapply(attr_burdens, function(attr_burdens_i) {
     ) +
     geom_point(
       data = attr_burdens_i,
-      aes(y = Ethnicity, x = mean, colour = Year, size = value) # ,size = value #TODO
+      size = 2.5,
+      aes(y = Ethnicity, x = mean, colour = Year) # ,size = value #TODO
     ) +
     scale_colour_manual(values = c("2000" = "#a3c4dc", "2015" = "#0e668b", "Mean between 2000 and 2015" = "#8b0000")) +
     #scale_shape_manual(values = c("2000" = 19, "2015" = 19, "Mean between 2000 and 2015" = 17)) + #shape = 17 "\u007C"
