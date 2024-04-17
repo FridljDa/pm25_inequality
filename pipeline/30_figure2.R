@@ -188,7 +188,9 @@ g3 <- g3 +
 g1 <- g1 +
   xlab("Age-adjusted mortality per 100,000")+
   xlim(0,NA)+
-  ggtitle("Absolute difference to Black Americans\n in mortality attributable to PM2.5") +
+  ggtitle(expression(atop("Absolute difference to Black Americans",
+                          "in mortality attributable to" ~ PM[2.5]))) +
+  #ggtitle("Absolute difference to Black Americans\n in mortality attributable to PM2.5") +
   ylab("Race-Ethnicity") +
   theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
         axis.text.x = element_text(size = 9)) #, face = "bold"
@@ -202,7 +204,9 @@ g1
 g3 <- g3 +
   xlab("Percent")+
   xlim(0,NA)+
-  ggtitle("Percent of the all-cause mortality difference\n to Black Americans attributable to PM2.5")+
+  ggtitle(expression(atop("Percent of the all-cause mortality difference",
+                          "to Black Americans attributable to" ~ PM[2.5]))) +
+  #ggtitle("Percent of the all-cause mortality difference\n to Black Americans attributable to PM2.5")+
   theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
         axis.text.x = element_text(size = 9))
 
