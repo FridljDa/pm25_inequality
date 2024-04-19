@@ -10,6 +10,11 @@ library(usmap)
 library(data.table)
 library(ggplot2)
 library(ggpubr)
+
+suppressMessages({
+  pkgload::load_all()
+})
+
 ```
 
 ```{r}
@@ -18,13 +23,16 @@ methodI <- "di_gee"
   
 summaryDir <- here::here("data/17_summary") 
 figuresDir <- here::here("data/18_figures") 
+states <- read.csv(here::here("data/tmp/states.csv"))
+
 ```
 
 lead attributable burden
 ```{r}
 file_list <- list.files(summaryDir)
 file_list <- file.path(summaryDir, file_list[grepl("attr_bur", file_list)])
-attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE)
+
+attr_burd <- lapply(file_list, read_data) %>% rbindlist(use.names = TRUE, fill = TRUE)
 ```
 
 filter out relevant data
@@ -36,7 +44,14 @@ attr_burd <- attr_burd %>%
     Year == 2016 &
     Gender.Code == "All genders" & measure1 == "Deaths" & measure2 == "age-adjusted rate per 100,000" &
     source == "National Vital Statistics System" & 
-    method == methodI 
+    method == methodI &
+      svi_bin == "All" &
+      rural_urban_class == "All" &
+      svi_bin1 == "All" &
+      svi_bin2 == "All" &
+      svi_bin3 == "All" &
+      svi_bin4 == "All" & 
+      min_age == 25
     ) 
 
 attr_burd <- attr_burd %>%
@@ -68,11 +83,25 @@ ggplot(attr_burd_sub2, aes(x=mean)) +
   geom_vline(xintercept=breaks2, color = "red") +
   facet_wrap(~ Ethnicity, nrow = 2)
 ```
+```{r}
+attr_burd_sub1_plotting <- attr_burd_sub1 %>%
+  rowwise() %>%
+  mutate(fips = states$STATEFP[as.numeric(Region)]) %>%
+  mutate(fips = sprintf("%02d", as.numeric(fips)))
+
+attr_burd_sub1_plotting <- attr_burd_sub1_plotting %>%
+  mutate(Ethnicity = as.factor(Ethnicity))
+```
 
 ```{r}
 name = "Percentage of all-cause mortality
 attributable to PM2.5"
-map1 <-  plot_usmap(data = attr_burd_sub1 %>% rename(state = Region), values = "mean", color = "white") +
+```
+
+
+```{r}
+
+map1 <-  plot_usmap(data = attr_burd_sub1_plotting, regions = "states", values = "mean", color = "white") +
  #scale_fill_viridis_b(name = name#, 
                       #breaks = c(5, 10, 15, 20, 40, 60), 
                       #label = c(5, 10, 15, 20, 40, 60)
@@ -81,30 +110,16 @@ map1 <-  plot_usmap(data = attr_burd_sub1 %>% rename(state = Region), values = "
                        #trans = scales::pseudo_log_trans(sigma = 0.001),
                        name = name) +
   #scale_fill_viridis_c()+
- theme(legend.position = c(1, .1), legend.justification = c(1, 0),
-        text = element_text(size=16)) +
+  theme(legend.position.inside = c(0.65, .1) # .inside
+        , text = element_text(size=10)) +
+ #theme(legend.position.inside = c(1, .1), legend.justification = c(1, 0),
+#        text = element_text(size=16)) +
  facet_wrap(~ Ethnicity, ncol = 2)                                                        # Change font size
 
 map1
 ```
 
 ```{r}
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure4.png"), dpi = 300, map1, height = 12, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure4.pdf"), dpi = 300, map1, height = 12, width = 8)
-```
-
-```{r}
-name = "age-adjusted mortality
-per 100,000" #TODO
- plot_usmap(data = attr_burd_sub2 %>% rename(state = Region), values = "mean", color = "white") +
-  scale_fill_viridis_c(#breaks = breaks2, labels = breaks2,
-                       #trans = scales::pseudo_log_trans(sigma = 0.001),
-                       name = name) +
-  #scale_fill_viridis_c()+
- theme(legend.position = c(1, .1), legend.justification = c(1, 0),
-        text = element_text(size=16)) +
- facet_wrap(~ Ethnicity, ncol = 2)   
-```
-```{r}
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI), "figure_map_state_attributable.png"), dpi = 300, height = 12, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI,"-25"), "figure4.png"), dpi = 300, map1, height = 12, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI,"-25"), "figure4.pdf"), dpi = 300, map1, height = 12, width = 8)
 ```
