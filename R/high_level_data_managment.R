@@ -171,7 +171,7 @@ read_data <- function(path) {
   )
 
   #remove strange columns
-  df <- df[, !grepl("^\\.\\.", names(attr_burd))]
+  df <- df[, !grepl("^\\.\\.", names(df))]
 
   parsing_problems <- readr::problems(df)
 
