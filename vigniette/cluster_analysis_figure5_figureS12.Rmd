@@ -7,9 +7,8 @@ output: html_document
 
 ## Packages and Data
 ```{r}
-
 library(sf)
-#library(mapview)
+# library(mapview)
 library(spdep)
 library(sp)
 library(purrr)
@@ -18,54 +17,156 @@ library(RColorBrewer)
 library(fipio)
 library(tigris)
 library(dataPreparation)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(usmap)
+library(data.table)
+
+suppressMessages({
+  pkgload::load_all()
+})
 
 theme_set(theme_classic(base_family = "Helvetica"))
 
 path_files_county_data <- "../trash/"
+# library(readr)
+# county_data_25 <- read_csv("~/Desktop/county_data_25+.csv")
+# path_files_county_data <- "~/Desktop/"
 path_to_figures <- "../data/18_figures/di_gee-real"
 ```
 
+
+
+# Reading data
+```{r}
+#TODO read county data
+```
+
+```{r}
+summaryDir <- here::here("data/17_summary") 
+
+file_list <- list.files(file.path(summaryDir, "county"))
+file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
+
+attr_burd <- (lapply(file_list, read_data) %>% rbindlist(use.names = TRUE))
+
+#drop columns names ..1 and ..2 if they exist
+
+```
+Filter
+```{r, cache=TRUE}
+attr_burd <- attr_burd %>%
+  filter(
+   measure2 == "age-adjusted rate per 100,000",
+   Year %in% 2000:2016,
+   scenario == "real",
+   method == "di_gee",
+   measure3 == "value"
+  ) %>%
+  #group by everything except the Year, mean, lower, upper
+  group_by_at(vars(-Year, -mean, -lower, -upper)) %>%
+  summarise(mean = mean(mean), lower = mean(lower), upper = mean(upper)) %>%
+  ungroup()
+```
+
+```{r}
+attr_burd <- attr_burd %>% rename(county = Region)
+```
+
+
+
+# cross product
+```{r}
+attr_burd <- attr_burd %>% select(county, Ethnicity, min_age, mean)
+attr_burd <- inner_join(attr_burd, 
+                        attr_burd, 
+                        by = c("county", "min_age")) %>%
+  rename(ethnicity1 = Ethnicity.x,
+         ethnicity2 = Ethnicity.y) %>%
+  filter(ethnicity1 != ethnicity2)
+
+attr_burd <- attr_burd%>%
+  mutate(ethnicity1_minus_ethnicity2 = mean.x - mean.y,
+         mean.x = NULL,
+         mean.y = NULL) 
+```
+
+```{r}
+str(attr_burd)
+attr_burd <- attr_burd %>%
+  mutate(county = as.numeric(county)) %>%
+  as.data.frame()
+```
+
+```{r}
+test <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) #TODO delete
+str(test)
+```
+```{r}
+data_25 <- attr_burd %>% filter(min_age == "25") 
+data_65 <- attr_burd %>% filter(min_age == "65") 
+```
+
+# meta
 ```{r}
 # Metadata
-
-meta <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) %>%
+#meta <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) %>%
+meta <- data_25 %>%
   rename(county_fips = county, Ethnicity = ethnicity1, mean = ethnicity1_minus_ethnicity2) %>%
   complete(Ethnicity, county_fips, fill = list(mean = 0, in_sample = 0)) %>%
   distinct(county_fips) %>%
   mutate(meta = fips_metadata(as.character(county_fips),
-                              geometry = T)) %>%
+    geometry = T
+  )) %>%
   unnest() %>%
   st_as_sf() %>%
-  st_cast("POLYGON") 
+  st_cast("POLYGON")
+```
 
+#Preparing data
+```{r}
+get_cat_diff <- function(eth1, eth2) {
+  if (eth2 == "0") {
+    return(eth1)
+  } else if (eth1 != "0" && eth2 != "0") {
+    return(paste(eth1, "minus", eth2))
+  }
+}
+```
+
+```{r}
 # 25+
+#data_25 <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) %>%
+data_25 <- data_25 %>%
+  rename(
+    county_fips = county,
+    diff = ethnicity1_minus_ethnicity2
+  )
 
-data_25 <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) %>%
-  rename(county_fips = county,
-         diff = ethnicity1_minus_ethnicity2) %>%
-  mutate(cat_diff = case_when(ethnicity1 == "Black American" & ethnicity2 == "Hispanic or Latino White" ~ "Black American minus Hispanic or Latino White",
-                              ethnicity1 == "Black American" & ethnicity2 == "NH White" ~ "Black American minus NH White",
-                              ethnicity1 == "Hispanic or Latino White" & ethnicity2 == "NH White" ~ "Hispanic or Latino White minus NH White", ethnicity1 == "Black American" & ethnicity2 == "0" ~ "Black American",
-ethnicity1 == "NH White" & ethnicity2 == "0" ~ "NH White",
-ethnicity1 == "Hispanic or Latino White" & ethnicity2 == "0" ~ "Hispanic or Latino White"))
+data_25 <- data_25 %>%
+  mutate(cat_diff = mapply(get_cat_diff, ethnicity1, ethnicity2))
 
 sf_data_25 <- meta %>%
   inner_join(data_25, by = "county_fips")
+```
 
+```{r}
 # 65+
-data_65 <- read_csv(file.path(path_files_county_data, "county_data_65+.csv")) %>%
-  rename(county_fips = county,
-         diff = ethnicity1_minus_ethnicity2) %>%
-  remove_percentile_outlier(cols = "diff", percentile = 1, verbose = F)  %>%
-  mutate(cat_diff = case_when(ethnicity1 == "Black American" & ethnicity2 == "Hispanic or Latino White" ~ "Black American minus Hispanic or Latino White",
-                              ethnicity1 == "Black American" & ethnicity2 == "NH White" ~ "Black American minus NH White",
-                              ethnicity1 == "Hispanic or Latino White" & ethnicity2 == "NH White" ~ "Hispanic or Latino White minus NH White", ethnicity1 == "Black American" & ethnicity2 == "0" ~ "Black American",
-ethnicity1 == "NH White" & ethnicity2 == "0" ~ "NH White",
-ethnicity1 == "Hispanic or Latino White" & ethnicity2 == "0" ~ "Hispanic or Latino White"))
+#data_65 <- read_csv(file.path(path_files_county_data, "county_data_65+.csv")) %>%
+data_65 <- data_65 %>%
+  rename(
+    county_fips = county,
+    diff = ethnicity1_minus_ethnicity2
+  ) 
+
+data_65 <- data_65 %>%
+  remove_percentile_outlier(cols = "diff", percentile = 1, verbose = F) %>%
+  mutate(cat_diff = mapply(get_cat_diff, ethnicity1, ethnicity2))
 
 sf_data_65 <- meta %>%
   inner_join(data_65, by = "county_fips")
-
 ```
 
 ## Visualization
@@ -79,178 +180,216 @@ sf_data_25 %>%
 
 my_breaks <- c(-1000, -10, -1, 0, 1, 10, 1000)
 ```
+
+
 ```{r}
 sf_data_25_map <- sf_data_25 %>%
-  filter(state_abbr != "AK", 
-         state_abbr != "HI") %>%
-  mutate(across(cat_diff, factor, levels=c("Black American",
-"Hispanic or Latino White",
-"NH White",
-"Black American minus NH White",
-"Black American minus Hispanic or Latino White",
-"Hispanic or Latino White minus NH White")))
+  #filter(
+  #  state_abbr != "AK",
+  #  state_abbr != "HI"
+  #) 
+#%>%
+  mutate(across(cat_diff, factor, levels = c(
+    "Black American",
+    "Hispanic or Latino White",
+    "NH White",
+    "Black American minus NH White",
+    "Black American minus Hispanic or Latino White",
+    "Hispanic or Latino White minus NH White"
+  )))
+
+#meta <- meta %>%
+#  filter(state_abbr != "AK", state_abbr != "HI")
 ```
 
 ```{r}
+sf_data_25_map_notsf <- sf_data_25_map %>%
+  rename(fips = county_fips) %>%
+  select(fips, min_age, diff, cat_diff, diff) %>%
+  as.data.frame()
+```
+
+```{r}
+
+#Asian and Pacific Islander
 my_breaks <- c(0, 1, 10, 1000)
-
-sf_data_25_map %>%
-  filter(cat_diff %in% c("Black American", "Hispanic or Latino White","NH White")) %>%
-  ggplot() +
-  geom_sf(data = meta %>%
-            filter(state_abbr != "AK", state_abbr != "HI"),
-          fill = "gray", col = "white", size = 0.1) +
-  geom_sf(aes(fill = diff), size = 0) +
-  scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
-                       trans = scales::pseudo_log_trans(sigma = 0.001)
-                       ) +
-  #facet_grid(.~cat_diff, ncol = 2) +
-  theme(#legend.position = c(1, 0), 
-        #title
-        #legend.justification = c(1, 0),
-    #strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
+sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
+  filter(cat_diff %in% c("Black American", "Hispanic or Latino White", "NH White", "American Indian or Alaskan Native", "Asian and Pacific Islander")) %>% #
+  plot_usmap(data = .,
+    regions = "counties",
+    values = "diff",
+    exclude = c("AK", "HI")
+  ) +
+  facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) +
+  theme(
     legend.position = "right",
-    #legend.key.size = unit(1, "cm"),
-        #text = element_text(size=16),
-        strip.background =element_rect(fill="grey")) +
-  facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
-  #geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
-  labs(title = "County-level estimated attributable mortality",
-       subtitle = "Mean from 2000 to 2016",
-       fill = "Age-adjusted mortality per 100,000") 
+    strip.background = element_rect(fill = "grey")
+  ) +
+  labs(
+    title = "County-level estimated attributable mortality",
+    subtitle = "Mean from 2000 to 2016",
+    fill = "Age-adjusted mortality per 100,000"
+  ) +
+  scale_fill_viridis_c(
+    breaks = my_breaks, labels = my_breaks,
+    trans = scales::pseudo_log_trans(sigma = 0.001)
+  )
+sf_data_25_map_notsf_plotted_upper
 ```
 
 ```{r}
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_25_upper.png"), bg = 'white', width = 15, height = 5, dpi = 300)
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_25_upper.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_25_upper.png"), bg = "white", width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_25_upper.pdf"), bg = "white", width = 15, height = 5, dpi = 300)
 ```
 
 ```{r}
 my_breaks <- c(-1000, -10, -1, 0, 1, 10, 1000)
 
-sf_data_25_map %>%
-  filter(cat_diff %in% c("Black American minus NH White",
-"Black American minus Hispanic or Latino White",
-"Hispanic or Latino White minus NH White")) %>%
-  ggplot() +
-  geom_sf(data = meta %>%
-            filter(state_abbr != "AK", state_abbr != "HI"),
-          fill = "gray", col = "white", size = 0.1) +
-  geom_sf(aes(fill = diff), size = 0) +
-  scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
-                       trans = scales::pseudo_log_trans(sigma = 0.001)) +
-  #facet_grid(.~cat_diff, ncol = 2) +
-  theme(#legend.position = c(1, 0), 
-        #title
-        #legend.justification = c(1, 0),
-    #strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
-    #legend.position = "bottom",
-    #legend.key.size = unit(1, "cm"),
-        #text = element_text(size=16),
-        strip.background =element_rect(fill="grey")) +
-  facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
-  #geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
-  labs(#title = "County-level estimated attributable mortality",
-       #subtitle = "Mean from 2000 to 2016",
-       fill = "Age-adjusted mortality per 100,000") 
+sf_data_25_map_notsf_plotted_lower <- sf_data_25_map_notsf %>%
+  filter(cat_diff %in% c(
+    "Black American minus NH White",
+    "Black American minus Hispanic or Latino White",
+    "Hispanic or Latino White minus NH White",
+    "American Indian or Alaskan Native minus NH White", 
+    "Asian and Pacific Islander minus NH White"
+  )) %>% #
+  plot_usmap(data = .,
+    regions = "counties",
+    values = "diff",
+    exclude = c("AK", "HI")
+  ) +
+  facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) +
+  theme(
+    legend.position = "right",
+    strip.background = element_rect(fill = "grey")
+  ) +
+  labs(
+    title = "County-level estimated attributable mortality",
+    subtitle = "Mean from 2000 to 2016",
+    fill = "Age-adjusted mortality per 100,000"
+  ) +
+  scale_fill_viridis_c(
+    breaks = my_breaks, labels = my_breaks,
+    trans = scales::pseudo_log_trans(sigma = 0.001)
+  )
+sf_data_25_map_notsf_plotted_lower
 ```
 
 ```{r}
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_25_lower.png"), bg = 'white', width = 15, height = 5, dpi = 300)
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_25_lower.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_25_lower.png"), bg = "white", width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_25_lower.pdf"), bg = "white", width = 15, height = 5, dpi = 300)
 ```
+
+
 ### Diff 65
 ```{r}
 sf_data_65 %>%
   st_set_geometry(NULL) %>%
   ggplot(aes(diff)) +
   geom_histogram() +
-   facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25), scales = "free_x") 
+  facet_wrap(. ~ cat_diff, ncol = 3, labeller = label_wrap_gen(width = 25), scales = "free_x")
 
-#my_breaks <- c(-1000000000, -100000, -100, 0, 100, 100000, 1000000000)
+# my_breaks <- c(-1000000000, -100000, -100, 0, 100, 100000, 1000000000)
 my_breaks <- c(-200, 0, 200, 400, 600, 800)
 ```
 
 ```{r}
 sf_data_65_map <- sf_data_65 %>%
-  filter(state_abbr != "AK", 
-         state_abbr != "HI") %>%
-  mutate(across(cat_diff, factor, levels=c("Black American",
-"Hispanic or Latino White",
-"NH White",
-"Black American minus NH White",
-"Black American minus Hispanic or Latino White",
-"Hispanic or Latino White minus NH White")))
+  filter(
+    state_abbr != "AK",
+    state_abbr != "HI"
+  ) %>%
+  mutate(across(cat_diff, factor, levels = c(
+    "Black American",
+    "Hispanic or Latino White",
+    "NH White",
+    "Black American minus NH White",
+    "Black American minus Hispanic or Latino White",
+    "Hispanic or Latino White minus NH White"
+  )))
 ```
 
 ```{r}
-my_breaks <- c(0, 1, 10,100, 1000)
+my_breaks <- c(0, 1, 10, 100, 1000)
 
 sf_data_65_map %>%
-  filter(cat_diff %in% c("Black American", "Hispanic or Latino White","NH White")) %>%
+  filter(cat_diff %in% c("Black American", "Hispanic or Latino White", "NH White")) %>%
   ggplot() +
-  geom_sf(data = meta %>%
-            filter(state_abbr != "AK", state_abbr != "HI"),
-          fill = "gray", col = "white", size = 0.1) +
+  geom_sf(
+    data = meta %>%
+      filter(state_abbr != "AK", state_abbr != "HI"),
+    fill = "gray", col = "white", size = 0.1
+  ) +
   geom_sf(aes(fill = diff), size = 0) +
-  scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
-                       trans = scales::pseudo_log_trans(sigma = 0.001)
-                       ) +
-  #facet_grid(.~cat_diff, ncol = 2) +
-  theme(#legend.position = c(1, 0), 
-        #title
-        #legend.justification = c(1, 0),
-    #strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
+  scale_fill_viridis_c(
+    breaks = my_breaks, labels = my_breaks,
+    trans = scales::pseudo_log_trans(sigma = 0.001)
+  ) +
+  # facet_grid(.~cat_diff, ncol = 2) +
+  theme( # legend.position = c(1, 0),
+    # title
+    # legend.justification = c(1, 0),
+    # strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
     legend.position = "right",
-    #legend.key.size = unit(1, "cm"),
-        #text = element_text(size=16),
-        strip.background =element_rect(fill="grey")) +
-  facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
-  #geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
-  labs(title = "County-level estimated attributable mortality",
-       subtitle = "Mean from 2000 to 2016",
-       fill = "Age-adjusted mortality per 100,000") 
+    # legend.key.size = unit(1, "cm"),
+    # text = element_text(size=16),
+    strip.background = element_rect(fill = "grey")
+  ) +
+  facet_wrap(. ~ cat_diff, ncol = 3, labeller = label_wrap_gen(width = 25)) +
+  # geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
+  labs(
+    title = "County-level estimated attributable mortality",
+    subtitle = "Mean from 2000 to 2016",
+    fill = "Age-adjusted mortality per 100,000"
+  )
 ```
 
 ```{r}
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_65_upper.png"), bg = 'white', width = 15, height = 5, dpi = 300)
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_65_upper.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_65_upper.png"), bg = "white", width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_65_upper.pdf"), bg = "white", width = 15, height = 5, dpi = 300)
 ```
 
 ```{r}
-my_breaks <- c(-100,-10,-1,0, 1, 10,100)
+my_breaks <- c(-100, -10, -1, 0, 1, 10, 100)
 
 sf_data_65_map %>%
-  filter(cat_diff %in% c("Black American minus NH White",
-"Black American minus Hispanic or Latino White",
-"Hispanic or Latino White minus NH White")) %>%
+  filter(cat_diff %in% c(
+    "Black American minus NH White",
+    "Black American minus Hispanic or Latino White",
+    "Hispanic or Latino White minus NH White"
+  )) %>%
   ggplot() +
-  geom_sf(data = meta %>%
-            filter(state_abbr != "AK", state_abbr != "HI"),
-          fill = "gray", col = "white", size = 0.1) +
+  geom_sf(
+    data = meta %>%
+      filter(state_abbr != "AK", state_abbr != "HI"),
+    fill = "gray", col = "white", size = 0.1
+  ) +
   geom_sf(aes(fill = diff), size = 0) +
-  scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
-                       trans = scales::pseudo_log_trans(sigma = 0.001)
-                       ) +
-  #facet_grid(.~cat_diff, ncol = 2) +
-  theme(#legend.position = c(1, 0), 
-        #title
-        #legend.justification = c(1, 0),
-    #strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
-    #legend.position = "bottom",
-    #legend.key.size = unit(1, "cm"),
-        #text = element_text(size=16),
-        strip.background =element_rect(fill="grey")) +
-  facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
-  #geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
-  labs(#title = "County-level estimated attributable mortality",
-       #subtitle = "Mean from 2000 to 2016",
-       fill = "Age-adjusted mortality per 100,000") 
+  scale_fill_viridis_c(
+    breaks = my_breaks, labels = my_breaks,
+    trans = scales::pseudo_log_trans(sigma = 0.001)
+  ) +
+  # facet_grid(.~cat_diff, ncol = 2) +
+  theme( # legend.position = c(1, 0),
+    # title
+    # legend.justification = c(1, 0),
+    # strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
+    # legend.position = "bottom",
+    # legend.key.size = unit(1, "cm"),
+    # text = element_text(size=16),
+    strip.background = element_rect(fill = "grey")
+  ) +
+  facet_wrap(. ~ cat_diff, ncol = 3, labeller = label_wrap_gen(width = 25)) +
+  # geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
+  labs( # title = "County-level estimated attributable mortality",
+    # subtitle = "Mean from 2000 to 2016",
+    fill = "Age-adjusted mortality per 100,000"
+  )
 ```
 
 ```{r}
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_65_lower.png"), bg = 'white', width = 15, height = 5, dpi = 300)
-ggsave(filename = file.path(path_to_figures,"figure5_map_diff_65_lower.pdf"), bg = 'white', width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_65_lower.png"), bg = "white", width = 15, height = 5, dpi = 300)
+ggsave(filename = file.path(path_to_figures, "figure5_map_diff_65_lower.pdf"), bg = "white", width = 15, height = 5, dpi = 300)
 ```
 ## Spatial Data wrangling
 
@@ -258,25 +397,23 @@ ggsave(filename = file.path(path_to_figures,"figure5_map_diff_65_lower.pdf"), bg
 
 ```{r}
 clean_sp <- function(object) {
-  
-  #share_sp_0 <- as(object, "Spatial")
+  # share_sp_0 <- as(object, "Spatial")
   object_1 <- st_make_valid(object)
-  share_nb_0 <- poly2nb(object_1)  #queen contiguity
-  #summary(share_nb_0)
-  
+  share_nb_0 <- poly2nb(object_1) # queen contiguity
+  # summary(share_nb_0)
+
   list_r <- card(share_nb_0) %>%
     as_data_frame() %>%
     rownames_to_column() %>%
-    filter(value<1) %>%
+    filter(value < 1) %>%
     pull(rowname)
-  
+
   share <- object_1 %>%
     rownames_to_column(var = "id") %>%
-    filter(!(id %in% list_r)) 
-  
+    filter(!(id %in% list_r))
+
   return(share)
 }
-
 ```
 
 ## Spatial 25
@@ -285,24 +422,32 @@ clean_sp <- function(object) {
 
 ```{r}
 breaks <- c(-Inf, -2.58, -1.96, -1.65, 1.65, 1.96, 2.58, Inf)
-labels <- c("Low (99% confidence)", "Low (95% confidence)", "Low (90% confidence)", "NS","High (90% confidence)", "High (95% confidence)", "High (99% confidence)")
+labels <- c("Low (99% confidence)", "Low (95% confidence)", "Low (90% confidence)", "NS", "High (90% confidence)", "High (95% confidence)", "High (99% confidence)")
 
 cii_getis_d <- sf_data_25 %>%
   group_by(cat_diff) %>%
   nest() %>%
-  mutate(data_clean = map(.x = data, .f = ~clean_sp(.)),
-         data_sub = map(.x = data_clean, 
-                         .f = ~dplyr::select(.x, diff, county_fips) %>% 
-                           rename(output = 1)),
-         dat_tbl = map(.x = data_sub, .f = ~st_set_geometry(.x, NULL)),
-         units = map_dbl(.x = dat_tbl, .f = ~nrow(.x))) %>%
-  filter(units>0) %>%
-  mutate(share_nb = map(.x = data_sub, .f = ~poly2nb(.x)),
-         share_w = map(.x = share_nb, .f = ~nb2listw(.x)),
-         LISA = map2(.x = data_sub, .y = share_w, .f = ~localG(.x$output, .y)),
-         clust_LISA = map(.x = LISA, .f = ~cut(.x, include.lowest = TRUE, 
-                                               breaks = breaks, labels = labels,
-                                               ordered_result = T))) %>%
+  mutate(
+    data_clean = map(.x = data, .f = ~ clean_sp(.)),
+    data_sub = map(
+      .x = data_clean,
+      .f = ~ dplyr::select(.x, diff, county_fips) %>%
+        rename(output = 1)
+    ),
+    dat_tbl = map(.x = data_sub, .f = ~ st_set_geometry(.x, NULL)),
+    units = map_dbl(.x = dat_tbl, .f = ~ nrow(.x))
+  ) %>%
+  filter(units > 0) %>%
+  mutate(
+    share_nb = map(.x = data_sub, .f = ~ poly2nb(.x)),
+    share_w = map(.x = share_nb, .f = ~ nb2listw(.x)),
+    LISA = map2(.x = data_sub, .y = share_w, .f = ~ localG(.x$output, .y)),
+    clust_LISA = map(.x = LISA, .f = ~ cut(.x,
+      include.lowest = TRUE,
+      breaks = breaks, labels = labels,
+      ordered_result = T
+    ))
+  ) %>%
   dplyr::select(cat_diff, dat_tbl, LISA, clust_LISA) %>%
   unnest() %>%
   select(-output)
@@ -314,8 +459,9 @@ saveRDS(cii_getis_d, "../data/tmp/cii_getis_diff_25.rds")
 
 ```{r}
 map_cii_getis_d <- meta %>%
-  inner_join(cii_getis_d, 
-             by = "county_fips")
+  inner_join(cii_getis_d,
+    by = "county_fips"
+  )
 
 saveRDS(map_cii_getis_d, "../data/tmp/map_cii_getis_diff_25.rds")
 ```
@@ -323,24 +469,31 @@ saveRDS(map_cii_getis_d, "../data/tmp/map_cii_getis_diff_25.rds")
 
 ```{r}
 map_cii_getis_d %>%
-  filter(state_abbr != "AK", 
-         state_abbr != "HI") %>%
+  filter(
+    state_abbr != "AK",
+    state_abbr != "HI"
+  ) %>%
   ggplot() +
-  geom_sf(data = meta %>% 
-            filter(state_abbr != "AK", state_abbr != "HI"), 
-          fill = "gray", col = "white", size = 0.1) +
+  geom_sf(
+    data = meta %>%
+      filter(state_abbr != "AK", state_abbr != "HI"),
+    fill = "gray", col = "white", size = 0.1
+  ) +
   geom_sf(aes(fill = clust_LISA), size = 0.1, col = "black") +
-  facet_grid(.~cat_diff) +
-  labs(title = "Clustering of county-level estimated attributable burden difference by race Ethnicity", 
-       subtitle = "Age-adjusted rate per 100,000 (all available data 2000-2016), all Education levels",
-       fill = "Clusters") +
-  scale_fill_brewer(palette = "RdBu", direction=1, limits = rev(labels)) +
-  theme(legend.position = c(1, .1), legend.justification = c(1, 0),
-        text = element_text(size=16)) +
+  facet_grid(. ~ cat_diff) +
+  labs(
+    title = "Clustering of county-level estimated attributable burden difference by race Ethnicity",
+    subtitle = "Age-adjusted rate per 100,000 (all available data 2000-2016), all Education levels",
+    fill = "Clusters"
+  ) +
+  scale_fill_brewer(palette = "RdBu", direction = 1, limits = rev(labels)) +
+  theme(
+    legend.position = c(1, .1), legend.justification = c(1, 0),
+    text = element_text(size = 16)
+  ) +
   theme_classic(base_family = "Helvetica")
 
-ggsave(filename = paste0("../data/18_figures/di_gee-real/map_clust_diff_25.png"), bg = 'white', width = 10, height = 5, dpi = 300)
-
+ggsave(filename = paste0("../data/18_figures/di_gee-real/map_clust_diff_25.png"), bg = "white", width = 10, height = 5, dpi = 300)
 ```
 
 ## Spatial 65
@@ -349,24 +502,32 @@ ggsave(filename = paste0("../data/18_figures/di_gee-real/map_clust_diff_25.png")
 
 ```{r}
 breaks <- c(-Inf, -2.58, -1.96, -1.65, 1.65, 1.96, 2.58, Inf)
-labels <- c("Low (99% confidence)", "Low (95% confidence)", "Low (90% confidence)", "NS","High (90% confidence)", "High (95% confidence)", "High (99% confidence)")
+labels <- c("Low (99% confidence)", "Low (95% confidence)", "Low (90% confidence)", "NS", "High (90% confidence)", "High (95% confidence)", "High (99% confidence)")
 
 cii_getis_d <- sf_data_65 %>%
   group_by(cat_diff) %>%
   nest() %>%
-  mutate(data_clean = map(.x = data, .f = ~clean_sp(.)),
-         data_sub = map(.x = data_clean, 
-                         .f = ~dplyr::select(.x, diff, county_fips) %>% 
-                           rename(output = 1)),
-         dat_tbl = map(.x = data_sub, .f = ~st_set_geometry(.x, NULL)),
-         units = map_dbl(.x = dat_tbl, .f = ~nrow(.x))) %>%
-  filter(units>0) %>%
-  mutate(share_nb = map(.x = data_sub, .f = ~poly2nb(.x)),
-         share_w = map(.x = share_nb, .f = ~nb2listw(.x)),
-         LISA = map2(.x = data_sub, .y = share_w, .f = ~localG(.x$output, .y)),
-         clust_LISA = map(.x = LISA, .f = ~cut(.x, include.lowest = TRUE, 
-                                               breaks = breaks, labels = labels,
-                                               ordered_result = T))) %>%
+  mutate(
+    data_clean = map(.x = data, .f = ~ clean_sp(.)),
+    data_sub = map(
+      .x = data_clean,
+      .f = ~ dplyr::select(.x, diff, county_fips) %>%
+        rename(output = 1)
+    ),
+    dat_tbl = map(.x = data_sub, .f = ~ st_set_geometry(.x, NULL)),
+    units = map_dbl(.x = dat_tbl, .f = ~ nrow(.x))
+  ) %>%
+  filter(units > 0) %>%
+  mutate(
+    share_nb = map(.x = data_sub, .f = ~ poly2nb(.x)),
+    share_w = map(.x = share_nb, .f = ~ nb2listw(.x)),
+    LISA = map2(.x = data_sub, .y = share_w, .f = ~ localG(.x$output, .y)),
+    clust_LISA = map(.x = LISA, .f = ~ cut(.x,
+      include.lowest = TRUE,
+      breaks = breaks, labels = labels,
+      ordered_result = T
+    ))
+  ) %>%
   dplyr::select(cat_diff, dat_tbl, LISA, clust_LISA) %>%
   unnest() %>%
   select(-output)
@@ -378,8 +539,9 @@ saveRDS(cii_getis_d, "../data/tmp/cii_getis_diff_65.rds")
 
 ```{r}
 map_cii_getis_d <- meta %>%
-  inner_join(cii_getis_d, 
-             by = "county_fips")
+  inner_join(cii_getis_d,
+    by = "county_fips"
+  )
 
 saveRDS(map_cii_getis_d, "./_out/map_cii_getis_diff_65.rds")
 ```
@@ -387,23 +549,25 @@ saveRDS(map_cii_getis_d, "./_out/map_cii_getis_diff_65.rds")
 
 ```{r}
 map_cii_getis_d %>%
-  filter(state_abbr != "AK", 
-         state_abbr != "HI") %>%
+  filter(
+    state_abbr != "AK",
+    state_abbr != "HI"
+  ) %>%
   ggplot() +
-  geom_sf(data = meta %>% 
-            filter(state_abbr != "AK", state_abbr != "HI"), 
-          fill = "gray", col = "white", size = 0.1) +
+  geom_sf(
+    data = meta %>%
+      filter(state_abbr != "AK", state_abbr != "HI"),
+    fill = "gray", col = "white", size = 0.1
+  ) +
   geom_sf(aes(fill = clust_LISA), size = 0.1, col = "black") +
-  facet_grid(.~cat_diff) +
-  labs(title = "Clustering of county-level estimated attributable burden difference by race Ethnicity", 
-       subtitle = "Age-adjusted rate per 100,000 (all available data 2000-2016), all Education levels",
-       fill = "Clusters") +
-  scale_fill_brewer(palette = "RdBu", direction=1, limits = rev(labels)) +
+  facet_grid(. ~ cat_diff) +
+  labs(
+    title = "Clustering of county-level estimated attributable burden difference by race Ethnicity",
+    subtitle = "Age-adjusted rate per 100,000 (all available data 2000-2016), all Education levels",
+    fill = "Clusters"
+  ) +
+  scale_fill_brewer(palette = "RdBu", direction = 1, limits = rev(labels)) +
   theme_minimal()
 
-ggsave(filename = paste0("./_out/clustering/map_clust_diff_65.png"), bg = 'white', width = 10, height = 5, dpi = 300)
-
+ggsave(filename = paste0("./_out/clustering/map_clust_diff_65.png"), bg = "white", width = 10, height = 5, dpi = 300)
 ```
-
-
-
