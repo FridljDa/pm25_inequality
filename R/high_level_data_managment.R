@@ -163,11 +163,15 @@ read_data <- function(path) {
   }
 
   col_types_data[["cols"]] <- col_types_data[["cols"]][column_names_intersection]
+  col_types_data[names(col_types_data) %in% c("..1", "..2")] <- "col_skip()"
 
   df <- readr::read_csv(path,
     col_types = col_types_data,
     show_col_types = FALSE
   )
+
+  #remove strange columns
+  df <- df[, !grepl("^\\.\\.", names(attr_burd))]
 
   parsing_problems <- readr::problems(df)
 
