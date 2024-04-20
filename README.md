@@ -4,7 +4,7 @@
 
 # PM2.5-attributable-mortality-analysis
 
-Repo supporting ["TODO publication"](https://www-pnas-org.stanford.idm.oclc.org/content/118/2/e2011048118).
+Repository supporting [preprint](https://www.medrxiv.org/content/10.1101/2024.04.17.24305943v1.full.pdf).
 
 # Using results
 
