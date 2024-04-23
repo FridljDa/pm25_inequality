@@ -16,6 +16,7 @@ options(scipen = 10000)
 ```
 
 # Loading data
+
 ```{r load_calculated_data}
 tracDir <- "../data/02_tracts"
 exp_tracDir <- "../data/03_exp_tracts"
@@ -34,6 +35,8 @@ pm_summ <- fread(file.path(summaryDir, "pm_summary.csv"))
 pm_summ <- pm_summ %>% filter(scenario == "real")
 #pop_summary <- fread(file.path(summaryDir, "pop_summary.csv"))
 ```
+
+
 # Mortality counts
 
 ```{r}
