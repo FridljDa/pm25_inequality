@@ -36,7 +36,7 @@ file_list <- file_list[grepl("nation", file_list)]
 file_list <- file_list[grepl("attr_bur", file_list)]
 file_list <- file.path(summaryDir, file_list)
 
-attr_burden <- lapply(file_list, fread) %>% rbindlist(use.names = T, fill = TRUE)
+attr_burden <- lapply(file_list, read_data) %>% rbindlist(use.names = T, fill = TRUE)
 attr_burden <- attr_burden %>% filter(min_age == min_ageI)
 ```
 
@@ -105,8 +105,9 @@ findreplace <- rbind(findreplace,
 findreplace <- distinct(findreplace)
 
 names(attr_burd_filtered_dfs) <- replaceOrRename(names(attr_burd_filtered_dfs), findreplace)
+```
 
-
+```{r}
 attr_burd_filtered_dfs <- lapply(attr_burd_filtered_dfs,
                                  function(attr_burd_filtered_dfs_i){
                                    replace_values(attr_burd_filtered_dfs_i, findreplace = findreplace)
@@ -179,19 +180,33 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
     xlab("Year") +
     ylim(0, NA) +
     theme(legend.position = "bottom") +
-    guides(color = guide_legend(nrow = 3, byrow = TRUE))
+    guides(color = guide_legend(ncol = 1, 
+                                byrow = TRUE,
+                                title.position = "top")) 
+  #colour = guide_legend(title.position = "left")
 })
 
 attr_burd_filtered_dfs_star_sum_ethn_plots <- update_ylim(attr_burd_filtered_dfs_star_sum_ethn_plots, column = "CoV")
 
-combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
-combined_plot
+combined_plot_ethnicity <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
+
+combined_plot_ethnicity <- combined_plot_ethnicity +
+    theme(plot.margin = unit(c(1, 3, 2, 1), "cm"))
+
+combined_plot_ethnicity
 ```
 
 ```{r}
 ggsave(
   filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_ethnicity.png")),
-  combined_plot
+  plot = combined_plot_ethnicity,
+  dpi = 300, height = 9, width = 8
+)
+
+ggsave(
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_ethnicity.pdf")),
+  plot = combined_plot_ethnicity,
+  dpi = 300, height = 10, width = 9
 )
 ```
 
@@ -217,18 +232,29 @@ attr_burd_filtered_dfs_star_sum_ethn_plots <- lapply(seq_along(attr_burd_filtere
     xlab("Year") +
     ylim(0, NA) +
     theme(legend.position = "bottom") +
-    guides(color = guide_legend(nrow = 3, byrow = TRUE)) # , title = color.column
+    guides(color = guide_legend(ncol = 1, 
+                                byrow = TRUE,
+                                title.position = "top")) 
 })
 attr_burd_filtered_dfs_star_sum_ethn_plots <- update_ylim(attr_burd_filtered_dfs_star_sum_ethn_plots, column = "CoV")
 
-combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots)
+combined_plot <- ggpubr::ggarrange(plotlist = attr_burd_filtered_dfs_star_sum_ethn_plots) 
+
+#combined_plot <- combined_plot+
+#    theme(plot.margin = unit(c(1, 1, 1, 1), "cm"))
 combined_plot
 ```
 
 ```{r}
 ggsave(
   filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_education.png")),
-  combined_plot
+  plot = combined_plot,
+  dpi = 300, height = 10, width = 9
+)
+ggsave(
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figure_cov_education.pdf")),
+  plot = combined_plot,
+  dpi = 300, height = 12, width = 9
 )
 ```
 
@@ -297,6 +323,10 @@ g
 ```{r}
 ggsave(
   filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.png")),
+  combined_plot, height = 6, width = 8
+)
+ggsave(
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.pdf")),
   combined_plot, height = 6, width = 8
 )
 ```
@@ -370,6 +400,10 @@ print(combined_plot)
 ```{r}
 ggsave(
   filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.png")),
+  combined_plot, height = 6, width = 8
+)
+ggsave(
+  filename = here(paste0("data/18_figures/di_gee-real-",min_ageI,"/figureS8.pdf")),
   combined_plot, height = 6, width = 8
 )
 ```
