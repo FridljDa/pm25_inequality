@@ -94,10 +94,10 @@ attr_burd <- attr_burd%>%
 ```
 
 ```{r}
-str(attr_burd)
 attr_burd <- attr_burd %>%
   mutate(county = as.numeric(county)) %>%
   as.data.frame()
+str(attr_burd)
 ```
 
 ```{r}
@@ -108,6 +108,8 @@ str(test)
 data_25 <- attr_burd %>% filter(min_age == "25") 
 data_65 <- attr_burd %>% filter(min_age == "65") 
 ```
+
+
 
 # meta
 ```{r}
@@ -169,34 +171,50 @@ sf_data_65 <- meta %>%
   inner_join(data_65, by = "county_fips")
 ```
 
-## Visualization
+## count counties 
+
+```{r}
+counties_unique <- unique(data_25$county)
+sf_data_25_counties <- unique(sf_data_25$county_fips)
+```
+
+## Visualization ggplot
+
+```{r}
+sf_data_25 %>%
+  filter(cat == "Black American minus NH White")
+```
+
+
+## Visualization us_map
 
 ### Diff 25
 ```{r}
 sf_data_25 %>%
   st_set_geometry(NULL) %>%
   ggplot(aes(diff)) +
-  geom_histogram()
+  geom_histogram()# +
+  #facet_wrap(. ~ cat_diff, ncol = 3, labeller = label_wrap_gen(width = 25), scales = "free_x")
 
 my_breaks <- c(-1000, -10, -1, 0, 1, 10, 1000)
 ```
 
 
-```{r}
-sf_data_25_map <- sf_data_25 %>%
+```{r, eval = TRUE}
+sf_data_25_map <- sf_data_25# %>%
   #filter(
   #  state_abbr != "AK",
   #  state_abbr != "HI"
   #) 
 #%>%
-  mutate(across(cat_diff, factor, levels = c(
-    "Black American",
-    "Hispanic or Latino White",
-    "NH White",
-    "Black American minus NH White",
-    "Black American minus Hispanic or Latino White",
-    "Hispanic or Latino White minus NH White"
-  )))
+ # mutate(across(cat_diff, factor, levels = c(
+#    "Black American",
+#    "Hispanic or Latino White",
+#    "NH White",
+#    "Black American minus NH White",
+#    "Black American minus Hispanic or Latino White",
+#    "Hispanic or Latino White minus NH White"
+#  )))
 
 #meta <- meta %>%
 #  filter(state_abbr != "AK", state_abbr != "HI")
@@ -207,6 +225,19 @@ sf_data_25_map_notsf <- sf_data_25_map %>%
   rename(fips = county_fips) %>%
   select(fips, min_age, diff, cat_diff, diff) %>%
   as.data.frame()
+head(sf_data_25_map_notsf)
+```
+
+```{r}
+sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
+  filter(cat_diff %in% c("Black American minus NH White")) %>%
+  plot_usmap(data = .,
+    regions = "counties",
+    values = "diff",
+    exclude = c("AK", "HI")
+  ) #+
+  #facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) 
+sf_data_25_map_notsf_plotted_upper
 ```
 
 ```{r}
@@ -234,6 +265,7 @@ sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
     breaks = my_breaks, labels = my_breaks,
     trans = scales::pseudo_log_trans(sigma = 0.001)
   )
+
 sf_data_25_map_notsf_plotted_upper
 ```
 
