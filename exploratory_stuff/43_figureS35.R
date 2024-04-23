@@ -50,7 +50,7 @@ attr_burd <- attr_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
 theme_set(theme_classic(base_family = "Helvetica"))
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 ### ----- read stuff----
 

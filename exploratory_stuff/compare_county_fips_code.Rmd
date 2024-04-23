@@ -22,7 +22,7 @@ library(here)
 library(stringr)
 library(ComplexHeatmap)
 
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 year <- 2016
 ```
 
