@@ -77,7 +77,7 @@ all_burd <- all_burd %>% filter(min_age == min_ageI)
 
 # Set plot theme and options
 theme_set(theme_classic(base_family = "Helvetica"))
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 

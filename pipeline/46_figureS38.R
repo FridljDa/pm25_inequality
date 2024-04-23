@@ -76,7 +76,7 @@ all_burd <- all_burd %>% filter(min_age == min_ageI)
 
 # Set plot theme and options
 theme_set(theme_classic(base_family = "Helvetica"))
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 
@@ -132,11 +132,16 @@ plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_na
   plot_i <- plot_attr_all_burd(attr_burd_i, all_burd_i, split_color_var[1], split_color_var[2])
 
   # Save the plot as both PNG and PDF
-  ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
-    dpi = 300, plot_i, height = 9, width = 8
+  ggplot2::ggsave(
+    filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
+         plot = plot_i,
+         #device = "png",
+    dpi = 300, height = 9, width = 8
   )
-  # ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
-  #       dpi = 300, plot_i, height = 9, width = 8)
+   ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
+         plot = plot_i,
+        # device = "pdf",
+         dpi = 300, height = 9, width = 8)
 
   return(plot_i)
 })

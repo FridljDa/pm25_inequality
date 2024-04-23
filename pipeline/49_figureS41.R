@@ -73,7 +73,7 @@ attr_burd <- attr_burd %>% filter(Year > 1990)
 
 # Set plot theme and options
 theme_set(theme_classic(base_family = "Helvetica"))
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
 
@@ -142,6 +142,8 @@ combined_plot
 
 
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.pdf"),
+       dpi = 300, combined_plot, height = 11, width = 8)
 ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.png"),
        dpi = 300, combined_plot, height = 11, width = 8)
 

@@ -52,7 +52,7 @@ if (rlang::is_empty(args)) {
   summaryDir <- "data/17_summary" # 17_summary
   figuresDir <- "data/18_figures"
 }
-#options(bitmapType = "cairo")
+##options(bitmapType = "cairo")
 file_list <- list.files(summaryDir)
 file_list <- file_list[grepl("attr_bur", file_list)]
 file_list <- file_list[grepl("nation", file_list)]
@@ -66,7 +66,7 @@ rm(file_list)
 #              "opioid_hotspots/master/code/mk_nytimes.R"))
 
 theme_set(theme_classic(base_family = "Helvetica"))
-#options(bitmapType = "cairo")
+##options(bitmapType = "cairo")
 # source("theme.R")
 
 # theme_set(theme_bw( base_family = "Helvetica"))
