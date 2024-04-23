@@ -42,11 +42,13 @@ tic("summarized all burden and attributable burden data")
 
 agr_bys <- list.files(summaryHigherTotalDir) # TODO , "STATEFP", "county"
 agr_bys <- "nation"
+#agr_by <- "nation" #TODO delete
 ## --- read and bind attr burden----
 cat("row-bind attr_burden-start\n")
 tic("row-bind attr_burden")
 attr_burden <- lapply(agr_bys, function(agr_by) {
   files <- list.files(file.path(propOfAttrBurdDir, agr_by))
+  #files <- c("attr_burden_prop_2000.csv", "attr_burden_prop_2015.csv") #TODO delete
   attr_burden <- lapply(files, function(file) read_data(file.path(propOfAttrBurdDir, agr_by, file)))
 
   attr_burden <- attr_burden %>% rbindlist(use.names = TRUE, fill = TRUE)
