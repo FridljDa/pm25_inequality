@@ -11,6 +11,7 @@ library(data.table)
 library(magrittr)
 library(dplyr)
 library(testthat)
+library(ggplot2)
 
 options(dplyr.summarise.inform = FALSE)
 options(scipen = 10000)
@@ -33,11 +34,11 @@ if (rlang::is_empty(args)) {
   scenarioI <- "real"
 }
 pkgload::load_all()
-options(bitmapType = "cairo")
+#options(bitmapType = "cairo")
 
 #source(paste0("https://raw.githubusercontent.com/mkiang/",
 #              "opioid_hotspots/master/code/mk_nytimes.R"))
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
+theme_set(theme_classic(base_family = "Helvetica")); #options(bitmapType ="cairo");
 ## --- read files---
 file_list <- list.files(file.path(summaryDir, "county"))
 file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
@@ -101,6 +102,13 @@ attr_burd_educ_2016 <- attr_burd %>%
   ) %>%
   select(Year, Region, Education, Ethnicity, mean) %>%
   pivot_wider(names_from = Education, values_from = mean)
+
+##---- filter out na rows----
+attr_burd_ethn_2000 <- attr_burd_ethn_2000[complete.cases(attr_burd_ethn_2000), ]
+attr_burd_ethn_2016 <- attr_burd_ethn_2016[complete.cases(attr_burd_ethn_2016), ]
+attr_burd_educ_2009 <- attr_burd_educ_2009[complete.cases(attr_burd_educ_2009), ]
+attr_burd_educ_2016 <- attr_burd_educ_2016[complete.cases(attr_burd_educ_2016), ]
+
 
 ###--- get ranges----
 range_ethn_x <- range(c(
@@ -216,3 +224,11 @@ g_combined <- cowplot::plot_grid(plot_attr_burd_ethn_2000, plot_attr_burd_educ_2
 )
 
 ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS11.png"), dpi = 300, g_combined, height = 9, width = 8)
+ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figureS11.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+
+## numbers for text
+proport_black_more_2000 <- sum(attr_burd_ethn_2000$`Black American` >= attr_burd_ethn_2000$`NH White`) / nrow(attr_burd_ethn_2000)
+proport_black_more_2016 <- sum(attr_burd_ethn_2016$`Black American` >= attr_burd_ethn_2016$`NH White`) / nrow(attr_burd_ethn_2016)
+
+cat("Proportion of counties where Black Americans have higher mortality than NH Whites in 2000: ", scales::label_percent(0.1)(proport_black_more_2000), "\n")
+cat("Proportion of counties where Black Americans have higher mortality than NH Whites in 2016: ", scales::label_percent(0.1)(proport_black_more_2016), "\n")
