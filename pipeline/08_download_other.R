@@ -109,6 +109,7 @@ apply(states, 1, function(state) {
 
     } else if (year %in% c(2009, 2011:2016)) {
       #browser()
+      #TODO set key here
       tracts <- get_acs(geography = "tract",
                         variables = "B01001A_003E",
                         state = STUSPS,
