@@ -38,7 +38,19 @@ pkgload::load_all()
 
 #source(paste0("https://raw.githubusercontent.com/mkiang/",
 #              "opioid_hotspots/master/code/mk_nytimes.R"))
-theme_set(theme_classic(base_family = "Helvetica")); #options(bitmapType ="cairo");
+
+# # Define a custom theme
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
 ## --- read files---
 file_list <- list.files(file.path(summaryDir, "county"))
 file_list <- file.path(summaryDir, "county", file_list[grepl("attr_bur", file_list)])
@@ -223,8 +235,15 @@ g_combined <- cowplot::plot_grid(plot_attr_burd_ethn_2000, plot_attr_burd_educ_2
   plot_attr_burd_ethn_2016, plot_attr_burd_educ_2016
 )
 
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure6.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure6.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure6.png"), dpi = 300, g_combined, height = 9, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure6.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure6.pdf"), #eps
+       dpi = 300,
+       plot = g_combined,
+       height = 200,
+       width = 180,
+       units = "mm")
 
 ## numbers for text
 proport_black_more_2000 <- sum(attr_burd_ethn_2000$`Black American` >= attr_burd_ethn_2000$`NH White`) / nrow(attr_burd_ethn_2000)

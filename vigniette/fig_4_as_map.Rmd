@@ -18,6 +18,21 @@ suppressMessages({
 ```
 
 ```{r}
+# Define a custom theme
+custom_theme <- theme(
+  text = element_text(family = "sans", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_grey() + custom_theme)
+```
+
+```{r}
 scenarioI <- "real"
 methodI <- "di_gee"
   
@@ -111,7 +126,8 @@ map1 <-  plot_usmap(data = attr_burd_sub1_plotting, regions = "states", values =
                        name = name) +
   #scale_fill_viridis_c()+
   theme(legend.position.inside = c(0.65, .1) # .inside
-        , text = element_text(size=10)) +
+        #, text = element_text(size=10)
+        ) +
  #theme(legend.position.inside = c(1, .1), legend.justification = c(1, 0),
 #        text = element_text(size=16)) +
  facet_wrap(~ Ethnicity, ncol = 2)                                                        # Change font size
@@ -122,4 +138,11 @@ map1
 ```{r}
 ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI,"-25"), "figure4.png"), dpi = 300, map1, height = 12, width = 8)
 ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI,"-25"), "figure4.pdf"), dpi = 300, map1, height = 12, width = 8)
+
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", 25), "figure4.eps"), #eps
+       dpi = 300,
+       plot = map1,
+       height = 220,
+       width = 210,
+       units = "mm")
 ```

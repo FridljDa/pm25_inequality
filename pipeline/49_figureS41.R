@@ -85,6 +85,20 @@ attr_burd <- attr_burd %>%
            agr_by == "nation" & method == methodI & measure3 == "value")
 
 
+# ------ Define a custom theme-----
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
+# ------ -----
+
 # Generate filtered data frames
 attr_burd_filtered_dfs <- generate_filtered_dfs(attr_burd)
 attr_burd_filtered_dfs_names <- names(attr_burd_filtered_dfs)
@@ -142,8 +156,13 @@ combined_plot
 
 
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.pdf"),
-       dpi = 300, combined_plot, height = 11, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.png"),
-       dpi = 300, combined_plot, height = 11, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure_attr_burd_subpopulation.pdf"),
+#       dpi = 300, combined_plot, height = 11, width = 8)
 
+
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "extended_data_figure1.eps"), #eps
+       dpi = 300,
+       plot = combined_plot,
+       height = 290,
+       width = 205,
+       units = "mm")

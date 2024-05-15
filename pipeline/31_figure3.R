@@ -54,8 +54,22 @@ all_burd <- all_burd %>% filter(min_age == min_ageI)
 #rm(file_list)
 unique(attr_burd$Education)
 
-theme_set(theme_classic(base_family = "Helvetica")); options(bitmapType ="cairo");
+theme_set(theme_classic(base_family = "Helvetica")); #options(bitmapType ="cairo");
 # dir.create(file.path(figuresDir, methodI), recursive = T, showWarnings = F)
+##------
+
+# # Define a custom theme
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
 ### ----- read stuff----
 
 attr_burd <- attr_burd %>%
@@ -191,29 +205,30 @@ lay <- rbind(
   c(NA, NA, 9, 9,  9)
 )
 
-t1 <- textGrob("Age-adjusted mortality per 100,000", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
-t2 <- textGrob("", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
+t1 <- textGrob("Age-adjusted mortality per 100,000", gp = gpar(fontsize = 7), rot = 90, vjust = 1) #
+t2 <- textGrob("", rot = 90,  vjust = 1) #gp = gpar(fontsize = 10),
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("4-year college graduate or higher", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("4-year college \n graduate or higher", rot = 90, gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0.5) #fontsize = 10,
 )
+
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Some college education \n but no 4-year college degree", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0.5)
+  textGrob("Some college education \n but no 4-year college degree", rot = 90, gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0.5)
 )#"Some college education but no 4-year college degree"
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("High school graduate or lower", rot = 90, gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("High school graduate or lower", rot = 90, gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("PM2.5-attributable mortality", gp = gpar(fontsize = 10, fontface = "bold"))
+  textGrob("PM2.5-attributable mortality", gp = gpar(fontsize = 7, fontface = "bold"))
 )
 t7 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("All-cause mortality", gp = gpar(fontsize = 10, fontface = "bold"))
+  textGrob("All-cause mortality", gp = gpar(fontsize = 7, fontface = "bold"))
 )
 
 gs <- append(plots, list(t1,  legend_plot, t3, t4, t5, t6, t7))
@@ -225,7 +240,7 @@ figure_hight <- 1
 
 g_combined <- grid.arrange(
   grobs = gs,
-  widths = c(0.25, 0.1, figure_width , blank_space,  figure_width),
+  widths = c(0.2, 0.1, figure_width , blank_space,  figure_width),
   heights = c(0.2, figure_hight, blank_space, figure_hight, blank_space, figure_hight, 0.6),
   layout_matrix = lay
 )
@@ -233,5 +248,12 @@ g_combined <- grid.arrange(
 
 as_ggplot(g_combined)
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.png"), dpi = 300, g_combined, height = 9, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.png"), dpi = 300, g_combined, height = 9, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI,"-",scenarioI, "-", min_ageI), "figure3.pdf"), dpi = 300, g_combined, height = 9, width = 8)
+
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure3.eps"), #eps
+       dpi = 300,
+       plot = g_combined,
+       height = 220,
+       width = 180,
+       units = "mm")

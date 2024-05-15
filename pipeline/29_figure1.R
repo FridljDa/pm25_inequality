@@ -27,6 +27,19 @@ suppressMessages({
   pkgload::load_all()
 })
 
+# Define a custom theme
+custom_theme <- theme(
+  text = element_text(family = "sans", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_grey() + custom_theme)
+
 #for (p in packages) {
   # if (p %in% rownames(installed.packages()) == FALSE) install.packages(p)
   # suppressMessages(library(p, character.only = T, warn.conflicts = FALSE, quietly = TRUE))
@@ -87,9 +100,20 @@ attr_burd <- attr_burd %>%
     source == "National Vital Statistics System" & scenario == scenarioI & method == methodI)
 
 ## -- figure 3, attributable burden---
-# TODO method di_gee/burnett
-attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "All" #& svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All"
-                                   & Education == 666 & Ethnicity != "All, All Origins" & measure3 == "value" & rural_urban_class == "All")
+# Filter the data
+attr_burd1 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "All"
+                                   & Education == 666 & Ethnicity != "All, All Origins"
+                                   & measure3 == "value" & rural_urban_class == "All")
+
+# Reorder the levels of the Ethnicity factor
+attr_burd1$Ethnicity <- factor(attr_burd1$Ethnicity,
+                               levels = c("Hispanic or Latino White",
+                                          "Asian or Pacific Islander",
+                                          "American Indian or Alaska Native",
+                                          "Black American",
+                                           "NH White", "White"))
+
+
 g1 <- ggplot(attr_burd1, aes(x = Year, y = mean, color = Ethnicity))
 
 attr_burd2 <- attr_burd %>% filter(agr_by == "nation" & svi_bin == "All" & #svi_bin1 == "All" & svi_bin2 == "All" & svi_bin3 == "All" & svi_bin4 == "All" &
@@ -165,6 +189,11 @@ g7 <- g7 + xlim(1990, 2016)
 #g6 <- g6 + xlim(1990, 2016)
 #g8 <- g8 + xlim(1990, 2016)
 
+g1 <- g1 + ggtitle("Race/Ethnicity")
+g2 <- g2 + ggtitle("Education")
+g3 <- g3 + ggtitle("Rurality")
+g7 <- g7 + ggtitle("Social Vulnerability Index")
+
 # g6 <- g6 + scale_y_continuous(breaks = pretty_breaks())
 
 #plots <- list(g1, g2, g3, g4, g5, g6) # , g7, g8
@@ -193,7 +222,7 @@ plots <- lapply(plots, function(g) {
       values = group.colors,
       limits = force
     ) +
-    theme(legend.title = element_blank(), legend.text = element_text(size = 8)) +
+    theme(legend.title = element_blank()) + #, legend.text = element_text(size = 8)
     guides(color = guide_legend(ncol = 1, byrow = TRUE))
 })
 
@@ -202,6 +231,8 @@ legend_plots <- lapply(plots, function(g) {
     get_legend() %>%
     as_ggplot()
 })
+
+
 
 # plots[[1]] <- plots[[1]]  + ggtitle("A)")
 ## ----get legends ---
@@ -222,28 +253,34 @@ legend_plots <- lapply(plots, function(g) {
 ## --- arrange plots----
 
 plots <- lapply(plots, function(g) {
-  g + theme(legend.position = "none", axis.title.y = element_blank())
+  g +
+    theme(legend.position = "bottom", axis.title.y = element_blank()) +
+    guides(color = guide_legend(ncol = 1))
+  # + theme(legend.position = "none", axis.title.y = element_blank())
 })
 
-t1 <- textGrob("Age-adjusted mortality per 100,000", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
+plots[[1]] <- plots[[1]] +
+  guides(color = guide_legend(ncol = 2))
+
+t1 <- textGrob("Age-adjusted mortality per 100,000", rot = 90, gp = gpar(fontsize = 7), vjust = 1)
 #t2 <- textGrob("%", rot = 90, gp = gpar(fontsize = 10), vjust = 1)
 
 t3 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Race-Ethnicity", gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Race-Ethnicity", gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0)
 )
 t4 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Education", gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Education", gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0)
 )
 t5 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Rurality", gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Rurality", gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0)
 )
 
 t6 <- grobTree(
   rectGrob(gp = gpar(fill = "grey")),
-  textGrob("Social Vulnerability Index", gp = gpar(fontsize = 10, fontface = "bold"), vjust = 0)
+  textGrob("Social Vulnerability Index", gp = gpar(fontsize = 7, fontface = "bold"), vjust = 0)
 )
 
 #t7 <- grobTree(
@@ -270,9 +307,9 @@ gs <- append(gs, legend_plots)
 # gs <- append(plots, list(t1, t2, legend_plot, t3, t4, t5, t6, t7))
 # gs <- lapply(1:6, function(ii) grobTree(rectGrob(gp = gpar(fill = ii, alpha = 0.5)), textGrob(ii)))
 
-blank_space <- 0.05
-figure_width <- 1.4
-figure_hight <- 0.8
+#blank_space <- 0.05
+#figure_width <- 1.4
+#figure_hight <- 0.8
 
 # g_combined <- grid.arrange(
 #  grobs = gs,
@@ -299,32 +336,35 @@ figure_hight <- 0.8
 #  c(NA, NA, 17, NA, 18, NA, 19, NA, 20)
 #)
 
-lay <- rbind(
-  c(NA, NA,  9, NA, 10,  NA, 11, NA, 12),
-  c(13, 15,  1, NA,  2,  NA,  3, NA,  7),
-  c(NA, NA, 17, NA, 18, NA, 19, NA, 20)
-)
+#lay <- rbind(
+#  c(NA, NA,  9, NA, 10,  NA, 11, NA, 12),
+#  c(13, 15,  1, NA,  2,  NA,  3, NA,  7),
+#  c(NA, NA, 17, NA, 18, NA, 19, NA, 20)
+#)
 
 # Update grid.arrange to account for the new column
-g_combined <- grid.arrange(
-  grobs = gs,
-  widths = c(0.2, 0.1, figure_width, blank_space, figure_width,
-             blank_space, figure_width, blank_space, figure_width), # Added a new blank_space
-  heights = c(0.1, figure_hight, 0.6),
-  layout_matrix = lay
-)
+#g_combined <- grid.arrange(
+#  grobs = gs,
+#  widths = c(0.2, 0.1, figure_width, blank_space, figure_width,
+#             blank_space, figure_width, blank_space, figure_width), # Added a new blank_space
+#  heights = c(0.1, figure_hight, 0.6),
+#  layout_matrix = lay
+#)
 
-#ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]],
-#          legend_plots[[1]], legend_plots[[2]], legend_plots[[3]], legend_plots[[4]],
-#          ncol = 4, nrow = 2,
-#          heights = c(1, 0.4))
+g_combined2 <- ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]],
+          ncol = 2, nrow = 2#,
+          #heights = c(1, 0.4)
+          )
 
-as_ggplot(g_combined)
+g_combined2 <- annotate_figure(g_combined2, left = text_grob("Age-adjusted mortality per 100,000", rot = 90))
+
+#as_ggplot(g_combined2)
+g_combined2
 # https://stackoverflow.com/questions/40265494/ggplot-grobs-align-with-tablegrob
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.pdf"), #eps
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.eps"), #eps
        dpi = 300,
-       plot = g_combined,
-       height = 228.6,
+       plot = g_combined2,
+       height = 220,
        width = 210,
        units = "mm")
 #ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure1.eps"),

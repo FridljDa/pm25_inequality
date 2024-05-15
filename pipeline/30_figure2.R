@@ -42,7 +42,19 @@ all_burd <- file.path(summaryDir, "all_burd.csv") %>% fread()
 all_burd <- all_burd %>% filter(min_age == min_ageI)
 rm(file_list)
 
-theme_set(theme_classic(base_family = "Helvetica")); #options(bitmapType ="cairo");
+
+# Define a custom theme
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
 
 if(min_ageI == 65){
   quit()
@@ -192,8 +204,8 @@ g1 <- g1 +
                           "in mortality attributable to" ~ PM[2.5]))) +
   #ggtitle("Absolute difference to Black Americans\n in mortality attributable to PM2.5") +
   ylab("Race-Ethnicity") +
-  theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
-        axis.text.x = element_text(size = 9)) #, face = "bold"
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"), #size = 10,
+        axis.text.x = element_text()) #, face = "bold" size = 9
 g1
 #g2 <- g2 +
 #  xlab("%")+
@@ -207,8 +219,8 @@ g3 <- g3 +
   ggtitle(expression(atop("Percent of the all-cause mortality difference",
                           "to Black Americans attributable to" ~ PM[2.5]))) +
   #ggtitle("Percent of the all-cause mortality difference\n to Black Americans attributable to PM2.5")+
-  theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
-        axis.text.x = element_text(size = 9))
+  theme(plot.title = element_text( hjust = 0.5, face = "bold"), #size = 10,
+        axis.text.x = element_text()) #size = 9
 
 ##----arrange--
 lay <- rbind(
@@ -218,12 +230,19 @@ lay <- rbind(
 
 gg_combined <- gridExtra::grid.arrange(g1, g3, legend, layout_matrix = lay,
                                        widths = c(1.7, 1),
-                                       heights = c(1,1/3)) # , rel_heights = c(1/2, 1/2)
+                                       heights = c(1,1/4)) # , rel_heights = c(1/2, 1/2)
 # gg_combined <- cowplot::plot_grid(g1, g3,g2, legend,  nrow = 2)
 as_ggplot(gg_combined)
 
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.jpg"),
+#ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.jpg"),
+#       dpi = 300,
+#       gg_combined,
+#       height = 6, width = 8)
+#ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)
+
+ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.eps"), #eps
        dpi = 300,
-       gg_combined,
-       height = 6, width = 8)
-ggsave(file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "figure2.pdf"), dpi = 300, gg_combined, height = 6, width = 8)
+       plot = gg_combined,
+       height = 170,
+       width = 180,
+       units = "mm")
