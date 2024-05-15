@@ -1,0 +1,78 @@
+---
+title: "check_final_data"
+author: "Daniel Fridljand"
+format: html
+editor: visual
+---
+
+## Quarto
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(grid)
+library(gridExtra)
+library(data.table)
+
+suppressMessages({
+  pkgload::load_all()
+})
+```
+
+```{r}
+summaryDir <- here::here("data/17_summary")
+file_list <- list.files(summaryDir)
+file_list <- file.path(summaryDir, file_list)
+file_list <- file_list[grepl("attr_bur", file_list)]
+file_list <- file_list[grepl("nation", file_list)]
+
+attr_burd <- lapply(file_list, fread) %>% rbindlist(use.names = TRUE, fill=TRUE)
+```
+
+You can add options to executable code like this
+
+```{r}
+str(attr_burd)
+```
+
+```{r}
+attr_burd %>%
+  #select(Year, Ethnicity, rural_urban_class, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, scenario, measure2, measure3,  min_age) %>%
+#unselect mean, lower, upper
+  select(-one_of(c("mean", "lower", "upper"))) %>%          
+  lapply(unique)
+```
+
+```{r}
+attr_burd %>%
+  select(-one_of(c("mean", "lower", "upper"))) %>%
+  colnames()
+```
+
+```{r}
+attr_burd_doublicates <- attr_burd %>%
+  #group_by(Year, Ethnicity, svi_bin, svi_bin1, svi_bin2, svi_bin3, svi_bin4, rural_urban_class, Education, scenario, method, measure2, min_age, measure1,
+           
+         #  agr_by, Gender.Code, max_age, attr, source, Region
+         #  ) %>%
+  group_by(across(-c(mean, lower, upper, agr_by, Gender.Code, max_age, attr, source, Region))) %>%
+             summarise(n = n(),
+                       mean = list(mean))
+```
+
+```{r}
+generate_filtered_dfs
+```
+
+```{r}
+
+attr_burd %>%
+  nrow()
+```
+
+```{r}
+test <- attr_burd %>%
+generate_filtered_dfs
+```
