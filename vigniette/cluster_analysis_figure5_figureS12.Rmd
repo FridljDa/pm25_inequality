@@ -40,9 +40,6 @@ path_to_figures <- "../data/18_figures/di_gee-real"
 
 
 # Reading data
-```{r}
-#TODO read county data
-```
 
 ```{r}
 summaryDir <- here::here("data/17_summary") 
@@ -75,7 +72,20 @@ attr_burd <- attr_burd %>%
 attr_burd <- attr_burd %>% rename(county = Region)
 ```
 
+```{r}
+attr_burd <- attr_burd %>%
+  group_by(Ethnicity, county, min_age) %>%
+  slice(1) %>%
+  ungroup()
+```
 
+```{r}
+#TODO delete
+attr_burd %>%
+  select(county) %>%
+  unique() %>%
+  nrow()
+```
 
 # cross product
 ```{r}
@@ -98,12 +108,26 @@ attr_burd <- attr_burd %>%
   mutate(county = as.numeric(county)) %>%
   as.data.frame()
 str(attr_burd)
+
+attr_burd %>%
+  select(county) %>%
+  unique() %>%
+  nrow()
 ```
 
-```{r}
+```{r, eval = FALSE, include = FALSE}
 test <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) #TODO delete
 str(test)
+
+test %>%
+  select(county) %>%
+  unique() %>%
+  nrow()
+
+setdiff( attr_burd$county, test$county) #TODO delete
 ```
+
+
 ```{r}
 data_25 <- attr_burd %>% filter(min_age == "25") 
 data_65 <- attr_burd %>% filter(min_age == "65") 
@@ -117,17 +141,34 @@ data_65 <- attr_burd %>% filter(min_age == "65")
 #meta <- read_csv(file.path(path_files_county_data, "county_data_25+.csv")) %>%
 meta <- data_25 %>%
   rename(county_fips = county, Ethnicity = ethnicity1, mean = ethnicity1_minus_ethnicity2) %>%
-  complete(Ethnicity, county_fips, fill = list(mean = 0, in_sample = 0)) %>%
-  distinct(county_fips) %>%
+  complete(Ethnicity, county_fips, fill = list(mean = 0, in_sample = 0)) %>% 
+  distinct(county_fips)
+```
+
+```{r}
+meta <- meta %>%
   mutate(meta = fips_metadata(as.character(county_fips),
     geometry = T
-  )) %>%
-  unnest() %>%
-  st_as_sf() %>%
+  )) 
+```
+
+
+```{r}
+meta <- meta %>%
+  unnest(cols = c(meta)) %>%
+  select(county_fips, state_abbr, geometry, fip_code)
+```
+
+```{r}
+meta <- meta %>%
+  st_as_sf()
+
+meta <- meta %>%
   st_cast("POLYGON")
 ```
 
 #Preparing data
+
 ```{r}
 get_cat_diff <- function(eth1, eth2) {
   if (eth2 == "0") {
@@ -171,18 +212,79 @@ sf_data_65 <- meta %>%
   inner_join(data_65, by = "county_fips")
 ```
 
-## count counties 
-
-```{r}
-counties_unique <- unique(data_25$county)
-sf_data_25_counties <- unique(sf_data_25$county_fips)
-```
 
 ## Visualization ggplot
 
-```{r}
+```{r, eval = FALSE, include = FALSE}
+sf_data_25_test_subset <- sf_data_25 %>%
+  filter(state_abbr != "AK", state_abbr != "HI") %>%
+  filter(cat_diff %in% c("Black American minus NH White"))
+
+meta_test_subset <- meta %>%
+            filter(state_abbr != "AK", state_abbr != "HI") 
+
+#sf_data_25_test_subset <- sf_data_25_test_subset %>%
+#  filter(state_abbr == "CA") #TODO multiple values, should not be happening
+
+#meta_test_subset <- meta %>%
+#            filter(state_abbr == "CA")
+```
+
+```{r, eval = FALSE}
+#are there any missing values in sf_data_25_test_subset?
+sf_data_25_test_subset %>%
+  filter(is.na(geometry))
+```
+
+
+```{r, eval = FALSE}
+my_breaks <- c(0, 1, 10,100, 1000)
+
+sf_data_25_test_subset %>%
+  ggplot() +
+  geom_sf(data = meta_test_subset,
+          fill = "gray", col = "white", size = 0.1
+          ) +
+  geom_sf(aes(fill = diff), size = 0) #+
+  #scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
+ #                      trans = scales::pseudo_log_trans(sigma = 0.001)
+  #                     ) +
+  #theme(
+  #  legend.position = "right",
+  #      strip.background =element_rect(fill="grey")) +
+  #facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
+  #labs(title = "County-level estimated attributable mortality",
+  #     subtitle = "Mean from 2000 to 2016",
+  #     fill = "Age-adjusted mortality per 100,000") 
+```
+
+```{r, eval = FALSE}
+my_breaks <- c(0, 1, 10,100, 1000)
+
 sf_data_25 %>%
-  filter(cat == "Black American minus NH White")
+  filter(cat_diff %in% c("NH White")) %>%
+  ggplot() +
+  geom_sf(data = meta %>%
+            filter(state_abbr != "AK", state_abbr != "HI"),
+          fill = "gray", col = "white", size = 0.1) +
+  geom_sf(aes(fill = diff), size = 0) +
+  scale_fill_viridis_c(breaks = my_breaks, labels = my_breaks,
+                       trans = scales::pseudo_log_trans(sigma = 0.001)
+                       ) +
+  #facet_grid(.~cat_diff, ncol = 2) +
+  theme(#legend.position = c(1, 0), 
+        #title
+        #legend.justification = c(1, 0),
+    #strip.text.x = element_text(margin = margin(0.2,5,3,4, "cm")),
+    legend.position = "right",
+    #legend.key.size = unit(1, "cm"),
+        #text = element_text(size=16),
+        strip.background =element_rect(fill="grey")) +
+  facet_wrap(.~cat_diff, ncol = 3, labeller = label_wrap_gen(width=25)) +
+  #geom_label("PM2.5-attributable\n mortality per 100,000", angle = 90)+
+  labs(title = "County-level estimated attributable mortality",
+       subtitle = "Mean from 2000 to 2016",
+       fill = "Age-adjusted mortality per 100,000") 
 ```
 
 
@@ -228,38 +330,55 @@ sf_data_25_map_notsf <- sf_data_25_map %>%
 head(sf_data_25_map_notsf)
 ```
 
-```{r}
-sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
-  filter(cat_diff %in% c("Black American minus NH White")) %>%
-  plot_usmap(data = .,
-    regions = "counties",
-    values = "diff",
-    exclude = c("AK", "HI")
-  ) #+
-  #facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) 
-sf_data_25_map_notsf_plotted_upper
-```
+https://stackoverflow.com/questions/54426144/how-to-remove-na-from-facet-wrap-in-ggplot2
 
 ```{r}
-
-#Asian and Pacific Islander
 my_breaks <- c(0, 1, 10, 1000)
 sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
-  filter(cat_diff %in% c("Black American", "Hispanic or Latino White", "NH White", "American Indian or Alaskan Native", "Asian and Pacific Islander")) %>% #
+  filter(cat_diff %in% c("Black American minus NH White", "Asian or Pacific Islander minus NH White", "American Indian or Alaska Native minus NH White")) %>%
   plot_usmap(data = .,
     regions = "counties",
     values = "diff",
     exclude = c("AK", "HI")
-  ) +
-  facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) +
-  theme(
-    legend.position = "right",
-    strip.background = element_rect(fill = "grey")
   ) +
   labs(
     title = "County-level estimated attributable mortality",
     subtitle = "Mean from 2000 to 2016",
     fill = "Age-adjusted mortality per 100,000"
+  ) +
+  #facet_grid(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) +
+  facet_grid(cols = vars(cat_diff), labeller = label_wrap_gen(width = 25)) +
+  #facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25)) +
+   theme(
+    legend.position = "right",
+    strip.background = element_rect(fill = "grey")
+  ) +
+  scale_fill_viridis_c(
+    breaks = my_breaks, labels = my_breaks,
+    trans = scales::pseudo_log_trans(sigma = 0.001)
+  )
+
+sf_data_25_map_notsf_plotted_upper
+```
+
+```{r}
+my_breaks <- c(0, 1, 10, 1000)
+sf_data_25_map_notsf_plotted_upper <- sf_data_25_map_notsf %>%
+  filter(cat_diff %in% c("Black American minus NH White", "Asian or Pacific Islander minus NH White", "American Indian or Alaska Native minus NH White")) %>%
+  plot_usmap(data = .,
+    regions = "counties",
+    values = "diff",
+    exclude = c("AK", "HI")
+  ) +
+  labs(
+    title = "County-level estimated attributable mortality",
+    subtitle = "Mean from 2000 to 2016",
+    fill = "Age-adjusted mortality per 100,000"
+  )+
+  facet_wrap(. ~ cat_diff, nrow = 1, labeller = label_wrap_gen(width = 25), drop=T) +
+   theme(
+    legend.position = "right",
+    strip.background = element_rect(fill = "grey")
   ) +
   scale_fill_viridis_c(
     breaks = my_breaks, labels = my_breaks,
