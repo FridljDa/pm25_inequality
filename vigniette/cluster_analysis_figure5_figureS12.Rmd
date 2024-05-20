@@ -28,7 +28,17 @@ suppressMessages({
   pkgload::load_all()
 })
 
-theme_set(theme_classic(base_family = "Helvetica"))
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
 
 path_files_county_data <- "../trash/"
 # library(readr)

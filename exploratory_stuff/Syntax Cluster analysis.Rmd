@@ -18,8 +18,41 @@ library(RColorBrewer)
 library(fipio)
 library(tigris)
 library(dataPreparation)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
 
-theme_set(theme_classic(base_family = "Helvetica"))
+library(sf)
+# library(mapview)
+library(spdep)
+library(sp)
+library(purrr)
+library(leaflet)
+library(RColorBrewer)
+library(fipio)
+library(tigris)
+library(dataPreparation)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(usmap)
+library(data.table)
+```
+
+
+```{r}
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
 ```
 
 ```{r}
