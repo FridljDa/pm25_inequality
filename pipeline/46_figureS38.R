@@ -53,6 +53,21 @@ if (rlang::is_empty(args)) {
   min_ageI <- args[13]
 }
 
+
+# ------ Define a custom theme-----
+custom_theme <- theme(
+  text = element_text(family = "Helvetica", size = 7),  # Set default text properties
+  plot.title = element_text(size = 7),  # Set title text size
+  axis.title = element_text(size = 6),  # Set axis title text size
+  axis.text = element_text(size = 5),   # Set axis text size
+  legend.title = element_text(size = 6),  # Set legend title text size
+  legend.text = element_text(size = 5)    # Set legend text size
+)
+
+# Apply the custom theme globally
+theme_set(theme_classic(base_family = "Helvetica") + custom_theme)
+# ------ -----
+
 # List files in summaryDir
 file_list <- list.files(summaryDir)
 
@@ -132,16 +147,23 @@ plots <- lapply(attr_burd_filtered_dfs_names, function(attr_burd_filtered_dfs_na
   plot_i <- plot_attr_all_burd(attr_burd_i, all_burd_i, split_color_var[1], split_color_var[2])
 
   # Save the plot as both PNG and PDF
-  ggplot2::ggsave(
-    filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
-         plot = plot_i,
-         #device = "png",
-    dpi = 300, height = 9, width = 8
-  )
-   ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
-         plot = plot_i,
-        # device = "pdf",
-         dpi = 300, height = 9, width = 8)
+  #ggplot2::ggsave(
+  #  filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI), "attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".png")),
+  #       plot = plot_i,
+  #       #device = "png",
+  #  dpi = 300, height = 9, width = 8
+  #)
+  # ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".pdf")),
+  #       plot = plot_i,
+  #      # device = "pdf",
+  #       dpi = 300, height = 9, width = 8)
+
+   ggsave(filename = file.path(figuresDir, paste0(methodI, "-", scenarioI, "-", min_ageI),"attr_all", paste0("figure_", attr_burd_filtered_dfs_names_i, ".eps")),, #eps
+          dpi = 300,
+          plot = plot_i,
+          height = 290,
+          width = 205,
+          units = "mm")
 
   return(plot_i)
 })
